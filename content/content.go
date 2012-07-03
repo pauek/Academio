@@ -161,9 +161,9 @@ func (c *Course) read(dir Dir) *Course {
 	return c
 }
 
-// CourseList
+// Courses
 
-var courseList Group
+var Courses Group
 
 func Read() {
 	path := os.Getenv("ACADEMIO_PATH")
@@ -172,7 +172,7 @@ func Read() {
 	}
 	for _, root := range filepath.SplitList(path) {
 		err := eachSubDir(root, func(subdir string) {
-			courseList.Add(toID(subdir), new(Course).read(Dir{root, subdir}))
+			Courses.Add(toID(subdir), new(Course).read(Dir{root, subdir}))
 		})
 		if err != nil {
 			log.Printf("ReadContent: Cannot read '%s': %s", root, err)
@@ -181,7 +181,7 @@ func Read() {
 }
 
 func Get(id string) (item Item) {
-	var g ItemGroup = courseList
+	var g ItemGroup = Courses
 	for {
 		i := strings.Index(id, ".")
 		if i == -1 {
@@ -207,7 +207,7 @@ func Type(item Item) string {
 }
 
 func Show() {
-	courseList.EachChild(func(id string, course Item) {
+	Courses.EachChild(func(id string, course Item) {
 		fmt.Printf("%s %s\n", id, course.Data().Title)
 		course.EachChild(func (id string, topic Item) {
 			fmt.Printf("   %s \"%s\"\n", id, topic.Data().Title)
