@@ -6,13 +6,27 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 )
 
-type Id string
+type Dir struct {
+	base, rel string
+}
 
-type ContentItem struct {
+func (d Dir) abs() string { return filepath.Join(d.base, d.rel) }
+
+func (d Dir) join(subdir string) Dir {
+	return Dir{d.base, filepath.Join(d.rel, subdir)}
+}
+
+func (d Dir) file(filename string) string {
+	return filepath.Join(d.abs(), filename)
+}
+
+// Common contains all fields that are common to content items
+//
+type CommonData struct {
+	dir Dir
 	Title string
 	Doc   struct {
 		Rst  []byte
@@ -20,188 +34,173 @@ type ContentItem struct {
 	}
 }
 
+func (data *CommonData) absdir() string { return data.dir.abs() }
+
+func (data *CommonData) Data() *CommonData { return data }
+
+func (data *CommonData) read(dir Dir) {
+	data.dir = dir
+	_, last := filepath.Split(data.dir.rel)
+	data.Title = removeOrder(last)
+	dochtml := filepath.Join(dir.abs(), "doc.html")
+	if raw, err := ioutil.ReadFile(dochtml); err == nil {
+		data.Doc.Html = raw
+	}
+	docrst := filepath.Join(dir.abs(), "doc.rst")
+	if raw, err := ioutil.ReadFile(docrst); err == nil {
+		data.Doc.Rst = raw
+	}
+}
+
+// Item
+
+type ItemGroup interface {
+	Get(id string) Item
+	EachChild(fn func(id string, item Item))
+}
+
+type Item interface {
+	ItemGroup
+	Data() *CommonData
+}
+
+// Concept
+
 type Concept struct {
-	ContentItem
-	Depends []Id
+	CommonData
+	Depends []string
 	VideoID string
-	// TODO: Exercises []string
 }
 
-type Topic struct {
-	ContentItem
-	Concepts []Id
-	// TODO: Progress Map
+func (c *Concept) Get(id string) Item { 
+	return nil 
 }
 
-type Course struct {
-	ContentItem
-	Topics []Id
-}
+func (c *Concept) EachChild(fn func(string, Item)) {}
 
-// keep in what directory is a particular course/topic/concept
-type RelDir struct {
-	base, rel string
-}
-
-func (rdir RelDir) join() string {
-	return filepath.Join(rdir.base, rdir.rel)
-}
-
-var dirs = make(map[Id]RelDir)
-
-var concepts = make(map[Id]*Concept)
-var topics = make(map[Id]*Topic)
-var courses = make(map[Id]*Course)
-
-var first = regexp.MustCompile(`^[0-9]+. ?`)
-var rest = regexp.MustCompile(`/[0-9]+. ?`)
-
-func removeOrder(dir string) string {
-	dir = first.ReplaceAllString(dir, "")
-	dir = rest.ReplaceAllString(dir, "/")
-	return dir
-}
-
-// Convert a directory name to an ID
-// 
-func dirToID(dir string) Id {
-	id := removeOrder(dir)
-
-	// remove accents + map certain characters
-	bef := "àèìòùáéíóúÀÈÌÒÙÁÉÍÓÚäëïöüÄËÏÖÜñÑ +.:-()"
-	aft := "aeiouaeiouAEIOUAEIOUaeiouAEIOUnN p     "
-	R := []string{}
-	for i, b := range strings.Split(bef, "") {
-		R = append(R, b)
-		R = append(R, aft[i:i+1])
+func (c *Concept) read(dir Dir) *Concept {
+	c.CommonData.read(dir)
+	if vid, err := ioutil.ReadFile(dir.file("video")); err == nil {
+		c.VideoID = strings.Replace(string(vid), "\n", "", -1)
 	}
-	r := strings.NewReplacer(R...)
-	id = r.Replace(id)
-
-	id = strings.Title(id)                 // Make A Title
-	id = strings.Replace(id, " ", "", -1)  // remove spaces
-	id = strings.Replace(id, "/", ".", -1) // remove '/'
-	return Id(id)
-}
-
-func subDirs(dir string, fn func(dir string)) error {
-	fileinfo, err := ioutil.ReadDir(dir) // sorted by name
-	if err != nil {
-		return err
-	}
-	for _, info := range fileinfo {
-		if info.IsDir() && info.Name()[0] != '.' {
-			fn(info.Name())
+	if deps, err := ioutil.ReadFile(dir.file("depends")); err == nil {
+		for _, dep := range strings.Split(string(deps), "\n") {
+			if dep != "" {
+				c.Depends = append(c.Depends, toID(dep))
+			}
 		}
+	}
+	return c
+}
+
+// Group
+
+type groupItem struct{ 
+	id string 
+	item Item 
+}
+
+type Group struct {
+	ItemMap map[string]int
+	Items []groupItem
+}
+
+func (g *Group) Add(id string, item Item) {
+	if g.ItemMap == nil {
+		g.ItemMap = make(map[string]int)
+	}
+	g.ItemMap[id] = len(g.Items)
+	g.Items = append(g.Items, groupItem{id, item})
+}
+
+func (g Group) Get(id string) Item {
+	i, ok := g.ItemMap[id]
+	if ok {
+		return g.Items[i].item
 	}
 	return nil
 }
 
-func (item *ContentItem) read(dir string) {
-	_, last := filepath.Split(dir)
-	item.Title = removeOrder(last)
-	dochtml := filepath.Join(dir, "doc.html")
-	if data, err := ioutil.ReadFile(dochtml); err == nil {
-		item.Doc.Html = data
-	}
-	docrst := filepath.Join(dir, "doc.rst")
-	if data, err := ioutil.ReadFile(docrst); err == nil {
-		item.Doc.Rst = data
+func (g Group) EachChild(fn func(string, Item)) {
+	for _, git := range g.Items {
+		fn(git.id, git.item)
 	}
 }
 
-func conceptFromDir(rdir RelDir) (C *Concept) {
-	dir := rdir.join()
-	C = new(Concept)
-	C.read(dir)
-	vidfile := filepath.Join(dir, "video")
-	if vid, err := ioutil.ReadFile(vidfile); err == nil {
-		C.VideoID = strings.Replace(string(vid), "\n", "", -1)
-	}
-	depsfile := filepath.Join(dir, "depends")
-	if deps, err := ioutil.ReadFile(depsfile); err == nil {
-		for _, dep := range strings.Split(string(deps), "\n") {
-			if dep != "" {
-				C.Depends = append(C.Depends, dirToID(dep))
-			}
-		}
-	}
-	return C
+// Topic
+
+type Topic struct {
+	CommonData
+	Group
+	// Map of concepts?
 }
 
-func topicFromDir(rdir RelDir) (T *Topic) {
-	dir := rdir.join()
-	T = new(Topic)
-	T.read(dir)
-	subDirs(dir, func(subdir string) {
-		id := dirToID(filepath.Join(rdir.rel, subdir))
-		T.Concepts = append(T.Concepts, id)
+func (t *Topic) read(dir Dir) *Topic {
+	t.CommonData.read(dir)
+	eachSubDir(dir.abs(), func(subdir string) {
+		t.Add(toID(subdir), new(Concept).read(dir.join(subdir)))
 	})
-	return T
+	return t
 }
 
-func courseFromDir(rdir RelDir) (C *Course) {
-	dir := rdir.join()
-	C = new(Course)
-	C.read(dir)
-	subDirs(dir, func(subdir string) {
-		id := dirToID(filepath.Join(rdir.rel, subdir))
-		C.Topics = append(C.Topics, id)
+// Course
+
+type Course struct {
+	CommonData
+	Group
+	basedir string
+}
+
+func (c *Course) read(dir Dir) *Course {
+	c.CommonData.read(dir)
+	eachSubDir(dir.abs(), func(subdir string) {
+		c.Add(toID(subdir), new(Topic).read(dir.join(subdir)))
 	})
-	return C
+	return c
 }
 
-func readDirectories(root string, reldir string, level int) {
-	dir := filepath.Join(root, reldir)
-	err := subDirs(dir, func (subdir string) {
-		nextdir := filepath.Join(reldir, subdir)
-		id := dirToID(nextdir)
-		dirs[id] = RelDir{root, nextdir}
-		if level < 2 {
-			readDirectories(root, nextdir, level+1)
-		}
-	})
-	if err != nil {
-		log.Printf("readDirectories: %s", err)
-	}
-}
+// CourseList
 
-func readCourseOrTopic(id Id, reldir RelDir) {
-	switch strings.Count(string(id), ".") {
-	case 0:
-		courses[id] = courseFromDir(reldir)
-	case 1:
-		topics[id] = topicFromDir(reldir)
-	case 2:
-		concepts[id] = conceptFromDir(reldir)
-	}
-}
+var courseList Group
 
-func init() {
+func Read() {
 	path := os.Getenv("ACADEMIO_PATH")
 	if path == "" {
 		log.Fatalf("Empty ACADEMIO_PATH")
 	}
-	for _, dir := range filepath.SplitList(path) {
-		readDirectories(dir, "", 0)
+	for _, root := range filepath.SplitList(path) {
+		err := eachSubDir(root, func(subdir string) {
+			courseList.Add(toID(subdir), new(Course).read(Dir{root, subdir}))
+		})
+		if err != nil {
+			log.Printf("ReadContent: Cannot read '%s': %s", root, err)
+		}
 	}
-	for id, rdir := range dirs {
-		readCourseOrTopic(id, rdir)
-	}
+}
 
-	// Debug info
-	/*
-		for id, rdir := range dirs {
-			fmt.Printf("%#v %#v\n", id, rdir)
+func Get(id string) (item Item) {
+	var g ItemGroup = courseList
+	for {
+		i := strings.Index(id, ".")
+		if i == -1 {
+			return g.Get(id)
 		}
-		for id, course := range courses {
-			fmt.Printf("%s: %#v %#v\n", id, course.Title, course.Topics)
-		}
-		for id, topic := range topics {
-			fmt.Printf("%s: %#v %#v\n", id, topic.Title, topic.Concepts)
-		}
-	*/
-	for id, c := range concepts {
-		fmt.Printf("%s: %#v %#v %d\n", id, c.Title, c.Depends, len(c.Doc.Rst))
+		g = g.Get(id[:i])
+		id = id[i+1:]
 	}
+	panic("unreachable")
+	return nil
+}
+
+func Show() {
+	courseList.EachChild(func(id string, course Item) {
+		fmt.Printf("%s %s\n", id, course.Data().Title)
+		course.EachChild(func (id string, topic Item) {
+			fmt.Printf("   %s \"%s\"\n", id, topic.Data().Title)
+			topic.EachChild(func (id string, concept Item) {
+				fmt.Printf("      %s \"%s\"\n", id, concept.Data().Title)
+			})
+		})
+		fmt.Println()
+	})
 }
