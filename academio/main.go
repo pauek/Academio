@@ -50,9 +50,6 @@ func hRoot(w http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func hCourseList(w http.ResponseWriter, req *http.Request) {
-}
-
 func main() {
 	ct.Read()
 	frag.Register("item", fItem)
