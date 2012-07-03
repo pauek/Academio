@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"html/template"
 )
 
 type Dir struct {
@@ -29,10 +30,12 @@ type CommonData struct {
 	dir Dir
 	Title string
 	Doc   struct {
-		Rst  []byte
-		Html []byte
+		Rst  string
+		Html template.HTML
 	}
 }
+
+func (data *CommonData) Id() string { return toID(data.dir.rel) }
 
 func (data *CommonData) absdir() string { return data.dir.abs() }
 
@@ -44,11 +47,11 @@ func (data *CommonData) read(dir Dir) {
 	data.Title = removeOrder(last)
 	dochtml := filepath.Join(dir.abs(), "doc.html")
 	if raw, err := ioutil.ReadFile(dochtml); err == nil {
-		data.Doc.Html = raw
+		data.Doc.Html = template.HTML(string(raw))
 	}
 	docrst := filepath.Join(dir.abs(), "doc.rst")
 	if raw, err := ioutil.ReadFile(docrst); err == nil {
-		data.Doc.Rst = raw
+		data.Doc.Rst = string(raw)
 	}
 }
 
@@ -96,8 +99,8 @@ func (c *Concept) read(dir Dir) *Concept {
 // Group
 
 type groupItem struct{ 
-	id string 
-	item Item 
+	Id string 
+	Item Item 
 }
 
 type Group struct {
@@ -114,16 +117,15 @@ func (g *Group) Add(id string, item Item) {
 }
 
 func (g Group) Get(id string) Item {
-	i, ok := g.ItemMap[id]
-	if ok {
-		return g.Items[i].item
+	if i, ok := g.ItemMap[id]; ok {
+		return g.Items[i].Item
 	}
 	return nil
 }
 
 func (g Group) EachChild(fn func(string, Item)) {
 	for _, git := range g.Items {
-		fn(git.id, git.item)
+		fn(git.Id, git.Item)
 	}
 }
 
@@ -186,10 +188,22 @@ func Get(id string) (item Item) {
 			return g.Get(id)
 		}
 		g = g.Get(id[:i])
+		if g == nil {
+			return nil
+		}
 		id = id[i+1:]
 	}
 	panic("unreachable")
 	return nil
+}
+
+func Type(item Item) string {
+	switch item.(type) {
+	case *Course: return "course"
+	case *Topic: return "topic"
+	case *Concept: return "concept"
+	}
+	return ""
 }
 
 func Show() {

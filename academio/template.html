@@ -1,0 +1,25 @@
+{{define "course"}}
+<h1>{{.Title}}</h1>
+<p>{{.Data.Doc.Html}}</p>
+<ul>
+  {{range .Items}}
+  <li><a href="/{{.Item.Data.Id}}">{{.Item.Data.Title}}</a></li>
+  {{end}}
+</ul>
+{{end}}
+
+{{define "topic"}}
+<h1>{{.Title}}</h1>
+<p>{{.Data.Doc.Html}}</p>
+<ul>
+  {{range .Items}}
+  <li><a href="/{{.Item.Data.Id}}">{{.Item.Data.Title}}</a></li>
+  {{end}}
+</ul>
+{{end}}
+
+{{define "concept"}}
+<h1>{{.Title}}</h1>
+<p><b>Video:</b> {{.VideoID}}</p>
+<p>{{.Data.Doc.Html}}</p>
+{{end}}
