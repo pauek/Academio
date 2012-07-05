@@ -1,8 +1,8 @@
-
 package content
 
 import (
 	"io/ioutil"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -38,6 +38,10 @@ func toID(dir string) string {
 	return id
 }
 
+func toDir(id string) string {
+	return ""
+}
+
 func eachSubDir(dir string, fn func(dir string)) error {
 	fileinfo, err := ioutil.ReadDir(dir) // sorted by name
 	if err != nil {
@@ -50,3 +54,26 @@ func eachSubDir(dir string, fn func(dir string)) error {
 	}
 	return nil
 }
+
+func removeRoot(abspath string) string {
+	for _, root := range roots {
+		if root == abspath {
+			return ""
+		}
+		if rel, err := filepath.Rel(root, abspath); err == nil {
+			if len(rel) == 0 || rel[0] != '.' {
+				return rel
+			}
+		}
+	}
+	panic("unreachable")
+	return ""
+}
+
+func numLevels(reldir string) (lv int) {
+	if len(reldir) > 0 {
+		lv = 1 + strings.Count(reldir, "/")
+	}
+	return
+}
+

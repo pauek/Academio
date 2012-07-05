@@ -10,14 +10,27 @@ import (
 	"html/template"
 )
 
-type Dir struct {
-	base, rel string
+var roots []string
+
+func init() {
+	// Get roots
+	pathlist := os.Getenv("ACADEMIO_PATH")
+	if pathlist == "" {
+		log.Fatalf("Empty ACADEMIO_PATH")
+	}
+	roots = filepath.SplitList(pathlist)
 }
 
-func (d Dir) abs() string { return filepath.Join(d.base, d.rel) }
+// Dir
+
+type Dir struct {
+	root, rel string
+}
+
+func (d Dir) abs() string { return filepath.Join(d.root, d.rel) }
 
 func (d Dir) join(subdir string) Dir {
-	return Dir{d.base, filepath.Join(d.rel, subdir)}
+	return Dir{d.root, filepath.Join(d.rel, subdir)}
 }
 
 func (d Dir) file(filename string) string {
