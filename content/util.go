@@ -48,7 +48,7 @@ func toID(dir string) (id string) {
 
 // Find a dir from the roots that translates to ID
 // 
-func toDir(ID string) string {
+func toDir(ID string) (dir Dir) {
 	for _, root := range roots {
 		found := ""
 		walkDirs(root, func(reldir string, level int) {
@@ -57,10 +57,10 @@ func toDir(ID string) string {
 			}
 		})
 		if found != "" {
-			return filepath.Join(root, found)
+			return Dir{root, found}
 		}
 	}
-	return ""
+	return
 }
 
 // Remove the root from an absolute path
@@ -85,6 +85,16 @@ func removeRoot(abspath string) string {
 func numLevels(reldir string) (lv int) {
 	if len(reldir) > 0 {
 		lv = 1 + strings.Count(reldir, "/")
+	}
+	return
+}
+
+
+// Determine the number of levels in a relative dir
+//
+func numLevelsID(id string) (lv int) {
+	if len(id) > 0 {
+		lv = 1 + strings.Count(id, ".")
 	}
 	return
 }

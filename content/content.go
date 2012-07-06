@@ -1,13 +1,12 @@
 package content
 
 import (
-	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"html/template"
 )
 
 var roots []string
@@ -40,7 +39,7 @@ func (d Dir) file(filename string) string {
 // Common contains all fields that are common to content items
 //
 type CommonData struct {
-	dir Dir
+	dir   Dir
 	Title string
 	Doc   struct {
 		Rst  string
@@ -70,14 +69,19 @@ func (data *CommonData) read(dir Dir) {
 
 // Item
 
+type SubItem struct {
+	Id, Title, dir string
+}
+
 type ItemGroup interface {
-	Get(id string) Item
-	EachChild(fn func(id string, item Item))
+	Children() []SubItem
 }
 
 type Item interface {
 	ItemGroup
 	Data() *CommonData
+	Type() string
+	read(dir Dir) Item
 }
 
 // Concept
@@ -88,13 +92,13 @@ type Concept struct {
 	VideoID string
 }
 
-func (c *Concept) Get(id string) Item { 
-	return nil 
+func (c *Concept) Children() []SubItem {
+	return nil
 }
 
-func (c *Concept) EachChild(fn func(string, Item)) {}
+func (c *Concept) Type() string { return "concept" }
 
-func (c *Concept) read(dir Dir) *Concept {
+func (c *Concept) read(dir Dir) Item {
 	c.CommonData.read(dir)
 	if vid, err := ioutil.ReadFile(dir.file("video")); err == nil {
 		c.VideoID = strings.Replace(string(vid), "\n", "", -1)
@@ -111,35 +115,32 @@ func (c *Concept) read(dir Dir) *Concept {
 
 // Group
 
-type groupItem struct{ 
-	Id string 
-	Item Item 
-}
-
 type Group struct {
 	ItemMap map[string]int
-	Items []groupItem
+	Items   []SubItem
 }
 
-func (g *Group) Add(id string, item Item) {
+func (g *Group) Add(subitem SubItem) {
 	if g.ItemMap == nil {
 		g.ItemMap = make(map[string]int)
 	}
-	g.ItemMap[id] = len(g.Items)
-	g.Items = append(g.Items, groupItem{id, item})
+	g.ItemMap[subitem.Id] = len(g.Items)
+	g.Items = append(g.Items, subitem)
 }
 
-func (g Group) Get(id string) Item {
-	if i, ok := g.ItemMap[id]; ok {
-		return g.Items[i].Item
-	}
-	return nil
+func (g *Group) Children() []SubItem {
+	return g.Items
 }
 
-func (g Group) EachChild(fn func(string, Item)) {
-	for _, git := range g.Items {
-		fn(git.Id, git.Item)
-	}
+func (g *Group) read(dir Dir) {
+	eachSubDir(dir.abs(), func(subdir string) {
+		d := dir.join(subdir)
+		g.Add(SubItem{
+			Id: toID(d.rel), 
+			Title: removeOrder(subdir),
+			dir: d.abs(),
+		})
+	})
 }
 
 // Topic
@@ -150,11 +151,11 @@ type Topic struct {
 	// Map of concepts?
 }
 
-func (t *Topic) read(dir Dir) *Topic {
+func (t *Topic) Type() string { return "topic" }
+
+func (t *Topic) read(dir Dir) Item {
 	t.CommonData.read(dir)
-	eachSubDir(dir.abs(), func(subdir string) {
-		t.Add(toID(subdir), new(Concept).read(dir.join(subdir)))
-	})
+	t.Group.read(dir)
 	return t
 }
 
@@ -166,68 +167,38 @@ type Course struct {
 	basedir string
 }
 
-func (c *Course) read(dir Dir) *Course {
+func (c *Course) Type() string { return "course" }
+
+func (c *Course) read(dir Dir) Item {
 	c.CommonData.read(dir)
-	eachSubDir(dir.abs(), func(subdir string) {
-		c.Add(toID(subdir), new(Topic).read(dir.join(subdir)))
-	})
+	c.Group.read(dir)
 	return c
 }
 
-// Courses
-
-var Courses Group
-
-func Read() {
-	path := os.Getenv("ACADEMIO_PATH")
-	if path == "" {
-		log.Fatalf("Empty ACADEMIO_PATH")
-	}
-	for _, root := range filepath.SplitList(path) {
-		err := eachSubDir(root, func(subdir string) {
-			Courses.Add(toID(subdir), new(Course).read(Dir{root, subdir}))
-		})
-		if err != nil {
-			log.Printf("ReadContent: Cannot read '%s': %s", root, err)
-		}
-	}
-}
+// Interface
 
 func Get(id string) (item Item) {
-	var g ItemGroup = Courses
-	for {
-		i := strings.Index(id, ".")
-		if i == -1 {
-			return g.Get(id)
-		}
-		g = g.Get(id[:i])
-		if g == nil {
-			return nil
-		}
-		id = id[i+1:]
+	dir := toDir(id)
+	if dir.root == "" {
+		return nil
 	}
-	panic("unreachable")
-	return nil
+	switch numLevels(dir.rel) {
+	case 1:
+		item = new(Course)
+	case 2:
+		item = new(Topic)
+	case 3:
+		item = new(Concept)
+	default:
+		return nil
+	}
+	return item.read(dir)
 }
 
-func Type(item Item) string {
-	switch item.(type) {
-	case *Course: return "course"
-	case *Topic: return "topic"
-	case *Concept: return "concept"
+func Courses() *Group {
+	g := new(Group)
+	for _, root := range roots {
+		g.read(Dir{root, ""})
 	}
-	return ""
-}
-
-func Show() {
-	Courses.EachChild(func(id string, course Item) {
-		fmt.Printf("%s %s\n", id, course.Data().Title)
-		course.EachChild(func (id string, topic Item) {
-			fmt.Printf("   %s \"%s\"\n", id, topic.Data().Title)
-			topic.EachChild(func (id string, concept Item) {
-				fmt.Printf("      %s \"%s\"\n", id, concept.Data().Title)
-			})
-		})
-		fmt.Println()
-	})
+	return g
 }

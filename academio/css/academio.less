@@ -1,0 +1,144 @@
+
+@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+@import url(http://fonts.googleapis.com/css?family=PT+Mono);
+
+@monospace: "PT Mono", "Ubuntu Mono", monospace;
+
+@base: hsl(220, 30%, 30%);
+@oppo: hsl(40, 70%, 100%);
+@dark: desaturate(darken(@base, 10%), 10%);
+
+html, body {
+  height: 100%;
+}
+
+a { 
+  color: @base;
+  text-decoration: none; 
+}
+a:hover {
+  color: @dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "PT Sans", "Open Sans", "Ubuntu";
+  font-size: 16px;
+}
+
+header {
+  padding: 8px 0 10px;
+  margin: 0;
+  background: @dark;
+  position: relative;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #eee;
+  }
+
+  .inner {
+    width: 950px;
+    margin: auto;
+
+    a#home { 
+      margin: 0; 
+      margin-right: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    } 
+
+    nav { display: inline; }
+
+    span.orange {
+      color: orange;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0 0 3px 0;
+      display: inline;
+      li { 
+        margin-left: 10px;
+        list-style-type: none; 
+        display: inline;
+        padding: 3px 5px 3px 5px;
+        border-radius: 3px;
+        .active {
+          background: lighten(@dark, 5%);
+        }
+      }
+    }
+
+  }
+}
+
+footer {
+  background: @dark;
+  color: white;
+  padding: 20px 0 100px;
+  
+  .inner {
+    width: 950px;
+    margin: auto;
+  }
+}
+
+#content {
+  padding-bottom: 50px;
+  margin: auto;
+  width: 950px;
+  min-height: 750px;
+
+  .doc {
+    width: 40em;
+  }
+}
+
+tt {
+  font-family: @monospace;
+  font-size: 14px;
+  background: #eee;
+}
+
+pre {
+  font-family: @monospace;
+  font-size: 14px;
+  line-height: 18px;
+  background: #eee;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+}
+
+.footnote {
+  font-size: 80%;
+}
+
+hr {
+  margin: 40px auto 20px auto;
+}
+
+ul#cursos {
+  padding: 0;
+
+  li {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 0 12px 15px 0;
+    display: inline-block;
+    height: 160px;
+    width: 120px;
+    padding: 8px;
+
+    a {
+      font-weight: bold;
+      h4 { margin: 0 }
+    }
+  }
+  
+}
