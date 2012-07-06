@@ -6,8 +6,9 @@ import (
 	"fmt"
 	frag "fragments"
 	T "html/template"
+	_ "log"
 	"net/http"
-	"strings"
+	_ "strings"
 )
 
 const tLayout = `<!doctype html>
@@ -40,7 +41,7 @@ func fItem(C *frag.Cache, args []string) frag.Fragment {
 	var b bytes.Buffer
 	item := ct.Get(args[1])
 	tmpl.Lookup(item.Type()).Execute(&b, item)
-	C.Invalidate(strings.Join(args, " ")) // always invalid
+	// C.Invalidate(strings.Join(args, " ")) // always invalid
 	return frag.Text(b.String())
 }
 
@@ -82,6 +83,14 @@ func hRoot(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	ct.WatchForChanges(func(id string) {
+		if id == "" {
+			frag.Invalidate("courses")
+		} else {
+			frag.Invalidate("item " + id)
+		}
+	})
+
 	// fragments
 	frag.Register("item", fItem)
 	frag.Register("home", fStatic)
