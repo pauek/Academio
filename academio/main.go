@@ -9,31 +9,40 @@ import (
 	"net/http"
 )
 
+var tFuncs = map[string]interface{}{
+	"plus1": func(i int) int { return i + 1 },
+}
+
 var (
-	tmpl   = T.Must(T.ParseGlob("templates/" + "*.html"))
+	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "*.html"))
 	layout = frag.MustParseFile("templates/layout")
 )
 
-func exec(tname string, data interface{}) frag.Fragment {
+func exec(tname string, data interface{}) string {
 	var b bytes.Buffer
 	if t := tmpl.Lookup(tname); t != nil {
 		t.Execute(&b, data)
-		return frag.Text(b.String())
+		return b.String()
 	}
 	panic("missing template")
 }
 
 func fItem(C *frag.Cache, args []string) frag.Fragment {
 	item := ct.Get(args[1])
-	return exec(item.Type(), item)
+	return frag.MustParse(exec(item.Type(), item))
+}
+
+func fTopicSmall(C *frag.Cache, args []string) frag.Fragment {
+	topic := ct.Get(args[1])
+	return frag.Text(exec("topic-small", topic))
 }
 
 func fStatic(C *frag.Cache, args []string) frag.Fragment {
-	return exec(args[0], nil)
+	return frag.Text(exec(args[0], nil))
 }
 
 func fCourses(C *frag.Cache, args []string) frag.Fragment {
-	return exec("courses", ct.Courses())
+	return frag.Text(exec("courses", ct.Courses()))
 }
 
 func hRoot(w http.ResponseWriter, req *http.Request) {
@@ -80,6 +89,7 @@ func main() {
 	frag.Register("navbar", fStatic)
 	frag.Register("footer", fStatic)
 	frag.Register("courses", fCourses)
+	frag.Register("topic-small", fTopicSmall)
 
 	// handlers
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))

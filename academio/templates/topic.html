@@ -7,3 +7,25 @@
   {{end}}
 </ul>
 {{end}}
+
+{{define "topic-small"}}
+<li class="topic">
+  <div class="left">
+    <a href="{{.Id}}">
+      <h3>{{.Title}}</h3>
+    </a>
+    <p>{{len .Items}} Conceptos</p>
+  </div>
+  <ul class="concepts">
+    {{range $i, $item := .Items}}
+    <li>
+      <a href="{{$item.Id}}" 
+         rel="tooltip" title="{{$item.Title}}">
+        {{plus1 $i}}
+      </a>
+    </li>
+    {{end}}
+  </ul>
+  <div class="clear"></div>
+</li>
+{{end}}
