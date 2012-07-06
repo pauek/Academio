@@ -11,24 +11,9 @@ import (
 	_ "strings"
 )
 
-const tLayout = `<!doctype html>
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Academio - {{title}}</title>
-  <link rel="stylesheet/less" type="text/css" href="/css/academio.less">
-  <script src="/js/less-1.3.0.min.js" type="text/javascript"></script>
-</head>
-<body>
-  <header>{{navbar}}</header>
-  <div id="content">{{body}}</div>
-  <footer>{{footer}}</footer>
-</body>
-</html>`
-
 var (
 	tmpl   = T.Must(T.ParseGlob("templates/" + "*.html"))
-	layout = frag.MustParse(tLayout)
+	layout = frag.MustParseFile("templates/layout")
 )
 
 func exec(tname string, data interface{}) frag.Fragment {
