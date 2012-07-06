@@ -1,12 +1,15 @@
 package main
 
 import (
-	ct "Academio/content"
+	"Academio/content"
 	"bytes"
+	"encoding/json"
 	"fmt"
-	frag "fragments"
+	F "fragments"
 	T "html/template"
+	"log"
 	"net/http"
+	"time"
 )
 
 var tFuncs = map[string]interface{}{
@@ -15,7 +18,7 @@ var tFuncs = map[string]interface{}{
 
 var (
 	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "*.html"))
-	layout = frag.MustParseFile("templates/layout")
+	layout = F.MustParseFile("templates/layout")
 )
 
 func exec(tname string, data interface{}) string {
@@ -27,25 +30,31 @@ func exec(tname string, data interface{}) string {
 	panic("missing template")
 }
 
-func fItem(C *frag.Cache, args []string) frag.Fragment {
-	item := ct.Get(args[1])
-	return frag.MustParse(exec(item.Type(), item))
+func fItem(C *F.Cache, args []string) F.Fragment {
+	item := content.Get(args[1])
+	return F.MustParse(exec(item.Type(), item))
 }
 
-func fTopicSmall(C *frag.Cache, args []string) frag.Fragment {
-	topic := ct.Get(args[1])
-	return frag.Text(exec("topic-small", topic))
+func fTopicSmall(C *F.Cache, args []string) F.Fragment {
+	topic := content.Get(args[1])
+	return F.Text(exec("topic-small", topic))
 }
 
-func fStatic(C *frag.Cache, args []string) frag.Fragment {
-	return frag.Text(exec(args[0], nil))
+func fStatic(C *F.Cache, args []string) F.Fragment {
+	return F.Text(exec(args[0], nil))
 }
 
-func fCourses(C *frag.Cache, args []string) frag.Fragment {
-	return frag.Text(exec("courses", ct.Courses()))
+func fCourses(C *F.Cache, args []string) F.Fragment {
+	return F.Text(exec("courses", content.Courses()))
 }
 
-func hRoot(w http.ResponseWriter, req *http.Request) {
+func hFragList(w http.ResponseWriter, req *http.Request) {
+	id := req.URL.Path[len("/_frag/"):]
+	list := F.List("item " + id)
+	tmpl.Lookup("fraglist").Execute(w, list)
+}
+
+func Page(w http.ResponseWriter, req *http.Request) {
 	var title, fid string // fid = fragment id
 	path := req.URL.Path[1:]
 	switch path {
@@ -54,7 +63,7 @@ func hRoot(w http.ResponseWriter, req *http.Request) {
 	case "cursos":
 		title, fid = "Cursos", "courses"
 	default:
-		item := ct.Get(path)
+		item := content.Get(path)
 		if item == nil {
 			http.NotFound(w, req)
 			return
@@ -62,39 +71,65 @@ func hRoot(w http.ResponseWriter, req *http.Request) {
 		title = item.Data().Title
 		fid = fmt.Sprintf("item %s", path)
 	}
-	layout.Exec(w, func(action string) {
-		switch action {
-		case "body":
-			frag.Render(w, fid)
-		case "title":
-			fmt.Fprintf(w, title)
-		default:
-			frag.Render(w, action)
+	switch req.Header.Get("Fragments") {
+	case "":
+		layout.Exec(w, func(action string) {
+			switch action {
+			case "body":
+				F.Render(w, fid)
+			case "title":
+				fmt.Fprintf(w, title)
+			default:
+				F.Render(w, action)
+			}
+		})
+	case "all":
+		list := F.List(fid)
+		if data, err := json.Marshal(list); err == nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(data)
+		} else {
+			log.Printf("ERROR: Cannot marshal fragment: %s", err)
 		}
-	})
+	case "since":
+		since := req.Header.Get("FragmentsStamp")
+		var stamp time.Time
+		err := json.Unmarshal([]byte(since), &stamp)
+		if err != nil {
+			log.Printf("ERROR: Cannot unmarshal timestamp '%s'", since)
+		}
+		list := F.ListDiff(fid, stamp)
+		if data, err := json.Marshal(list); err == nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(data)
+		} else {
+			log.Printf("ERROR: Cannot marshal fragment: %s", err)
+		}
+	}
 }
 
 func main() {
-	ct.WatchForChanges(func(id string) {
+	content.WatchForChanges(func(id string) {
 		if id == "" {
-			frag.Invalidate("courses")
+			F.Invalidate("courses")
 		} else {
-			frag.Invalidate("item " + id)
+			F.Invalidate("item " + id)
 		}
 	})
 
 	// fragments
-	frag.Register("item", fItem)
-	frag.Register("home", fStatic)
-	frag.Register("navbar", fStatic)
-	frag.Register("footer", fStatic)
-	frag.Register("courses", fCourses)
-	frag.Register("topic-small", fTopicSmall)
+	F.Register("item", fItem)
+	F.Register("home", fStatic)
+	F.Register("navbar", fStatic)
+	F.Register("footer", fStatic)
+	F.Register("courses", fCourses)
+	F.Register("topic-small", fTopicSmall)
 
 	// handlers
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
-	http.HandleFunc("/", hRoot)
+	http.HandleFunc("/_frag/", hFragList)
+	http.HandleFunc("/", Page)
 
 	http.ListenAndServe(":8080", nil)
 }

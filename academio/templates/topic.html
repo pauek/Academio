@@ -3,7 +3,7 @@
 <p>{{.Data.Doc.Html}}</p>
 <ul>
   {{range .Items}}
-  <li><a href="/{{.Id}}">{{.Title}}</a></li>
+  <li><a ajx href="/{{.Id}}">{{.Title}}</a></li>
   {{end}}
 </ul>
 {{end}}
@@ -11,20 +11,13 @@
 {{define "topic-small"}}
 <li class="topic">
   <div class="left">
-    <a href="{{.Id}}">
+    <a ajx href="{{.Id}}">
       <h3>{{.Title}}</h3>
     </a>
     <p>{{len .Items}} Conceptos</p>
   </div>
-  <ul class="concepts">
-    {{range $i, $item := .Items}}
-    <li>
-      <a href="{{$item.Id}}" 
-         rel="tooltip" title="{{$item.Title}}">
-        {{plus1 $i}}
-      </a>
-    </li>
-    {{end}}
+  <ul class="concepts">{{range $i, $item := .Items}}
+    <li><a ajx href="{{$item.Id}}" rel="tooltip" title="{{$item.Title}}">{{plus1 $i}}</a></li>{{end}}
   </ul>
   <div class="clear"></div>
 </li>

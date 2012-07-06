@@ -1,11 +1,10 @@
 {{define "course"}}
 <div class="course">
   <h1>{{.Title}}</h1>
-  <p>{{.Data.Doc.Html}}</p>
+  {{.Data.Doc.Html}}
   <ul class="course">
-    {{range .Items}}
-    {% topic-small {{.Id}} %}
-    {{end}}
+{{range .Items}}   {% topic-small {{.Id}} %}
+{{end}}
   </ul>
 </div>
 {{end}}
