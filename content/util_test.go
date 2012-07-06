@@ -28,3 +28,23 @@ func TestWalk(t *testing.T) {
 		}
 	}
 }
+
+func TestRemoveOrder(t *testing.T) {
+	cases := [][]string{
+		{"a/b/c", "a/b/c"},
+		{"1. a/2. b/3. c", "a/b/c"},
+		{"001. a/002. b/003. c", "a/b/c"},
+		{"123. a/0. c", "a/c"},
+		{"0. xxxx", "xxxx"},
+		{"10298347. añsldkfj/01. pqwoieru", "añsldkfj/pqwoieru"},
+		{"1x a/2x b", "1x a/2x b"},
+		{"a1. /b2. /c3. ", "a1. /b2. /c3. "},
+		{"123/456/789", "123/456/789"},
+	}
+	for _, c := range cases {
+		x := removeOrder(c[0])
+		if x != c[1] {
+			t.Errorf("%q != %q", x, c[1])
+		}
+	}
+}

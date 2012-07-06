@@ -12,29 +12,15 @@ func WatchForChanges() {
 	// Create watcher
 	watcher, err := inotify.NewWatcher()
 	if err != nil {
-		log.Printf("warning: Cannot create inofity.Watcher")
+		log.Printf("warning: Cannot create inotify.Watcher")
 		return
 	}
 
 	// watch dirs in levels 1-3 from the roots
-	var path string
-	var walk func(dir string, level int) // recursive
-
-	walk = func(dir string, level int) {
-		absdir := filepath.Join(path, dir)
-		if level > 0 {
-			// fmt.Printf("%s\n", absdir)
-			watcher.Watch(absdir)
-		}
-		eachSubDir(absdir, func(subdir string) {
-			reldir := filepath.Join(dir, subdir)
-			if level < 3 {
-				walk(reldir, level+1)
-			}
+	for _, root := range roots {
+		walkDirs(root, func(reldir string, level int) {
+			watcher.Watch(filepath.Join(root, reldir))
 		})
-	}
-	for _, path = range roots {
-		walk("", 0)
 	}
 
 	// go wait for events
