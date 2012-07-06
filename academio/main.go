@@ -6,9 +6,7 @@ import (
 	"fmt"
 	frag "fragments"
 	T "html/template"
-	_ "log"
 	"net/http"
-	_ "strings"
 )
 
 var (
