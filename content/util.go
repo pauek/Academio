@@ -46,6 +46,16 @@ func toID(dir string) (id string) {
 	return id
 }
 
+// Determine the ID of the parent
+//
+func parentID(id string) (pid string) {
+	if len(id) > 0 {
+		parts := strings.Split(id, ".")
+		pid = strings.Join(parts[:len(parts)-1], ".")
+	}
+	return
+}
+
 // Find a dir from the roots that translates to ID
 // 
 func toDir(ID string) (dir Dir) {

@@ -48,3 +48,19 @@ func TestRemoveOrder(t *testing.T) {
 		}
 	}
 }
+
+func TestParentID(t *testing.T) {
+	cases := [][]string{
+		{"a.b.c", "a.b"},
+		{"a", ""},
+		{"a.b", "a"},
+		{"aaa.bbb.ccc", "aaa.bbb"},
+		{"", ""},
+	}
+	for _, c := range cases {
+		pid := parentID(c[0])
+		if pid != c[1] {
+			t.Errorf("%q != %q", pid, c[1])
+		}
+	}
+}
