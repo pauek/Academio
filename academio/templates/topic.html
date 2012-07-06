@@ -1,0 +1,9 @@
+{{define "topic"}}
+<h1>{{.Title}}</h1>
+<p>{{.Data.Doc.Html}}</p>
+<ul>
+  {{range .Items}}
+  <li><a href="/{{.Id}}">{{.Title}}</a></li>
+  {{end}}
+</ul>
+{{end}}

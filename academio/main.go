@@ -27,22 +27,22 @@ const tLayout = `<!doctype html>
 </html>`
 
 var (
-	tmpl   = T.Must(T.ParseFiles("template.html"))
+	tmpl   = T.Must(T.ParseGlob("templates/" + "*.html"))
 	layout = frag.MustParse(tLayout)
 )
 
 func exec(tname string, data interface{}) frag.Fragment {
 	var b bytes.Buffer
-	tmpl.Lookup(tname).Execute(&b, data)
-	return frag.Text(b.String())
+	if t := tmpl.Lookup(tname); t != nil {
+		t.Execute(&b, data)
+		return frag.Text(b.String())
+	}
+	panic("missing template")
 }
 
 func fItem(C *frag.Cache, args []string) frag.Fragment {
-	var b bytes.Buffer
 	item := ct.Get(args[1])
-	tmpl.Lookup(item.Type()).Execute(&b, item)
-	// C.Invalidate(strings.Join(args, " ")) // always invalid
-	return frag.Text(b.String())
+	return exec(item.Type(), item)
 }
 
 func fStatic(C *frag.Cache, args []string) frag.Fragment {
