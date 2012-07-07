@@ -98,7 +98,7 @@ footer {
 #top {
   background: #f3f3f3;
   border-bottom: 1px solid #d7d7d7;
-  padding: 0;
+  padding: 3px 0 0 0;
   
   .inner {
     width: @width;
@@ -152,6 +152,23 @@ footer {
 
   #doc {
     width: 40em;
+  }
+}
+
+#content.topic .concept {
+  div { display: inline-block; }
+  .num { 
+    margin: 0px 8px 8px 0;
+    border-radius: 3px;
+    color: #666;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: #ddd;
+  }
+  a {
+    font-weight: bold;
   }
 }
 
@@ -229,14 +246,13 @@ ul.course {
         a {
           color: #666;
           display: block;
-          margin: 0px 0px 3px 3px;
+          margin: 0px 0px 5px 3px;
           width: 20px;
           height: 20px;
           background: #ccc;
           border-radius: 2px;
           text-align: center;
           font-size: 11px;
-          font-weight: bold;
           line-height: 20px;
         }
         a:hover {

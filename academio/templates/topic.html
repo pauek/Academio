@@ -7,10 +7,12 @@
 </div>
 <div id="content" class="topic">
   <p>{{.Data.Doc.Html}}</p>
-  <ul>
-    {{range .Items}}
-    <li><a ajx href="/{{.Id}}">{{.Title}}</a></li>
-    {{end}}
+  {{range $i, $item := .Items}}
+  <div class="concept">
+    <div class="num">{{plus1 $i}}</div>
+    {% item-link {{.Id}} %}
+  </div>
+  {{end}}
   </ul>
 </div>
 {{end}}

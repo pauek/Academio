@@ -35,13 +35,8 @@ func fItem(C *F.Cache, args []string) F.Fragment {
 	return F.MustParse(exec(item.Type(), item))
 }
 
-func fItemNav(C *F.Cache, args []string) F.Fragment {
+func fItemFragment(C *F.Cache, args []string) F.Fragment {
 	return F.MustParse(exec(args[0], content.Get(args[1])))
-}
-
-func fTopicSmall(C *F.Cache, args []string) F.Fragment {
-	topic := content.Get(args[1])
-	return F.Text(exec("topic-small", topic))
 }
 
 func fStatic(C *F.Cache, args []string) F.Fragment {
@@ -123,13 +118,14 @@ func main() {
 
 	// fragments
 	F.Register("item", fItem)
-	F.Register("item-nav", fItemNav)
-	F.Register("item-link", fItemNav)
+	F.Register("item-nav", fItemFragment)
+	F.Register("item-link", fItemFragment)
+	F.Register("topic-small", fItemFragment)
+	F.Register("concept-small", fItemFragment)
 	F.Register("home", fStatic)
 	F.Register("navbar", fStatic)
 	F.Register("footer", fStatic)
 	F.Register("courses", fCourses)
-	F.Register("topic-small", fTopicSmall)
 
 	// handlers
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
