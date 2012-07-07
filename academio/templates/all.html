@@ -14,21 +14,38 @@
 {{end}}
 
 {{define "home"}}
-<h1>Inicio</h1>
-<p>Esta es la página principal</p>
-<p>Aquí hay algunos <a href="/cursos">cursos</a></p>
+<div id="content">
+  <h1>Inicio</h1>
+  <p>Esta es la página principal</p>
+  <p>Aquí hay algunos <a href="/cursos">cursos</a></p>
+</div>
 {{end}}
 
 {{define "courses"}}
-<h1>Cursos</h1>
-<ul id="cursos">
-  {{range .Items}}
-  <li>
-    <a href="/{{.Id}}">
-      <img src="http://placehold.it/120x120">
-      <h4>{{.Title}}</h4>
-    </a>
-  </li>
+<div id="content">
+  <h1>Cursos</h1>
+  <ul id="cursos">
+    {{range .Items}}
+    <li>
+      <a href="/{{.Id}}">
+        <img src="http://placehold.it/120x120">
+        <h4>{{.Title}}</h4>
+      </a>
+    </li>
+    {{end}}
+  </ul>
+</div>
+{{end}}
+
+{{define "item-link"}}
+<a href="/{{.Id}}">{{.Title}}</a>
+{{end}}
+
+{{define "item-nav"}}
+<nav>
+  <a href="/cursos">cursos</a>
+  {{range .Path}}
+  <span>&gt;</span>{% item-link {{.}} %}
   {{end}}
-</ul>
+</nav>
 {{end}}

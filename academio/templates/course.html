@@ -1,6 +1,11 @@
 {{define "course"}}
-<div class="course">
-  <h1>{{.Title}}</h1>
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
+</div>
+<div id="content" class="course">
   {{.Data.Doc.Html}}
   <ul class="course">
 {{range .Items}}   {% topic-small {{.Id}} %}

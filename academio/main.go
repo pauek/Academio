@@ -35,6 +35,10 @@ func fItem(C *F.Cache, args []string) F.Fragment {
 	return F.MustParse(exec(item.Type(), item))
 }
 
+func fItemNav(C *F.Cache, args []string) F.Fragment {
+	return F.MustParse(exec(args[0], content.Get(args[1])))
+}
+
 func fTopicSmall(C *F.Cache, args []string) F.Fragment {
 	topic := content.Get(args[1])
 	return F.Text(exec("topic-small", topic))
@@ -119,6 +123,8 @@ func main() {
 
 	// fragments
 	F.Register("item", fItem)
+	F.Register("item-nav", fItemNav)
+	F.Register("item-link", fItemNav)
 	F.Register("home", fStatic)
 	F.Register("navbar", fStatic)
 	F.Register("footer", fStatic)

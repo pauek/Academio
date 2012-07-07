@@ -11,7 +11,7 @@
 </head>
 <body>
   <header>{% navbar %}</header>
-  <div id="content" fragment="_root">{% body %}</div>
+  <div fragment="_root">{% body %}</div>
   <footer>{% footer %}</footer>
 </body>
 </html>

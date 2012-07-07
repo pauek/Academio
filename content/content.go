@@ -49,6 +49,18 @@ type CommonData struct {
 
 func (data *CommonData) Id() string { return toID(data.dir.rel) }
 
+func (data *CommonData) Path() (ids []string) {
+	acum := ""
+	parts := strings.Split(data.Id(), ".")
+	for i, part := range parts {
+		if i < len(parts)-1 {
+			acum += "." + part
+			ids = append(ids, acum[1:])
+		}
+	}
+	return
+}
+
 func (data *CommonData) absdir() string { return data.dir.abs() }
 
 func (data *CommonData) Data() *CommonData { return data }
@@ -136,9 +148,9 @@ func (g *Group) read(dir Dir) {
 	eachSubDir(dir.abs(), func(subdir string) {
 		d := dir.join(subdir)
 		g.Add(SubItem{
-			Id: toID(d.rel), 
+			Id:    toID(d.rel),
 			Title: removeOrder(subdir),
-			dir: d.abs(),
+			dir:   d.abs(),
 		})
 	})
 }

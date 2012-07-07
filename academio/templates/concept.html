@@ -1,7 +1,34 @@
 {{define "concept"}}
-<h1>{{.Title}}</h1>
-<p><b>Video:</b> {{.VideoID}}</p>
-<div class="doc">
-{{.Data.Doc.Html}}
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
 </div>
+<div class="tabs">
+  <ul>
+    <li class="active"><a href="#vid">Video</a></li>
+    <li><a href="#doc">Documentación</a></li>
+    <li><a href="#exe">Ejercicios</a></li>
+  </ul>
+</div>
+<div id="content" class="topic">
+  <div id="vid">
+    <p><b>Video:</b> {{.VideoID}}</p>
+  </div>
+  <div id="doc" style="display: none">
+    {{.Data.Doc.Html}}
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+  $('.tabs a').click(function (ev) {
+    ev.preventDefault();
+    $('#content > div').hide();
+    $('.tabs li').removeClass('active');
+    $('#content div' + $(this).attr('href')).show();
+    $(this).parent().addClass('active');   
+  });
+});
+</script>
 {{end}}

@@ -1,11 +1,18 @@
 {{define "topic"}}
-<h1>{{.Title}}</h1>
-<p>{{.Data.Doc.Html}}</p>
-<ul>
-  {{range .Items}}
-  <li><a ajx href="/{{.Id}}">{{.Title}}</a></li>
-  {{end}}
-</ul>
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
+</div>
+<div id="content" class="topic">
+  <p>{{.Data.Doc.Html}}</p>
+  <ul>
+    {{range .Items}}
+    <li><a ajx href="/{{.Id}}">{{.Title}}</a></li>
+    {{end}}
+  </ul>
+</div>
 {{end}}
 
 {{define "topic-small"}}

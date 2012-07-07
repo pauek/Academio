@@ -8,6 +8,8 @@
 @oppo: hsl(40, 70%, 100%);
 @dark: desaturate(darken(@base, 10%), 10%);
 
+@width: 950px;
+
 html, body {
   height: 100%;
 }
@@ -19,7 +21,11 @@ a {
 a:hover {
   color: @dark;
 }
-h3, h4 { margin: 0; }
+h1, h2, h3, h4 { margin: 0; }
+h1 { 
+  margin: 9px 0 5px 0;
+  font-size: 28px; 
+}
 
 body {
   margin: 0;
@@ -75,7 +81,6 @@ header {
         }
       }
     }
-
   }
 }
 
@@ -85,18 +90,67 @@ footer {
   padding: 20px 0 100px;
   
   .inner {
-    width: 950px;
+    width: @width;
     margin: auto;
+  }
+}
+
+#top {
+  background: #f3f3f3;
+  border-bottom: 1px solid #d7d7d7;
+  padding: 0;
+  
+  .inner {
+    width: @width;
+    margin: auto;
+    h1 { margin-bottom: 0px; }
+    nav {
+      padding-bottom: 10px;
+
+      span {
+        color: #777;
+        font-size: 12px;
+        padding: 0 7px 0 7px;
+      }
+      div[fragment] {
+        display: inline-block;
+      }
+      a {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.tabs {
+  width: @width;
+  margin: auto;
+  padding-bottom: 20px;
+  ul {
+    margin: 0;
+    padding: 0;
+    li {
+      list-style-type: none; 
+      display: inline-block;
+      padding: 7px 14px 3px 14px;
+      color: #777;
+      font-size: 15px;
+      font-variant: small-caps;
+      border-top: 5px solid white;
+    }
+    li.active {
+      border-top: 5px solid lighten(@dark, 20%);
+    } 
   }
 }
 
 #content {
   padding-bottom: 50px;
   margin: auto;
-  width: 950px;
+  width: @width;
   min-height: 750px;
 
-  .doc {
+  #doc {
     width: 40em;
   }
 }
