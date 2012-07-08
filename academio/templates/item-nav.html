@@ -1,0 +1,5 @@
+{{define "item-nav"}}
+<nav>
+  <a ajx href="/cursos">cursos</a>{{range .Path}}&gt;{% item-link {{.}} %}{{end}}
+</nav>
+{{end}}

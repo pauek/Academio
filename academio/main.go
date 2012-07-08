@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "*.html"))
+	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
 	layout = F.MustParseFile("templates/layout")
 	cache  = F.NewCache()
 )
@@ -28,17 +28,24 @@ func exec(tname string, data interface{}) string {
 }
 
 func fItem(C *F.Cache, args []string) F.Fragment {
-	C.Depends("item "+args[1], "/item/"+args[1])
 	item := content.Get(args[1])
+	C.Depends("item "+args[1],
+		"/item/"+args[1],
+		"/templates/"+item.Type()+".html",
+	)
 	return F.MustParse(exec(item.Type(), item))
 }
 
 func fItemFragment(C *F.Cache, args []string) F.Fragment {
-	C.Depends(args[0]+" "+args[1], "/item/"+args[1])
+	C.Depends(args[0]+" "+args[1], 
+		"/item/"+args[1],
+		"/templates/"+args[0]+".html",
+	)
 	return F.MustParse(exec(args[0], content.Get(args[1])))
 }
 
 func fStatic(C *F.Cache, args []string) F.Fragment {
+	C.Depends(args[0], "/templates/static.html")
 	return F.Text(exec(args[0], nil))
 }
 
@@ -115,6 +122,7 @@ func main() {
 			cache.Touch("/item/" + id)
 		}
 	})
+	watchTemplates()
 
 	// fragments
 	cache.Register(fItem, "item")
