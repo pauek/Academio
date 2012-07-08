@@ -1,0 +1,137 @@
+{{define "courses"}}
+<div id="content">
+  <h1>Cursos</h1>
+  <ul id="cursos">
+    {{range .Items}}
+    <li>
+      <a ajx href="/{{.Id}}">
+        <img src="/png/{{.Id}}">
+        <h4>{{.Title}}</h4>
+      </a>
+    </li>
+    {{end}}
+  </ul>
+</div>
+{{end}}
+
+
+{{define "item-link"}}
+<a ajx class="item" href="/{{.Id}}">{{.Title}}</a>
+{{end}}
+
+
+{{define "item-nav"}}
+<nav>
+  <a ajx href="/cursos">Cursos</a>{{range .Path}}&gt;{% item-link {{.}} %}{{end}}
+</nav>
+{{end}}
+
+
+{{define "course"}}
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
+</div>
+<div id="content" class="course">
+  {{.Data.Doc.Html}}
+  <ul class="course">
+{{range .Items}}   {% topic-small {{.Id}} %}
+{{end}}
+  </ul>
+</div>
+{{end}}
+
+
+{{define "topic"}}
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
+</div>
+<div id="content">
+  <div class="topic">
+    <p>{{.Data.Doc.Html}}</p>
+    {{range .ChildrenInfo}}
+    <div class="concept">
+      <div class="num" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">{{.Index}}</div>
+      <a ajx class="item" href="/{{.Item.Id}}">{{.Item.Title}}</a>
+    </div>
+    {{end}}
+  </div>
+  <div id="map" width="500" height="500"></div>
+  <div class="clear"></div>
+</div>
+<script src="/js/raphael-min.js" type="text/javascript"></script>
+<script src="/js/map.js" type="text/javascript"></script>
+{{end}}
+
+
+{{define "topic-small"}}
+<li class="topic">
+  <div class="left">
+    <a ajx href="{{.Id}}">
+      <h3>{{.Title}}</h3>
+    </a>
+    <p>{{len .Items}} Conceptos</p>
+  </div>
+  <ul class="concepts">{{range $i, $item := .Items}}
+    <li><a ajx href="{{$item.Id}}" rel="tooltip" title="{{$item.Title}}">{{plus1 $i}}</a></li>{{end}}
+  </ul>
+  <div class="clear"></div>
+</li>
+{{end}}
+
+
+{{define "concept"}}
+<div id="top">
+  <div class="inner">
+    <h1>{{.Title}}</h1>
+    {% item-nav {{.Id}} %}
+  </div>
+</div>
+<div class="tabs">
+  <ul>
+    <li class="active"><a href="#vid">Video</a></li>
+    <li><a href="#doc">Documentación</a></li>
+    <li><a href="#exe">Ejercicios</a></li>
+  </ul>
+</div>
+<div id="content" class="topic">
+  <div id="vid">
+    <div class="tab-pane active" id="vid">
+      <iframe class="youtube-player"
+              width="950"
+              height="570"
+              frameborder="0"
+              src="http://www.youtube.com/embed/{{.VideoID}}?rel=0&wmode=transparent"
+              allowfullscreen="null">
+      </iframe>
+    </div>
+  </div>
+  <div id="doc" style="display: none">
+    {{.Data.Doc.Html}}
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+  $('.tabs a').click(function (ev) {
+    ev.preventDefault();
+    $('#content > div').hide();
+    $('.tabs li').removeClass('active');
+    $('#content div' + $(this).attr('href')).show();
+    $(this).parent().addClass('active');   
+  });
+});
+</script>
+{{end}}
+
+
+{{define "concept-small"}}
+<a ajx href="/{{.Id}}">{{.Title}}</a>
+{{end}}
+
+
+

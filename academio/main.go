@@ -8,6 +8,8 @@ import (
 	F "fragments"
 	T "html/template"
 	"log"
+	"os"
+	"io"
 	"net/http"
 	"time"
 )
@@ -36,34 +38,63 @@ func exec(tname string, data interface{}) string {
 func fItem(C *F.Cache, args []string) F.Fragment {
 	item := content.Get(args[1])
 	C.Depends("item "+args[1],
-		"/item/"+args[1],
-		"/templates/"+item.Type()+".html",
+		"/content/"+args[1],
+		"/templates",
 	)
+	if topic, ok := item.(*content.Topic); ok {
+		for _, subitems := range topic.Children() {
+			C.Depends("item "+args[1], "/content/"+subitems.Id)
+		}
+	}
 	return F.MustParse(exec(item.Type(), item))
 }
 
 func fItemFragment(C *F.Cache, args []string) F.Fragment {
 	C.Depends(args[0]+" "+args[1], 
-		"/item/"+args[1],
-		"/templates/"+args[0]+".html",
+		"/content/"+args[1],
+		"/templates",
 	)
 	return F.MustParse(exec(args[0], content.Get(args[1])))
 }
 
 func fStatic(C *F.Cache, args []string) F.Fragment {
-	C.Depends(args[0], "/templates/static.html")
+	C.Depends(args[0], "/templates")
 	return F.Text(exec(args[0], nil))
 }
 
 func fCourses(C *F.Cache, args []string) F.Fragment {
-	C.Depends("courses", "/courses")
-	return F.Text(exec("courses", content.Courses()))
+	C.Depends("courses", 
+		"/courses",
+		"/templates",
+	)
+	return F.MustParse(exec("courses", content.Courses()))
 }
 
 func hFragList(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/_frag/"):]
 	list := cache.List("item " + id)
 	tmpl.Lookup("fraglist").Execute(w, list)
+}
+
+func hPhotos(w http.ResponseWriter, req *http.Request) {
+	id := req.URL.Path[len("/png/"):]
+	item := content.Get(id)
+	if item == nil {
+		http.NotFound(w, req)
+		return
+	}
+	course, ok := item.(*content.Course); 
+	if !ok {
+		http.NotFound(w, req)
+		return
+	}
+	image, err := os.Open(course.Photo)
+	if err != nil {
+		http.NotFound(w, req)
+		return
+	}
+	w.Header().Set("Content-Type", "image/png")
+	io.Copy(w, image)
 }
 
 func Page(w http.ResponseWriter, req *http.Request) {
@@ -128,7 +159,7 @@ func main() {
 		if id == "" {
 			cache.Touch("/courses")
 		} else {
-			cache.Touch("/item/" + id)
+			cache.Touch("/content/" + id)
 		}
 	})
 
@@ -151,6 +182,7 @@ func main() {
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	http.HandleFunc("/_frag/", hFragList)
+	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", Page)
 
 	http.ListenAndServe(":8080", nil)

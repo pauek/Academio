@@ -29,7 +29,7 @@ func watchTemplates() {
 				if isChange(ev) {
 					fmt.Printf("Changed: %s\n", ev.Name)
 					readTemplates()
-					cache.Touch("/" + ev.Name)
+					cache.Touch("/templates")
 				}
 			}
 		}

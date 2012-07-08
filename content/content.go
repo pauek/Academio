@@ -1,6 +1,7 @@
 package content
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -147,27 +148,91 @@ func (g *Group) Children() []SubItem {
 func (g *Group) read(dir Dir) {
 	eachSubDir(dir.abs(), func(subdir string) {
 		d := dir.join(subdir)
-		g.Add(SubItem{
+		subitem := SubItem{
 			Id:    toID(d.rel),
 			Title: removeOrder(subdir),
 			dir:   d.abs(),
-		})
+		}
+		g.Add(subitem)
 	})
 }
 
 // Topic
 
+type XY struct{ X, Y int }
+
 type Topic struct {
 	CommonData
 	Group
+	Coords []XY
+	Deps [][]int
 	// Map of concepts?
+}
+
+type Info struct {
+	Index int
+	Item SubItem
+	Coords XY
+	Deps string
+}
+
+func (t *Topic) ChildrenInfo() (info []Info) {
+	for i := range t.Items {
+		deps := "["
+		for i, d := range t.Deps[i] {
+			if i > 0 {
+				deps += ", "
+			}
+			deps += fmt.Sprintf("%d", d)
+		}
+		deps += "]";
+
+		info = append(info, Info{
+			Index: i + 1,
+			Item: t.Items[i],
+			Coords: t.Coords[i],
+			Deps: deps,
+		})
+	}
+	return
 }
 
 func (t *Topic) Type() string { return "topic" }
 
+func (t *Topic) index(id string) int {
+	for i, subitem := range t.Items {
+		if subitem.Id == id {
+			return i
+		}
+	}
+	return -1
+}
+
 func (t *Topic) read(dir Dir) Item {
 	t.CommonData.read(dir)
 	t.Group.read(dir)
+	t.Coords = make([]XY, len(t.Group.Items))
+	t.Deps = make([][]int, len(t.Group.Items))
+	for i, subitem := range t.Items {
+		path := filepath.Join(subitem.dir, "xy")
+		xy := XY{-1, -1}
+		if file, err := os.Open(path); err == nil {
+			fmt.Fscanf(file, "%d %d", &xy.X, &xy.Y)
+			file.Close()
+		}
+		path = filepath.Join(subitem.dir, "depends")
+		di := []int{}
+		if depends, err := ioutil.ReadFile(path); err == nil {
+			for _, dep := range strings.Split(string(depends), "\n") {
+				fmt.Printf("dep = '%s'\n", toID(dep))
+				if j := t.index(toID(dep)); j != -1 {
+					di = append(di, j)
+				}
+			}
+		}
+		t.Deps[i] = di
+		t.Coords[i] = xy
+	}
 	return t
 }
 
@@ -176,7 +241,7 @@ func (t *Topic) read(dir Dir) Item {
 type Course struct {
 	CommonData
 	Group
-	basedir string
+	Photo string // path for the photo
 }
 
 func (c *Course) Type() string { return "course" }
@@ -184,6 +249,9 @@ func (c *Course) Type() string { return "course" }
 func (c *Course) read(dir Dir) Item {
 	c.CommonData.read(dir)
 	c.Group.read(dir)
+	if _, err := os.Stat(dir.file("photo.png")); err == nil {
+		c.Photo = dir.file("photo.png")
+	}
 	return c
 }
 
