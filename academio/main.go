@@ -14,7 +14,7 @@ import (
 
 var (
 	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
-	layout = F.MustParseFile("templates/layout")
+	layout = F.MustParse(exec("layout", nil))
 	cache  = F.NewCache()
 )
 
