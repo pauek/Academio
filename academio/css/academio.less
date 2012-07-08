@@ -1,8 +1,9 @@
 
-@import url(http://fonts.googleapis.com/css?family=PT+Sans);
-@import url(http://fonts.googleapis.com/css?family=PT+Mono);
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700");
+@import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
+@import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
 
-@monospace: "PT Mono", "Ubuntu Mono", monospace;
+@monospace: "Droid Sans Mono", monospace;
 
 @base: hsl(220, 30%, 30%);
 @oppo: hsl(40, 70%, 100%);
@@ -22,16 +23,25 @@ a:hover {
   color: @dark;
 }
 h1, h2, h3, h4 { margin: 0; }
+#doc h1 { 
+  font-size: 22px; 
+  font-weight: 700;
+  font-family: "Open Sans Condensed";
+}
 h1 { 
+  font-family: "Open Sans";
+  font-weight: 300;
   margin: 9px 0 5px 0;
-  font-size: 28px; 
+  font-variant: normal;
+  font-style: normal;
+  font-size: 36px; 
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: "PT Sans", "Open Sans", "Ubuntu";
-  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
 }
 
 header {
