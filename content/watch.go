@@ -6,13 +6,16 @@ import (
 	"path/filepath"
 )
 
-func isDir(ev *inotify.Event) bool   { return ev.Mask&inotify.IN_ISDIR != 0 }
-func isChange(ev *inotify.Event) bool { 
-	ch := inotify.IN_CREATE 
-	ch |= inotify.IN_DELETE 
+func isDir(ev *inotify.Event) bool {
+	return (ev.Mask & inotify.IN_ISDIR) != 0
+}
+
+func isChange(ev *inotify.Event) bool {
+	ch := inotify.IN_CREATE
+	ch |= inotify.IN_DELETE
 	ch |= inotify.IN_MODIFY
 	ch |= inotify.IN_MOVE
-	return (ev.Mask & ch) != 0 
+	return (ev.Mask & ch) != 0
 }
 
 func WatchForChanges(onChange func(id string)) {

@@ -14,7 +14,15 @@
 </div>
 <div id="content" class="topic">
   <div id="vid">
-    <p><b>Video:</b> {{.VideoID}}</p>
+    <div class="tab-pane active" id="vid">
+      <iframe class="youtube-player"
+              width="950"
+              height="570"
+              frameborder="0"
+              src="http://www.youtube.com/embed/{{.VideoID}}?rel=0&wmode=transparent"
+              allowfullscreen="null">
+      </iframe>
+    </div>
   </div>
   <div id="doc" style="display: none">
     {{.Data.Doc.Html}}
@@ -34,5 +42,5 @@ $(document).ready(function() {
 {{end}}
 
 {{define "concept-small"}}
-<a href="/{{.Id}}">{{.Title}}</a>
+<a ajx href="/{{.Id}}">{{.Title}}</a>
 {{end}}

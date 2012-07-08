@@ -27,7 +27,7 @@
   <ul id="cursos">
     {{range .Items}}
     <li>
-      <a href="/{{.Id}}">
+      <a ajx href="/{{.Id}}">
         <img src="http://placehold.it/120x120">
         <h4>{{.Title}}</h4>
       </a>
@@ -38,14 +38,11 @@
 {{end}}
 
 {{define "item-link"}}
-<a href="/{{.Id}}">{{.Title}}</a>
+<a ajx class="item" href="/{{.Id}}">{{.Title}}</a>
 {{end}}
 
 {{define "item-nav"}}
 <nav>
-  <a href="/cursos">cursos</a>
-  {{range .Path}}
-  <span>&gt;</span>{% item-link {{.}} %}
-  {{end}}
+  <a ajx href="/cursos">cursos</a>{{range .Path}}&gt;{% item-link {{.}} %}{{end}}
 </nav>
 {{end}}
