@@ -13,10 +13,16 @@ import (
 )
 
 var (
-	tmpl   = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
-	layout = F.MustParse(exec("layout", nil))
-	cache  = F.NewCache()
+	tmpl *T.Template  
+	layout F.Template
 )
+
+func readTemplates() {
+	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
+	layout = F.MustParse(exec("layout", nil))
+}
+
+var cache = F.NewCache()
 
 func exec(tname string, data interface{}) string {
 	var b bytes.Buffer
@@ -115,6 +121,9 @@ func Page(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	readTemplates()
+	watchTemplates()
+
 	content.WatchForChanges(func(id string) {
 		if id == "" {
 			cache.Touch("/courses")
@@ -122,7 +131,6 @@ func main() {
 			cache.Touch("/item/" + id)
 		}
 	})
-	watchTemplates()
 
 	// fragments
 	cache.Register(fItem, "item")

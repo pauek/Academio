@@ -170,21 +170,29 @@ footer {
   }
 }
 
-#content.topic .concept {
-  div { display: inline-block; }
-  .num { 
-    margin: 0px 8px 8px 0;
-    border-radius: 3px;
-    color: #666;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    background: #ddd;
+#content > .topic {
+  float: left;
+  .concept {
+    div { display: inline-block; }
+    .num { 
+      margin: 0px 8px 8px 0;
+      border-radius: 3px;
+      color: #666;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background: #ddd;
+    }
+    a {
+      font-weight: bold;
+    }
   }
-  a {
-    font-weight: bold;
-  }
+}
+
+#map {
+  float: right;
+  padding: 20px;
 }
 
 tt {

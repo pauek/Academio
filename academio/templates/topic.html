@@ -5,16 +5,20 @@
     {% item-nav {{.Id}} %}
   </div>
 </div>
-<div id="content" class="topic">
-  <p>{{.Data.Doc.Html}}</p>
-  {{range $i, $item := .Items}}
-  <div class="concept">
-    <div class="num">{{plus1 $i}}</div>
-    {% item-link {{.Id}} %}
+<div id="content">
+  <div class="topic">
+    <p>{{.Data.Doc.Html}}</p>
+    {{range $i, $item := .Items}}
+    <div class="concept">
+      <div class="num">{{plus1 $i}}</div>
+      {% item-link {{.Id}} %}
+    </div>
+    {{end}}
   </div>
-  {{end}}
-  </ul>
+  <div id="map" width="500" height="500"></canvas>
 </div>
+<script src="/js/raphael-min.js" type="text/javascript"></script>
+<script src="/js/map.js" type="text/javascript"></script>
 {{end}}
 
 {{define "topic-small"}}

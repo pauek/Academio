@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	F "fragments"
-	T "html/template"
 	"inotify"
 	"log"
 )
@@ -14,11 +12,6 @@ func isChange(ev *inotify.Event) bool {
 	ch |= inotify.IN_MODIFY
 	ch |= inotify.IN_MOVE
 	return (ev.Mask & ch) != 0
-}
-
-func readTemplates() {
-	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
-	layout = F.MustParseFile("templates/layout")
 }
 
 func watchTemplates() {
