@@ -185,5 +185,10 @@ func main() {
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", Page)
 
-	http.ListenAndServe(":8080", nil)
+	ln, err := net.Listen("tcp4", ":80")
+	if err != nil {
+		log.Fatalf("Cannot listen on :80")
+		return
+	}
+	http.Serve(ln, nil)
 }
