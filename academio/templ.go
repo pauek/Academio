@@ -2,9 +2,37 @@ package main
 
 import (
 	"fmt"
+	F "fragments"
+	T "html/template"
 	"inotify"
 	"log"
+	"os"
 )
+
+var tFuncs = map[string]interface{}{
+	"plus1": plus1,
+}
+
+func plus1(i int) int {
+	return i + 1
+}
+
+var (
+	tmpl   *T.Template
+	layout F.Template
+)
+
+func init() {
+	readTemplates();
+	watchTemplates();
+}
+
+func readTemplates() {
+	base := os.Getenv("ACADEMIO_ROOT")
+	tmpldir := base + "/templates/[a-zA-Z0-9]*.html"
+	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob(tmpldir))
+	layout = F.MustParse(exec("layout", nil))
+}
 
 func isChange(ev *inotify.Event) bool {
 	ch := inotify.IN_CREATE
@@ -19,9 +47,9 @@ func watchTemplates() {
 	if err != nil {
 		log.Printf("Warning: Cannot watch templates.")
 	}
-	
+
 	watcher.Watch("templates")
-	
+
 	go func() {
 		for {
 			select {
@@ -35,3 +63,4 @@ func watchTemplates() {
 		}
 	}()
 }
+

@@ -29,6 +29,7 @@ func WatchForChanges(onChange func(id string)) {
 	// watch dirs in levels 1-3 from the roots
 	watchList := []string{} // prevent walkDirs from generating events
 	for _, root := range roots {
+		watchList = append(watchList, root)
 		walkDirs(root, func(reldir string, level int) {
 			watchList = append(watchList, filepath.Join(root, reldir))
 		})
@@ -42,6 +43,7 @@ func WatchForChanges(onChange func(id string)) {
 		for {
 			select {
 			case ev := <-watcher.Event:
+				log.Printf("ev.Name = %s", ev.Name)
 				rel := removeRoot(ev.Name)
 				if onChange != nil && isChange(ev) {
 					if !isDir(ev) {

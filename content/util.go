@@ -81,7 +81,7 @@ func removeRoot(abspath string) string {
 			return ""
 		}
 		if rel, err := filepath.Rel(root, abspath); err == nil {
-			if len(rel) == 0 || rel[0] != '.' {
+			if rel[0] != '.' || rel[1] != '.' {
 				return rel
 			}
 		}

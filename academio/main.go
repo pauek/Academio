@@ -5,8 +5,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"flag"
 	F "fragments"
-	T "html/template"
 	"io"
 	"log"
 	"net"
@@ -14,16 +14,6 @@ import (
 	"os"
 	"time"
 )
-
-var (
-	tmpl   *T.Template
-	layout F.Template
-)
-
-func readTemplates() {
-	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob("templates/" + "[a-zA-Z0-9]*.html"))
-	layout = F.MustParse(exec("layout", nil))
-}
 
 var cache = F.NewCache()
 
@@ -51,7 +41,7 @@ func fItem(C *F.Cache, args []string) F.Fragment {
 }
 
 func fItemFragment(C *F.Cache, args []string) F.Fragment {
-	C.Depends(args[0]+" "+args[1], 
+	C.Depends(args[0]+" "+args[1],
 		"/content/"+args[1],
 		"/templates",
 	)
@@ -152,9 +142,10 @@ func Page(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+var port = flag.Int("port", 8080, "Network port")
+
 func main() {
-	readTemplates()
-	watchTemplates()
+	flag.Parse()
 
 	content.WatchForChanges(func(id string) {
 		if id == "" {
@@ -186,7 +177,7 @@ func main() {
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", Page)
 
-	ln, err := net.Listen("tcp", ":80")
+	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("Cannot listen on :80")
 		return
