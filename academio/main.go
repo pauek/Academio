@@ -7,15 +7,16 @@ import (
 	"fmt"
 	F "fragments"
 	T "html/template"
-	"log"
-	"os"
 	"io"
+	"log"
+	"net"
 	"net/http"
+	"os"
 	"time"
 )
 
 var (
-	tmpl *T.Template  
+	tmpl   *T.Template
 	layout F.Template
 )
 
@@ -63,7 +64,7 @@ func fStatic(C *F.Cache, args []string) F.Fragment {
 }
 
 func fCourses(C *F.Cache, args []string) F.Fragment {
-	C.Depends("courses", 
+	C.Depends("courses",
 		"/courses",
 		"/templates",
 	)
@@ -83,7 +84,7 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
-	course, ok := item.(*content.Course); 
+	course, ok := item.(*content.Course)
 	if !ok {
 		http.NotFound(w, req)
 		return
@@ -185,7 +186,7 @@ func main() {
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", Page)
 
-	ln, err := net.Listen("tcp4", ":80")
+	ln, err := net.Listen("tcp", ":80")
 	if err != nil {
 		log.Fatalf("Cannot listen on :80")
 		return
