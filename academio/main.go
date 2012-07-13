@@ -15,6 +15,7 @@ import (
 	"time"
 )
 
+var srvdir = os.Getenv("ACADEMIO_ROOT")
 var cache = F.NewCache()
 
 func exec(tname string, data interface{}) string {
@@ -171,8 +172,10 @@ func main() {
 	cache.Register(fCourses, "courses")
 
 	// handlers
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
+	http.Handle("/js/", 
+		http.StripPrefix("/js/", http.FileServer(http.Dir(srvdir + "/js"))))
+	http.Handle("/css/", 
+		http.StripPrefix("/css/", http.FileServer(http.Dir(srvdir + "/css"))))
 	http.HandleFunc("/_frag/", hFragList)
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", Page)

@@ -6,7 +6,6 @@ import (
 	T "html/template"
 	"inotify"
 	"log"
-	"os"
 )
 
 var tFuncs = map[string]interface{}{
@@ -28,8 +27,7 @@ func init() {
 }
 
 func readTemplates() {
-	base := os.Getenv("ACADEMIO_ROOT")
-	tmpldir := base + "/templates/[a-zA-Z0-9]*.html"
+	tmpldir := srvdir + "/templates/[a-zA-Z0-9]*.html"
 	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob(tmpldir))
 	layout = F.MustParse(exec("layout", nil))
 }
