@@ -1,4 +1,4 @@
-var paper = Raphael("map", 500, 500);
+var paper;
 var gridSz = 80;
 var rectSz = 40;
 
@@ -18,7 +18,6 @@ function getInfo(concept) {
 
 function drawItem(info, i) {
    var item = info[i];
-   console.log(item);
    var r = paper.rect(item.x*gridSz, item.y*gridSz, rectSz, rectSz, 4);
    r.attr({ fill: "#ddd", stroke: "", cursor: "pointer" });
    var t = paper.text(item.x*gridSz + rectSz/2, item.y*gridSz + rectSz/2, item.num);
@@ -39,15 +38,18 @@ function drawDeps(info, i) {
    }
 }
 
-$(document).ready(function () {
+function drawMap() {
+   if (paper === undefined) {
+      paper = Raphael("map", 500, 500);
+   }
+   $('#map').append(paper.canvas);
+   paper.clear();
    var info = [];
    $('.topic .concept').each(function () {
       info.push(getInfo(this));
    });
-   $(info).each(function (i) {
-      drawDeps(info, i);
-   });
-   $(info).each(function (i) {
-      drawItem(info, i);
-   });
-});
+   $(info).each(function (i) { drawDeps(info, i); });
+   $(info).each(function (i) { drawItem(info, i); });
+}
+
+fragments.onUpdate(drawMap);
