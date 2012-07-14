@@ -5,7 +5,7 @@
     {{range .Items}}
     <li>
       <a ajx href="/{{.Id}}">
-        <img src="/png/{{.Id}}">
+        <img src="/png/{{.Id}}" width="120" height="120">
         <h4>{{.Title}}</h4>
       </a>
     </li>
@@ -64,8 +64,6 @@
   <div id="map" width="500" height="500"></div>
   <div class="clear"></div>
 </div>
-<script src="/js/raphael-min.js" type="text/javascript"></script>
-<script src="/js/map.js" type="text/javascript"></script>
 {{end}}
 
 

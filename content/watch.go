@@ -43,7 +43,6 @@ func WatchForChanges(onChange func(id string)) {
 		for {
 			select {
 			case ev := <-watcher.Event:
-				log.Printf("ev.Name = %s", ev.Name)
 				rel := removeRoot(ev.Name)
 				if onChange != nil && isChange(ev) {
 					if !isDir(ev) {

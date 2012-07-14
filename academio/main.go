@@ -108,6 +108,7 @@ func Page(w http.ResponseWriter, req *http.Request) {
 	}
 	switch req.Header.Get("Fragments") {
 	case "":
+		w.Header().Set("Content-Type", "text/html")
 		layout.Exec(w, func(action string) {
 			switch action {
 			case "body":
@@ -172,13 +173,19 @@ func main() {
 	cache.Register(fCourses, "courses")
 
 	// handlers
+	http.Handle("/js/lib/", 
+		http.StripPrefix("/js/lib/", 
+		GzippedNoExpire(http.FileServer(http.Dir(srvdir + "/js/lib/")))))
 	http.Handle("/js/", 
-		http.StripPrefix("/js/", http.FileServer(http.Dir(srvdir + "/js"))))
+		http.StripPrefix("/js/", 
+		Gzipped(http.FileServer(http.Dir(srvdir + "/js")))))
 	http.Handle("/css/", 
-		http.StripPrefix("/css/", http.FileServer(http.Dir(srvdir + "/css"))))
-	http.HandleFunc("/_frag/", hFragList)
+		http.StripPrefix("/css/", 
+		Gzipped(http.FileServer(http.Dir(srvdir + "/css")))))
+
+	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
 	http.HandleFunc("/png/", hPhotos)
-	http.HandleFunc("/", Page)
+	http.HandleFunc("/", GzippedFunc(Page))
 
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
