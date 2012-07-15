@@ -57,8 +57,8 @@ academio.updateMap = function () {
          var k = deps[j];
          ctx.beginPath();
          // porqué +15??
-         ctx.moveTo(items[i].px + 15, items[i].py + 15);
-         ctx.lineTo(items[k].px + 15, items[k].py + 15);
+         ctx.moveTo(items[i].px + 17, items[i].py + 17);
+         ctx.lineTo(items[k].px + 17, items[k].py + 17);
          ctx.closePath();
          ctx.strokeStyle = "rgba(200, 200, 200, .3)";
          ctx.lineWidth = 4;

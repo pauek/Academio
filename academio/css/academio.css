@@ -161,6 +161,9 @@ footer .inner {
   text-align: center;
   background: #ddd;
 }
+.map .concept .num {
+  box-shadow: 3px 3px 6px #999;
+}
 .concept a {
   font-weight: bold;
 }
