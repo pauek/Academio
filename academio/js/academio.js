@@ -2,41 +2,65 @@
 var academio = {};
 
 academio.updateMap = function () {
-   // Compute minimum x and y (+ deps)
+   var ctx;
    var xmin, ymin;
-   var deps = [];
+   var xcurr = 0, ycurr = 0;
+   var items = [];
+
+   // Get positions
    $('.map .concept').each(function () {
       var x = parseInt($(this).attr('x'));
       var y = parseInt($(this).attr('y'));
-      if (typeof xmin === "undefined" || x < xmin) {
-         xmin = x;
-      } 
-      if (typeof ymin === "undefined" || y < ymin) {
-         ymin = y;
+      var deps = JSON.parse($(this).attr('deps'));
+      items.push({ x: x, y: y, deps: deps });
+   });
+   
+   // Assign positions if necessary
+   for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (it.x == -1 && it.y == -1) {
+         it.x = xcurr, it.y = ycurr;
+         xcurr += 1;
+         if (xcurr >= 5) {
+            xcurr = 0, ycurr++;
+         }
       }
-      deps.push(JSON.parse($(this).attr('deps')));
-   });
+   }
+
+   // Compute minimum of x and y
+   for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (typeof xmin === "undefined" || it.x < xmin) {
+         xmin = it.x;
+      } 
+      if (typeof ymin === "undefined" || it.y < ymin) {
+         ymin = it.y;
+      }
+   }
+
    // Move each element
-   var pos = [];
-   $('.map .concept').each(function () {
-      var x = parseInt($(this).attr('x'));
-      var y = parseInt($(this).attr('y'));
-      var p = { x: (x - xmin) * 60, y: (y - ymin) * 60 };
-      $(this).css({ position: "absolute", left: p.x, top: p.y });
-      pos.push(p);
+   $('.map .concept').each(function (i) {
+      var it = items[i];
+      it.px = (it.x - xmin) * 60;
+      it.py = (it.y - ymin) * 60;
+      $(this).css({ position: "absolute", left: it.px, top: it.py });
    });
+
    // Paint links
-   var ctx = $('#deps')[0].getContext('2d');
+   if (typeof ctx === "undefined") {
+      ctx = $('#deps')[0].getContext('2d');
+   }
    ctx.clearRect(0, 0, 500, 500);
-   for (var i = 0; i < deps.length; i++) {
-      for (var j = 0; j < deps[i].length; j++) {
-         var k = deps[i][j];
+   for (var i = 0; i < items.length; i++) {
+      var deps = items[i].deps;
+      for (var j = 0; j < deps.length; j++) {
+         var k = deps[j];
          ctx.beginPath();
-         // porqué -5??
-         ctx.moveTo(pos[i].x+15, pos[i].y+15);
-         ctx.lineTo(pos[k].x+15, pos[k].y+15);
+         // porqué +15??
+         ctx.moveTo(items[i].px + 15, items[i].py + 15);
+         ctx.lineTo(items[k].px + 15, items[k].py + 15);
          ctx.closePath();
-         ctx.strokeStyle = "rgba(200, 200, 200, .35)";
+         ctx.strokeStyle = "rgba(200, 200, 200, .3)";
          ctx.lineWidth = 4;
          ctx.stroke();
       }
