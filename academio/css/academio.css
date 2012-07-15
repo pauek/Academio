@@ -1,10 +1,8 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700");
-
 @import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
-
 @import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
-html,
-body {
+
+html, body {
   height: 100%;
 }
 a {
@@ -14,10 +12,7 @@ a {
 a:hover {
   color: #29303d;
 }
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   margin: 0;
 }
 #doc h1 {
@@ -186,16 +181,16 @@ a:hover .num {
 .map.links {
   z-index: -10;
 }
-tt {
-  font-size: 90%;
+pre, tt {
   font-family: "Droid Sans Mono", monospace;
   background: #eee;
 }
+tt {
+  font-size: 90%;
+}
 pre {
-  font-family: "Droid Sans Mono", monospace;
   font-size: 14px;
   line-height: 18px;
-  background: #eee;
   padding: 10px 15px;
   border: 1px solid #ccc;
 }
@@ -275,6 +270,8 @@ ul.course .topic .concepts li a:hover {
 .clear {
   clear: both;
 }
+
+
 .fraglist {
   margin: 0;
   padding: 20px;
