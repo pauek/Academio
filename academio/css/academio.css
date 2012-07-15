@@ -1,0 +1,306 @@
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700");
+
+@import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
+
+@import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
+html,
+body {
+  height: 100%;
+}
+a {
+  color: #364563;
+  text-decoration: none;
+}
+a:hover {
+  color: #29303d;
+}
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+#doc h1 {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: "Open Sans Condensed";
+}
+h1 {
+  font-family: "Open Sans";
+  font-weight: 300;
+  margin: 9px 0 5px 0;
+  font-variant: normal;
+  font-style: normal;
+  font-size: 36px;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+}
+header {
+  padding: 8px 0 10px;
+  margin: 0;
+  background: #29303d;
+  position: relative;
+}
+header a {
+  color: white;
+  text-decoration: none;
+}
+header a:hover {
+  color: #eee;
+}
+header .inner {
+  width: 950px;
+  margin: auto;
+}
+header .inner a#home {
+  margin: 0;
+  margin-right: 15px;
+  font-size: 22px;
+  font-weight: bold;
+}
+header .inner nav {
+  display: inline;
+}
+header .inner span.orange {
+  color: orange;
+}
+header .inner ul {
+  margin: 0;
+  padding: 0 0 3px 0;
+  display: inline;
+}
+header .inner ul li {
+  margin-left: 10px;
+  list-style-type: none;
+  display: inline;
+  padding: 3px 5px 3px 5px;
+  border-radius: 3px;
+}
+header .inner ul li .active {
+  background: #333b4d;
+}
+footer {
+  background: #29303d;
+  color: white;
+  padding: 20px 0 100px;
+}
+footer .inner {
+  width: 950px;
+  margin: auto;
+}
+#top {
+  background: #f3f3f3;
+  border-bottom: 1px solid #d7d7d7;
+  padding: 3px 0 0 0;
+}
+#top .inner {
+  width: 950px;
+  margin: auto;
+}
+#top .inner h1 {
+  margin-bottom: 0px;
+}
+#top .inner nav {
+  padding-bottom: 10px;
+  color: #aaa;
+}
+#top .inner nav span {
+  color: #777;
+  font-size: 12px;
+  padding: 0 7px 0 7px;
+}
+#top .inner nav div[fragment] {
+  display: inline-block;
+}
+#top .inner nav a {
+  font-size: 12px;
+  padding-right: 7px;
+}
+#top .inner nav a.item {
+  padding: 0 7px 0 7px;
+}
+.tabs {
+  width: 950px;
+  margin: auto;
+  padding-bottom: 20px;
+}
+.tabs ul {
+  margin: 0;
+  padding: 0;
+}
+.tabs ul li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 7px 14px 3px 14px;
+  color: #777;
+  font-size: 15px;
+  font-variant: small-caps;
+  border-top: 5px solid white;
+}
+.tabs ul li.active {
+  border-top: 5px solid #525f7a;
+}
+#content {
+  padding-bottom: 50px;
+  margin: auto;
+  width: 950px;
+  min-height: 750px;
+}
+#content #doc {
+  width: 40em;
+}
+.concept div {
+  display: inline-block;
+}
+.concept .num {
+  margin: 0px 8px 8px 0;
+  border-radius: 3px;
+  color: #666;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background: #ddd;
+}
+.concept a {
+  font-weight: bold;
+}
+.topic {
+  position: relative;
+}
+a:hover .num {
+  background: #bbb;
+}
+.map {
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 500px;
+  height: 500px;
+}
+.map.links {
+  z-index: -10;
+}
+tt {
+  font-size: 90%;
+  font-family: "Droid Sans Mono", monospace;
+  background: #eee;
+}
+pre {
+  font-family: "Droid Sans Mono", monospace;
+  font-size: 14px;
+  line-height: 18px;
+  background: #eee;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+}
+.footnote {
+  font-size: 80%;
+}
+hr {
+  margin: 40px auto 20px auto;
+}
+ul#cursos {
+  padding: 0;
+}
+ul#cursos li {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0 12px 15px 0;
+  display: inline-block;
+  height: 160px;
+  width: 120px;
+  padding: 8px;
+}
+ul#cursos li a {
+  font-weight: bold;
+}
+ul#cursos li a h4 {
+  margin: 0;
+}
+div.course {
+  width: 600px;
+}
+ul.course {
+  margin: 0 auto 0 0;
+  padding: 0;
+  width: 550px;
+}
+ul.course .topic {
+  border-top: 1px solid #ddd;
+  padding: 5px 0 10px 0;
+  list-style-type: none;
+}
+ul.course .topic .left {
+  display: inline-block;
+}
+ul.course .topic .left h3 {
+  margin-bottom: 2px;
+}
+ul.course .topic .left p {
+  margin: 0;
+  font-size: 80%;
+  color: #777;
+}
+ul.course .topic .concepts {
+  display: inline-block;
+  float: right;
+  margin: 0;
+  padding: 0;
+  width: 275px;
+}
+ul.course .topic .concepts li {
+  display: inline-block;
+}
+ul.course .topic .concepts li a {
+  color: #666;
+  display: block;
+  margin: 0px 0px 5px 3px;
+  width: 20px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 20px;
+}
+ul.course .topic .concepts li a:hover {
+  background-color: #aaa;
+}
+.clear {
+  clear: both;
+}
+.fraglist {
+  margin: 0;
+  padding: 20px;
+}
+.fraglist ul {
+  padding: 0;
+  margin: 0;
+}
+.fraglist ul li {
+  list-style-type: none;
+}
+.fraglist p {
+  margin: 0 0 5px 0;
+}
+.fraglist tt {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background-color: #cec;
+  cursor: pointer;
+}
+.fraglist pre {
+  margin: 0;
+  padding: 5px;
+  background-color: #ccc;
+  font-size: 11px;
+  margin-bottom: 25px;
+}
