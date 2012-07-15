@@ -170,29 +170,38 @@ footer {
   }
 }
 
-#content > .topic {
-  float: left;
-  .concept {
-    div { display: inline-block; }
-    .num { 
-      margin: 0px 8px 8px 0;
-      border-radius: 3px;
-      color: #666;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      background: #ddd;
-    }
-    a {
-      font-weight: bold;
-    }
+.concept {
+  div { display: inline-block; }
+  .num { 
+    margin: 0px 8px 8px 0;
+    border-radius: 3px;
+    color: #666;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: #ddd;
+  }
+  a {
+    font-weight: bold;
   }
 }
 
-#map {
-  float: right;
-  padding: 20px;
+.topic {
+  position: relative;
+}
+
+.map {
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 500px;
+  height: 500px;
+}
+
+.map.links {
+  z-index: -10;
 }
 
 tt {

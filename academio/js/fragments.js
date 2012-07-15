@@ -144,7 +144,7 @@ fragments.replaceLinks = function() {
 
 fragments._fns = []
 
-fragments.onUpdate = function(fn) {
+fragments.ready = function(fn) {
    fragments._fns.push(fn);
 }
 

@@ -52,17 +52,30 @@
   </div>
 </div>
 <div id="content">
+  <p>{{.Data.Doc.Html}}</p>
   <div class="topic">
-    <p>{{.Data.Doc.Html}}</p>
-    {{range .ChildrenInfo}}
-    <div class="concept">
-      <div class="num" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">{{.Index}}</div>
-      <a ajx class="item" href="/{{.Item.Id}}">{{.Item.Title}}</a>
+    <div class="list">
+      {{range .ChildrenInfo}}
+      <div class="concept">
+        <div class="num">{{.Index}}</div>
+        <a ajx class="item" href="/{{.Item.Id}}">{{.Item.Title}}</a>
+      </div>
+      {{end}}
     </div>
-    {{end}}
+    <div class="map">
+      {{range .ChildrenInfo}}
+      <div class="concept" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">
+        <a ajx href="/{{.Item.Id}}"><div class="num">{{.Index}}</div></a>
+      </div>
+      {{end}}
+    </div>
+    <div class="map links">
+      <canvas id="deps" width="500" height="500"></canvas>
+    </div>
   </div>
-  <div id="map" width="500" height="500"></div>
-  <div class="clear"></div>
+  <script>
+    fragments.ready(academio.updateMap);
+  </script>
 </div>
 {{end}}
 
