@@ -22,8 +22,8 @@ var (
 )
 
 func init() {
-	readTemplates();
-	watchTemplates();
+	readTemplates()
+	watchTemplates()
 }
 
 func readTemplates() {

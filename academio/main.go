@@ -68,8 +68,13 @@ func hFragList(w http.ResponseWriter, req *http.Request) {
 	tmpl.Lookup("fraglist").Execute(w, list)
 }
 
+func fmtTime(t time.Time) string {
+	return t.UTC().Format(http.TimeFormat)
+}
+
 func hPhotos(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/png/"):]
+
 	item := content.Get(id)
 	if item == nil {
 		http.NotFound(w, req)
@@ -80,16 +85,27 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
+
 	image, err := os.Open(course.Photo)
 	if err != nil {
 		http.NotFound(w, req)
 		return
 	}
+	defer image.Close()
+
 	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Expires", fmtTime(time.Now().Add(1 * time.Hour)))
+	if stat, err := image.Stat(); err == nil {
+		w.Header().Set("Last-Modified", fmtTime(stat.ModTime()))
+	}
+	if req.Method == "HEAD" {
+		return
+	}
 	io.Copy(w, image)
 }
 
 func Page(w http.ResponseWriter, req *http.Request) {
+	log.Printf("%s", req.URL)
 	var title, fid string // fid = fragment id
 	path := req.URL.Path[1:]
 	switch path {
@@ -189,8 +205,9 @@ func main() {
 
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		log.Fatalf("Cannot listen on :80")
+		log.Fatalf("Cannot listen on :%d", *port)
 		return
 	}
+	log.Printf("Ready.")
 	http.Serve(ln, nil)
 }
