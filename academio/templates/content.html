@@ -62,6 +62,7 @@
       </div>
       {{end}}
     </div>
+    <div class="map-container">
     <div class="map">
       {{range .ChildrenInfo}}
       <div class="concept" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">
@@ -71,6 +72,7 @@
     </div>
     <div class="map links">
       <canvas id="deps" width="500" height="500"></canvas>
+    </div>
     </div>
   </div>
   <script>

@@ -2,6 +2,38 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
 @import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
 
+#content, .tabs, #top .inner { width: 300px; }
+ul.course             { width: 300px; }
+ul.course .topic .concepts {
+  width: 100%;
+  margin-top: 1em;
+}
+.map-container { display: none; }
+
+@media screen and (min-width: 480px) {
+   #content, .tabs, #top .inner { width: 450px; }
+   ul.course             { width: 410px; }
+   .map-container { clear: none; display: block; }
+}
+@media screen and (min-width: 750px) {
+   #content, .tabs, #top .inner { width: 720px; }
+   ul.course             { width: 720px; }
+   ul.course .topic .concepts {
+     width: 410px;
+     float: right;
+   }
+   .map-container { clear: none; display: block; }
+}
+@media screen and (min-width: 1200px) {
+   #content, .tabs, #top .inner { width: 1150px; }
+   ul.course             { width: 1100px; }
+   ul.course .topic .concepts {
+     width: 780px;
+     float: right;
+   }
+   .map-container { clear: none; display: block; }
+}
+
 html, body {
   height: 100%;
 }
@@ -16,26 +48,26 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 #doc h1 {
-  font-size: 22px;
+  font-size: 1.38em;
   font-weight: 700;
   font-family: "Open Sans Condensed";
 }
 h1 {
   font-family: "Open Sans";
   font-weight: 300;
-  margin: 9px 0 5px 0;
+  margin: 0.56em 0 0.32em 0;
   font-variant: normal;
   font-style: normal;
-  font-size: 36px;
+  font-size: 2.25em;
 }
 body {
   margin: 0;
   padding: 0;
   font-family: "Open Sans", sans-serif;
-  font-size: 14px;
+  font-size: 0.875em;
 }
 header {
-  padding: 8px 0 10px;
+  padding: 0.5em 0 0.625em;
   margin: 0;
   background: #29303d;
   position: relative;
@@ -47,103 +79,95 @@ header a {
 header a:hover {
   color: #eee;
 }
-header .inner {
-  width: 950px;
-  margin: auto;
-}
-header .inner a#home {
+header a#home {
   margin: 0;
-  margin-right: 15px;
-  font-size: 22px;
+  margin-right: 0.7em;
+  margin-left: 0.6em;
+  font-size: 1.375em;
   font-weight: bold;
 }
-header .inner nav {
+header nav {
   display: inline;
 }
-header .inner span.orange {
+header span.orange {
   color: orange;
 }
-header .inner ul {
+header ul {
   margin: 0;
-  padding: 0 0 3px 0;
+  padding: 0 0 0.2em 0;
   display: inline;
 }
-header .inner ul li {
-  margin-left: 10px;
+header ul li {
+  margin-left: 0.62em;
   list-style-type: none;
   display: inline;
-  padding: 3px 5px 3px 5px;
-  border-radius: 3px;
+  padding: 0.2em 0.3em 0.2em 0.3em;
+  border-radius: 0.2em;
 }
-header .inner ul li .active {
+header ul li .active {
   background: #333b4d;
 }
 footer {
   background: #29303d;
   color: white;
-  padding: 20px 0 100px;
+  padding: 1.5em 0 10em;
 }
-footer .inner {
-  width: 950px;
+.inner {
   margin: auto;
 }
 #top {
   background: #f3f3f3;
   border-bottom: 1px solid #d7d7d7;
-  padding: 3px 0 0 0;
-}
-#top .inner {
-  width: 950px;
-  margin: auto;
+  padding: 0.2em 0 0 0;
 }
 #top .inner h1 {
-  margin-bottom: 0px;
+  /* margin-bottom: 0; */
 }
 #top .inner nav {
-  padding-bottom: 10px;
+  padding-bottom: 0.62em;
   color: #aaa;
 }
 #top .inner nav span {
   color: #777;
-  font-size: 12px;
-  padding: 0 7px 0 7px;
+  font-size: 0.75em;
+  padding: 0 0.5em 0 0.5em;
 }
 #top .inner nav div[fragment] {
   display: inline-block;
 }
 #top .inner nav a {
-  font-size: 12px;
-  padding-right: 7px;
+  font-size: 1em;
+  padding-right: 0.7em;
 }
 #top .inner nav a.item {
-  padding: 0 7px 0 7px;
+  padding: 0 0.7em 0 0.7em;
 }
 .tabs {
-  width: 950px;
   margin: auto;
-  padding-bottom: 20px;
+  padding-bottom: 1.25em;
 }
 .tabs ul {
   margin: 0;
   padding: 0;
+  margin-bottom: .5em;
 }
 .tabs ul li {
   list-style-type: none;
   display: inline-block;
-  padding: 7px 14px 3px 14px;
+  padding: 0.25em 0.875em 0.2em 0.875em;
   color: #777;
-  font-size: 15px;
+  font-size: 1.1em;
   font-variant: small-caps;
-  border-top: 5px solid white;
+  border-top: 0.3em solid white;
 }
 .tabs ul li.active {
-  border-top: 5px solid #525f7a;
+  border-top: 0.3em solid #525f7a;
 }
+
 #content {
-  padding-bottom: 50px;
+  padding-bottom: 3.5em;
   margin: auto;
-  width: 950px;
-  min-height: 750px;
+  min-height: 60em;
 }
 #content #doc {
   width: 40em;
@@ -152,34 +176,42 @@ footer .inner {
   display: inline-block;
 }
 .concept .num {
-  margin: 0px 8px 8px 0;
-  border-radius: 3px;
+  margin: 0 0.5em 0.5em 0;
+  border-radius: 0.2em;
   color: #666;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
   text-align: center;
   background: #ddd;
 }
-.map .concept .num {
-  box-shadow: 3px 3px 6px #999;
+.topic .list {
+  float: left;
+  margin-bottom: 2em;
 }
 .concept a {
   font-weight: bold;
 }
 .topic {
-  position: relative;
+  font-size: 1.1em;
+  vertical-align: top;
 }
 a:hover .num {
   background: #bbb;
+}
+.map-container {
+  float: left;
+  margin-left: 5em;
+  position: relative;
 }
 .map {
   padding: 0;
   position: absolute;
   top: 0;
-  right: 0;
-  width: 500px;
-  height: 500px;
+  left: 0;
+}
+.map .concept .num {
+  box-shadow: 0.2em 0.2em 0.375em #999;
 }
 .map.links {
   z-index: -10;
@@ -192,28 +224,28 @@ tt {
   font-size: 90%;
 }
 pre {
-  font-size: 14px;
-  line-height: 18px;
-  padding: 10px 15px;
+  font-size: 0.875em;
+  line-height: 1.125em;
+  padding: 0.62em 0.95em;
   border: 1px solid #ccc;
 }
 .footnote {
   font-size: 80%;
 }
 hr {
-  margin: 40px auto 20px auto;
+  margin: 25em auto 1.25em auto;
 }
 ul#cursos {
   padding: 0;
 }
 ul#cursos li {
   border: 1px solid #ddd;
-  border-radius: 5px;
-  margin: 0 12px 15px 0;
+  border-radius: 0.3em;
+  margin: 0 0.75em 0.95em 0;
   display: inline-block;
-  height: 160px;
-  width: 120px;
-  padding: 8px;
+  height: 11em;
+  width: 8.6em;
+  padding: 0.5em;
 }
 ul#cursos li a {
   font-weight: bold;
@@ -221,24 +253,25 @@ ul#cursos li a {
 ul#cursos li a h4 {
   margin: 0;
 }
-div.course {
-  width: 600px;
-}
 ul.course {
-  margin: 0 auto 0 0;
+  margin: 0;
+  padding-bottom: .5em;
   padding: 0;
-  width: 550px;
 }
 ul.course .topic {
-  border-top: 1px solid #ddd;
-  padding: 5px 0 10px 0;
+  font-size: .9em;
+  border-top: 1px solid #e7e7e7;
   list-style-type: none;
+  padding: .4em 0 .4em 0;
 }
 ul.course .topic .left {
   display: inline-block;
+  margin-left: .3em;
+  margin-bottom: .7em;
 }
 ul.course .topic .left h3 {
-  margin-bottom: 2px;
+  margin-bottom: 0.125em;
+  font-size: 1.3em;
 }
 ul.course .topic .left p {
   margin: 0;
@@ -247,10 +280,8 @@ ul.course .topic .left p {
 }
 ul.course .topic .concepts {
   display: inline-block;
-  float: right;
   margin: 0;
   padding: 0;
-  width: 275px;
 }
 ul.course .topic .concepts li {
   display: inline-block;
@@ -258,14 +289,14 @@ ul.course .topic .concepts li {
 ul.course .topic .concepts li a {
   color: #666;
   display: block;
-  margin: 0px 0px 5px 3px;
-  width: 20px;
-  height: 20px;
+  margin: 0.3em 0.2em;
+  width: 2em;
+  height: 2em;
   background: #ccc;
-  border-radius: 2px;
+  border-radius: 0.2em;
   text-align: center;
-  font-size: 11px;
-  line-height: 20px;
+  font-size: 1.1em;
+  line-height: 2em;
 }
 ul.course .topic .concepts li a:hover {
   background-color: #aaa;
@@ -277,7 +308,7 @@ ul.course .topic .concepts li a:hover {
 
 .fraglist {
   margin: 0;
-  padding: 20px;
+  padding: 1.25em;
 }
 .fraglist ul {
   padding: 0;
@@ -287,20 +318,20 @@ ul.course .topic .concepts li a:hover {
   list-style-type: none;
 }
 .fraglist p {
-  margin: 0 0 5px 0;
+  margin: 0 0 0.3em 0;
 }
 .fraglist tt {
-  font-size: 16px;
+  font-size: 1em;
   font-weight: bold;
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
   background-color: #cec;
   cursor: pointer;
 }
 .fraglist pre {
   margin: 0;
-  padding: 5px;
+  padding: 0.3em;
   background-color: #ccc;
-  font-size: 11px;
-  margin-bottom: 25px;
+  font-size: 0.75em;
+  margin-bottom: 1.5em;
 }
