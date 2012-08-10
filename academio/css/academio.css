@@ -2,37 +2,7 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
 @import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
 
-#content, #top .inner { width: 300px; }
-ul.course             { width: 300px; }
-ul.course .topic .concepts {
-  width: 100%;
-  margin-top: 1em;
-}
-.map-container { display: none; }
 
-@media screen and (min-width: 480px) {
-   #content, #top .inner { width: 450px; }
-   ul.course             { width: 410px; }
-   .map-container { clear: none; display: block; }
-}
-@media screen and (min-width: 750px) {
-   #content, #top .inner { width: 720px; }
-   ul.course             { width: 720px; }
-   ul.course .topic .concepts {
-     width: 410px;
-     float: right;
-   }
-   .map-container { clear: none; display: block; }
-}
-@media screen and (min-width: 1200px) {
-   #content, #top .inner { width: 1150px; }
-   ul.course             { width: 1100px; }
-   ul.course .topic .concepts {
-     width: 780px;
-     float: right;
-   }
-   .map-container { clear: none; display: block; }
-}
 
 html, body {
   height: 100%;
@@ -55,7 +25,7 @@ h1, h2, h3, h4 {
 h1 {
   font-family: "Open Sans";
   font-weight: 300;
-  margin: 0.2em 0 0.3em 0;
+  margin: 0.2em 0 0.15em 0;
   font-variant: normal;
   font-style: normal;
   font-size: 2.25em;
@@ -118,14 +88,14 @@ footer {
 #top {
   background: #f3f3f3;
   border-bottom: 1px solid #d7d7d7;
-  padding: 0.2em 0 0 0;
+  padding: .5em .5em 0 .5em;
 }
 #top .inner {
   position: relative;
 }
 #top .inner h1 {
-  padding-top: .7em;
-  /* margin-bottom: 0; */
+  padding-top: 0.7em;
+  line-height: 1.4em;
 }
 #top .inner nav {
   position: absolute;
@@ -148,20 +118,18 @@ footer {
 }
 
 #vid {
-  margin-top: 1em;
 }
 #vid img {
-  width: 40em;
+  width: 100%;
 }
 
 #content {
-  padding-bottom: 3.5em;
-  margin: auto;
-  min-height: 60em;
+  margin: .7em;
+  margin-bottom: 2em;
+  min-height: 45em;
 }
+
 #doc {
-  margin-top: 1em;
-  width: 40em;
 }
 .concept div {
   display: inline-block;
@@ -191,6 +159,7 @@ a:hover .num {
   background: #bbb;
 }
 .map-container {
+  display: none;
   float: left;
   margin-left: 5em;
   position: relative;
@@ -245,6 +214,7 @@ ul#cursos li a h4 {
   margin: 0;
 }
 ul.course {
+  width: 100%;
   margin: 0;
   padding-bottom: .5em;
   padding: 0;
@@ -273,6 +243,7 @@ ul.course .topic .concepts {
   display: inline-block;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 ul.course .topic .concepts li {
   display: inline-block;
@@ -281,13 +252,13 @@ ul.course .topic .concepts li a {
   color: #666;
   display: block;
   margin: 0.3em 0.2em;
-  width: 2em;
-  height: 2em;
   background: #ccc;
-  border-radius: 0.2em;
   text-align: center;
   font-size: 1.1em;
+  width: 2em;
+  height: 2em;
   line-height: 2em;
+  border-radius: 0.2em;
 }
 ul.course .topic .concepts li a:hover {
   background-color: #aaa;
@@ -325,4 +296,108 @@ ul.course .topic .concepts li a:hover {
   background-color: #ccc;
   font-size: 0.75em;
   margin-bottom: 1.5em;
+}
+
+/* phones and tablets */
+@media screen and (max-width: 750px) {
+  #top .inner h1 {
+    padding-top: 0.8em;
+  }
+  #top .inner nav a {
+    font-size: 1.1em;
+    padding-right: 0.7em;
+    margin-right: .4em;
+  }
+  #top .inner nav a.item {
+    padding: 0.2em 0.7em 0.2em 0.7em;
+    border: 1px solid #ccc;
+    background: #e7e7e7;
+    border-radius: 0.3em;
+  }
+  ul.course .topic .concepts li a {
+    margin: 0.3em 0.2em;
+    font-size: 1.4em;
+    width: 2.3em;
+    height: 2.3em;
+    line-height: 2.3em;
+    border-radius: 0.3em;
+  }
+  .topic {
+    font-size: 1.3em;
+  }
+  ul.course .topic .left {
+    font-size: 1.3em;
+  }
+}
+
+/* big phone */
+@media screen and (min-width: 480px) {
+  .map-container { 
+    clear: none; 
+    display: block; 
+  }
+}
+
+/* tablet */
+@media screen and (min-width: 800px) {
+  #content, #top .inner { 
+    width: 720px; 
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #content > p {
+    width: 40em;
+  }
+  ul.course { 
+    width: 720px; 
+  }
+  ul.course .topic .concepts {
+    width: 370px;
+    float: right;
+  }
+  .map-container { 
+     clear: none; 
+     display: block; 
+  }
+}
+
+/* desktop */
+@media screen and (min-width: 1200px) {
+  #content, #top .inner { 
+    width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #content > p {
+    width: 40em;
+  }
+  #doc, #vid {
+    width: 45em;
+  }
+  ul.course { 
+    width: 1050px; 
+  }
+  ul.course .topic .concepts {
+    width: 740px;
+    float: right;
+  }
+  .map-container { 
+    clear: none; 
+    display: block; 
+  }
+  
+  #top .inner h1 {
+    padding-top: .7em;
+  }
+  #top .inner nav a {
+    font-size: 0.8em;
+    padding-right: 0.7em;
+    margin-right: .4em;
+  }
+  #top .inner nav a.item {
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    border: 1px solid #ccc;
+    background: #e7e7e7;
+    border-radius: 0.3em;
+  }
 }
