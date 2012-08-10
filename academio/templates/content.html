@@ -22,7 +22,7 @@
 
 {{define "item-nav"}}
 <nav>
-  <a ajx href="/cursos">Cursos</a>{{range .Path}}&gt;{% item-link {{.}} %}{{end}}
+  {{range .Path}}{% item-link {{.}} %}{{end}}
 </nav>
 {{end}}
 
@@ -30,8 +30,8 @@
 {{define "course"}}
 <div id="top">
   <div class="inner">
-    <h1>{{.Title}}</h1>
     {% item-nav {{.Id}} %}
+    <h1>{{.Title}}</h1>
   </div>
 </div>
 <div id="content" class="course">
@@ -47,8 +47,8 @@
 {{define "topic"}}
 <div id="top">
   <div class="inner">
-    <h1>{{.Title}}</h1>
     {% item-nav {{.Id}} %}
+    <h1>{{.Title}}</h1>
   </div>
 </div>
 <div id="content">
@@ -101,30 +101,15 @@
 {{define "concept"}}
 <div id="top">
   <div class="inner">
-    <h1>{{.Title}}</h1>
     {% item-nav {{.Id}} %}
+    <h1>{{.Title}}</h1>
   </div>
-</div>
-<div class="tabs">
-  <ul>
-    <li class="active"><a href="#vid">Video</a></li>
-    <li><a href="#doc">Documentación</a></li>
-    <li><a href="#exe">Ejercicios</a></li>
-  </ul>
 </div>
 <div id="content" class="topic">
-  <div id="vid">
-    <div class="tab-pane active" id="vid">
-      <iframe class="youtube-player"
-              width="950"
-              height="570"
-              frameborder="0"
-              src="http://www.youtube.com/embed/{{.VideoID}}?rel=0&wmode=transparent"
-              allowfullscreen="null">
-      </iframe>
-    </div>
+  <div id="vid" videoid="{{.VideoID}}">
+    <img src="/img/video.png">
   </div>
-  <div id="doc" style="display: none">
+  <div id="doc">
     {{.Data.Doc.Html}}
   </div>
 </div>
@@ -137,6 +122,7 @@ $(document).ready(function() {
     $('#content div' + $(this).attr('href')).show();
     $(this).parent().addClass('active');   
   });
+  $('#vid img').click(academio.showVideo);
 });
 </script>
 {{end}}

@@ -198,6 +198,9 @@ func main() {
 	http.Handle("/css/", 
 		http.StripPrefix("/css/", 
 		Gzipped(http.FileServer(http.Dir(srvdir + "/css")))))
+	http.Handle("/img/", 
+		http.StripPrefix("/img/", 
+		Gzipped(http.FileServer(http.Dir(srvdir + "/img")))))
 
 	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
 	http.HandleFunc("/png/", hPhotos)

@@ -66,3 +66,16 @@ academio.updateMap = function () {
       }
    }
 }
+
+academio.showVideo = function (ev) {
+   var videoid = $('#vid').attr('videoid');
+   $('#vid img').replaceWith('<iframe class="youtube-player" ' +
+                             'width="950" ' +
+                             'height="570" ' +
+                             'frameborder="0" ' +
+                             'src="http://www.youtube.com/embed/' + 
+                             videoid + 
+                             '?autoplay=1&rel=0&wmode=transparent" ' +
+                             'allowfullscreen>' +
+                             '</iframe>');
+}

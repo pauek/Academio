@@ -2,7 +2,7 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
 @import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
 
-#content, .tabs, #top .inner { width: 300px; }
+#content, #top .inner { width: 300px; }
 ul.course             { width: 300px; }
 ul.course .topic .concepts {
   width: 100%;
@@ -11,12 +11,12 @@ ul.course .topic .concepts {
 .map-container { display: none; }
 
 @media screen and (min-width: 480px) {
-   #content, .tabs, #top .inner { width: 450px; }
+   #content, #top .inner { width: 450px; }
    ul.course             { width: 410px; }
    .map-container { clear: none; display: block; }
 }
 @media screen and (min-width: 750px) {
-   #content, .tabs, #top .inner { width: 720px; }
+   #content, #top .inner { width: 720px; }
    ul.course             { width: 720px; }
    ul.course .topic .concepts {
      width: 410px;
@@ -25,7 +25,7 @@ ul.course .topic .concepts {
    .map-container { clear: none; display: block; }
 }
 @media screen and (min-width: 1200px) {
-   #content, .tabs, #top .inner { width: 1150px; }
+   #content, #top .inner { width: 1150px; }
    ul.course             { width: 1100px; }
    ul.course .topic .concepts {
      width: 780px;
@@ -55,7 +55,7 @@ h1, h2, h3, h4 {
 h1 {
   font-family: "Open Sans";
   font-weight: 300;
-  margin: 0.56em 0 0.32em 0;
+  margin: 0.2em 0 0.3em 0;
   font-variant: normal;
   font-style: normal;
   font-size: 2.25em;
@@ -120,48 +120,38 @@ footer {
   border-bottom: 1px solid #d7d7d7;
   padding: 0.2em 0 0 0;
 }
+#top .inner {
+  position: relative;
+}
 #top .inner h1 {
+  padding-top: .7em;
   /* margin-bottom: 0; */
 }
 #top .inner nav {
-  padding-bottom: 0.62em;
-  color: #aaa;
-}
-#top .inner nav span {
-  color: #777;
-  font-size: 0.75em;
-  padding: 0 0.5em 0 0.5em;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #top .inner nav div[fragment] {
   display: inline-block;
 }
 #top .inner nav a {
-  font-size: 1em;
+  font-size: 0.8em;
   padding-right: 0.7em;
+  margin-right: .4em;
 }
 #top .inner nav a.item {
-  padding: 0 0.7em 0 0.7em;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border: 1px solid #ccc;
+  background: #e7e7e7;
+  border-radius: 0.3em;
 }
-.tabs {
-  margin: auto;
-  padding-bottom: 1.25em;
+
+#vid {
+  margin-top: 1em;
 }
-.tabs ul {
-  margin: 0;
-  padding: 0;
-  margin-bottom: .5em;
-}
-.tabs ul li {
-  list-style-type: none;
-  display: inline-block;
-  padding: 0.25em 0.875em 0.2em 0.875em;
-  color: #777;
-  font-size: 1.1em;
-  font-variant: small-caps;
-  border-top: 0.3em solid white;
-}
-.tabs ul li.active {
-  border-top: 0.3em solid #525f7a;
+#vid img {
+  width: 40em;
 }
 
 #content {
@@ -169,7 +159,8 @@ footer {
   margin: auto;
   min-height: 60em;
 }
-#content #doc {
+#doc {
+  margin-top: 1em;
   width: 40em;
 }
 .concept div {
