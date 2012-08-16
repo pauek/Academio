@@ -32,7 +32,7 @@ class HTMLTranslator(html4css1.HTMLTranslator):
       path = node.astext()
       url = normalize(path)
       name = path.split('/')[-1]
-      self.body.append('<a href="/%s">%s</a>' % (url, name))
+      self.body.append('<a ajx href="/%s">%s</a>' % (url, name))
       raise nodes.SkipNode
 
 class HTMLWriter(html4css1.Writer):
