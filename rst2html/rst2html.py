@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, subprocess, codecs
+import sys, os, subprocess, codecs, re
 import docutils.core
 from docutils import nodes
 from docutils.parsers.rst.roles import register_generic_role
@@ -12,8 +12,10 @@ from docutils.writers import html4css1
 # - takes an ID and generates the apropriate link.
 
 class concept(nodes.TextElement): pass
+class math(nodes.TextElement): pass
 
 register_generic_role('concept', concept)
+register_generic_role('math', math)
 
 ## Highlighting in docutils (using pygments)
 
@@ -33,6 +35,15 @@ class HTMLTranslator(html4css1.HTMLTranslator):
       url = normalize(path)
       name = path.split('/')[-1]
       self.body.append('<a ajx href="/%s">%s</a>' % (url, name))
+      raise nodes.SkipNode # avoid depart_...
+   
+   def visit_math(self, node):
+      print "'" + node.rawsource + "'"
+      g = re.match(':math:`(.*)`', node.rawsource, flags=re.DOTALL)
+      if g: 
+         math = g.group(1)
+         print math
+         self.body.append('\\(%s\\)' % math)
       raise nodes.SkipNode
 
 class HTMLWriter(html4css1.Writer):

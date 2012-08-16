@@ -114,6 +114,11 @@
     {{.Data.Doc.Html}}
   </div>
   <div class="clear"></div>
+  <script>
+    fragments.ready(function () {
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    });
+  </script>
 </div>
 
 <script>
