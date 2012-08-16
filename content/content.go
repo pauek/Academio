@@ -48,7 +48,7 @@ type CommonData struct {
 	}
 }
 
-func (data *CommonData) Id() string { return toID(data.dir.rel) }
+func (data *CommonData) Id() string { return ToID(data.dir.rel) }
 
 func (data *CommonData) Path() (ids []string) {
 	acum := ""
@@ -119,7 +119,7 @@ func (c *Concept) read(dir Dir) Item {
 	if deps, err := ioutil.ReadFile(dir.file("depends")); err == nil {
 		for _, dep := range strings.Split(string(deps), "\n") {
 			if dep != "" {
-				c.Depends = append(c.Depends, toID(dep))
+				c.Depends = append(c.Depends, ToID(dep))
 			}
 		}
 	}
@@ -149,7 +149,7 @@ func (g *Group) read(dir Dir) {
 	eachSubDir(dir.abs(), func(subdir string) {
 		d := dir.join(subdir)
 		subitem := SubItem{
-			Id:    toID(d.rel),
+			Id:    ToID(d.rel),
 			Title: removeOrder(subdir),
 			dir:   d.abs(),
 		}
@@ -224,8 +224,8 @@ func (t *Topic) read(dir Dir) Item {
 		di := []int{}
 		if depends, err := ioutil.ReadFile(path); err == nil {
 			for _, dep := range strings.Split(string(depends), "\n") {
-				fmt.Printf("dep = '%s'\n", toID(dep))
-				if j := t.index(toID(dep)); j != -1 {
+				fmt.Printf("dep = '%s'\n", ToID(dep))
+				if j := t.index(ToID(dep)); j != -1 {
 					di = append(di, j)
 				}
 			}

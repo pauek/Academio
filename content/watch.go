@@ -48,7 +48,7 @@ func WatchForChanges(onChange func(id string)) {
 					if !isDir(ev) {
 						rel = filepath.Dir(rel)
 					}
-					id := toID(rel)
+					id := ToID(rel)
 					onChange(id)
 					if isDir(ev) {
 						onChange(parentID(id))

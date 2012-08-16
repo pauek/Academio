@@ -37,7 +37,7 @@ func init() {
 
 // Convert a directory name to an ID
 // 
-func toID(dir string) (id string) {
+func ToID(dir string) (id string) {
 	id = removeOrder(dir)                  // remove "^[0-9]+. "
 	id = replacer.Replace(id)              // remove accents + map chars
 	id = strings.Title(id)                 // Make A Title
@@ -62,7 +62,7 @@ func toDir(ID string) (dir Dir) {
 	for _, root := range roots {
 		found := ""
 		walkDirs(root, func(reldir string, level int) {
-			if toID(reldir) == ID && found == "" {
+			if ToID(reldir) == ID && found == "" {
 				found = reldir
 			}
 		})
