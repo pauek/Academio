@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os
+import sys, os, subprocess, codecs
 import docutils.core
 from docutils import nodes
 from docutils.parsers.rst.roles import register_generic_role
@@ -18,17 +18,20 @@ register_generic_role('concept', concept)
 ## Highlighting in docutils (using pygments)
 
 def normalize(cid):
-   
-   
+   p = subprocess.Popen(["dir2id", cid], stdout=subprocess.PIPE)
+   output = ""
+   for line in p.stdout:
+      output += line
+   return output
 
 class HTMLTranslator(html4css1.HTMLTranslator):
    def __init__(self, document):
       html4css1.HTMLTranslator.__init__(self, document)
 
    def visit_concept(self, node):
-      ID = node.astext()
-      url = ID
-      name = ID.split('/')[-1]
+      path = node.astext()
+      url = normalize(path)
+      name = path.split('/')[-1]
       self.body.append('<a href="/%s">%s</a>' % (url, name))
       raise nodes.SkipNode
 
@@ -53,7 +56,12 @@ def read_file(filename, utf=False):
    except IOError:
       return None
 
-filename = sys.argv[1]
-text = read_file(filename)
+rst = sys.argv[1]
+dirr, base = os.path.split(rst)
+name, ext = os.path.splitext(base)
+html = os.path.join(dirr, name + '.html')
+print html
+text = read_file(rst)
 dic = docutils.core.publish_parts(text, writer = HTMLWriter())
-print dic['body']
+f = codecs.open(html, 'w', 'utf8')
+f.write(dic['body'])
