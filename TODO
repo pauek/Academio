@@ -1,0 +1,12 @@
+
+[ ] Actualizar el .html a partir del .rst (si es más reciente)
+    desde el mismo servidor.
+
+[ ] Añadir usuarios (+ sesiones).
+
+[ ] Sistema de comentarios.
+
+[ ] Blog:
+    - ficheros rst para cada entrada (no DB!).
+    - comentarios usando el sistema propio de Academio.
+     
