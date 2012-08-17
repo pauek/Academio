@@ -4,7 +4,7 @@
 
 html, body {
   height: 100%;
-  background: #e6e4e0;
+  background: #ddd6cb;
 }
 a {
   color: #364563;
@@ -78,7 +78,7 @@ header ul li .active {
 }
 footer {
   border-top: 1px solid #fafcff;
-  color: #999;
+  color: #666;
   padding: 1.5em 1.5em 5em;
 }
 footer .logo {
@@ -86,7 +86,7 @@ footer .logo {
   margin-right: 5em;
 }
 footer .logo .orange {
-  color: #c4c0b5;
+  color: #afaba0;
 }
 footer ul {
   margin: 0;
@@ -98,18 +98,18 @@ footer ul li {
   margin-right: 3em;
 }
 footer a {
-  color: #999;
+  color: #777;
 }
 footer a:hover {
-  color: #777;
+  color: #444;
 }
 
 .inner {
   margin: auto;
 }
 #top {
-  background: #faf6ec;
-  border-bottom: 1px solid #eee8d9;
+  background: #f3f3f5;
+  border-bottom: 1px solid #e7ebff;
   padding: .5em .5em 0 .5em;
 }
 #top .inner {
@@ -135,13 +135,13 @@ footer a:hover {
 }
 #top .inner nav a.item {
   padding: 0.2em 0.5em 0.2em 0.5em;
-  border: 1px solid #e4d9be;
-  background: #f7efd7;
+  border: 1px solid #a5abbe;
+  background: #dadee9;
   border-radius: 0.3em;
-  color: #9b8e73;
+  color: #505c6f;
 }
 #top .inner nav a.item:hover {
-  background: #eee6ce;
+  background: #ebe8df;
 }
 
 #vid {
@@ -284,7 +284,7 @@ ul.course .topic .concepts li a {
   color: #575d68;
   display: block;
   margin: 0.3em 0.2em;
-  background: #d8d2c2;
+  background: #d4d7db;
   text-align: center;
   font-size: 1.1em;
   width: 2em;
@@ -293,7 +293,7 @@ ul.course .topic .concepts li a {
   border-radius: 0.2em;
 }
 ul.course .topic .concepts li a:hover {
-  background-color: #bbb5a6;
+  background-color: #ebe8df;
 }
 .clear {
   clear: both;
