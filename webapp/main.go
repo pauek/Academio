@@ -4,18 +4,19 @@ import (
 	"Academio/content"
 	"bytes"
 	"encoding/json"
+	"path/filepath"
 	"fmt"
 	"flag"
 	F "fragments"
-	"io"
 	"log"
+	"io"
 	"net"
 	"net/http"
 	"os"
 	"time"
 )
 
-var srvdir = os.Getenv("ACADEMIO_ROOT")
+var srvdir = filepath.Join(os.Getenv("ACADEMIO_ROOT"), "webapp")
 var cache = F.NewCache()
 
 func exec(tname string, data interface{}) string {
