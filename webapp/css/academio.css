@@ -145,6 +145,8 @@ footer a:hover {
 }
 
 #vid {
+  margin-top: 1.2em;
+  margin-bottom: 2.4em;
 }
 #vid img {
   width: 100%;
@@ -156,9 +158,12 @@ div[fragment=_root] {
 
 #content {
   padding: .7em;
-  padding-top: 2em;
   padding-bottom: 5em;
   min-height: 45em;
+}
+#content > p {
+  margin: 0;
+  margin-bottom: 1.5em;
 }
 
 #doc {
