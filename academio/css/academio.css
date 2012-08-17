@@ -2,10 +2,9 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700");
 @import url("http://fonts.googleapis.com/css?family=Droid+Sans+Mono");
 
-
-
 html, body {
   height: 100%;
+  background: #e6e4e0;
 }
 a {
   color: #364563;
@@ -49,7 +48,7 @@ header a {
 header a:hover {
   color: #eee;
 }
-header a#home {
+.logo {
   margin: 0;
   margin-right: 0.7em;
   margin-left: 0.6em;
@@ -78,16 +77,39 @@ header ul li .active {
   background: #333b4d;
 }
 footer {
-  background: #29303d;
-  color: white;
-  padding: 1.5em 0 10em;
+  border-top: 1px solid #fafcff;
+  color: #999;
+  padding: 1.5em 1.5em 5em;
 }
+footer .logo {
+  color: white;
+  margin-right: 5em;
+}
+footer .logo .orange {
+  color: #c4c0b5;
+}
+footer ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+footer ul li {
+  display: inline-block;
+  margin-right: 3em;
+}
+footer a {
+  color: #999;
+}
+footer a:hover {
+  color: #777;
+}
+
 .inner {
   margin: auto;
 }
 #top {
-  background: #f3f3f3;
-  border-bottom: 1px solid #d7d7d7;
+  background: #faf6ec;
+  border-bottom: 1px solid #eee8d9;
   padding: .5em .5em 0 .5em;
 }
 #top .inner {
@@ -96,6 +118,7 @@ footer {
 #top .inner h1 {
   padding-top: 0.7em;
   line-height: 1.4em;
+  color: #29393d;
 }
 #top .inner nav {
   position: absolute;
@@ -112,9 +135,13 @@ footer {
 }
 #top .inner nav a.item {
   padding: 0.2em 0.5em 0.2em 0.5em;
-  border: 1px solid #ccc;
-  background: #e7e7e7;
+  border: 1px solid #e4d9be;
+  background: #f7efd7;
   border-radius: 0.3em;
+  color: #9b8e73;
+}
+#top .inner nav a.item:hover {
+  background: #eee6ce;
 }
 
 #vid {
@@ -123,9 +150,14 @@ footer {
   width: 100%;
 }
 
+div[fragment=_root] {
+  background: #fff;
+}
+
 #content {
-  margin: .7em;
-  margin-bottom: 2em;
+  padding: .7em;
+  padding-top: 2em;
+  padding-bottom: 5em;
   min-height: 45em;
 }
 
@@ -249,10 +281,10 @@ ul.course .topic .concepts li {
   display: inline-block;
 }
 ul.course .topic .concepts li a {
-  color: #666;
+  color: #575d68;
   display: block;
   margin: 0.3em 0.2em;
-  background: #ccc;
+  background: #d8d2c2;
   text-align: center;
   font-size: 1.1em;
   width: 2em;
@@ -261,7 +293,7 @@ ul.course .topic .concepts li a {
   border-radius: 0.2em;
 }
 ul.course .topic .concepts li a:hover {
-  background-color: #aaa;
+  background-color: #bbb5a6;
 }
 .clear {
   clear: both;
@@ -310,8 +342,6 @@ ul.course .topic .concepts li a:hover {
   }
   #top .inner nav a.item {
     padding: 0.2em 0.7em 0.2em 0.7em;
-    border: 1px solid #ccc;
-    background: #e7e7e7;
     border-radius: 0.3em;
   }
   ul.course .topic .concepts li a {
@@ -396,8 +426,6 @@ ul.course .topic .concepts li a:hover {
   }
   #top .inner nav a.item {
     padding: 0.2em 0.5em 0.2em 0.5em;
-    border: 1px solid #ccc;
-    background: #e7e7e7;
     border-radius: 0.3em;
   }
 }
