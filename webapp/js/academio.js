@@ -2,19 +2,22 @@
 var academio = {};
 
 academio.updateMap = function () {
-   var ctx;
+   if ($('#map').length == 0) {
+      return;
+   }
+   
    var xmin, ymin;
    var xcurr = 0, ycurr = 0;
    var items = [];
 
    // Get positions
-   $('.map .concept').each(function () {
+   $('#map .concept').each(function () {
       var x = parseInt($(this).attr('x'));
       var y = parseInt($(this).attr('y'));
       var deps = JSON.parse($(this).attr('deps'));
       items.push({ x: x, y: y, deps: deps });
    });
-   
+
    // Assign positions if necessary
    for (var i = 0; i < items.length; i++) {
       var it = items[i];
@@ -38,32 +41,57 @@ academio.updateMap = function () {
       }
    }
 
-   // Move each element
-   $('.map .concept').each(function (i) {
+   // Compute px, py
+   $('#map .concept').each(function (i) {
       var it = items[i];
       it.px = (it.x - xmin) * 60;
       it.py = (it.y - ymin) * 60;
-      $(this).css({ position: "absolute", left: it.px, top: it.py });
    });
 
    // Paint links
-   if (typeof ctx === "undefined") {
-      ctx = $('#deps')[0].getContext('2d');
-   }
-   ctx.clearRect(0, 0, 500, 500);
+   var c = new fabric.Canvas('c', { 
+      backgroundColor: "#eee",
+      selection: false 
+   });
+   c.setHeight($('#map').height());
+   c.setWidth($('#map').width());
    for (var i = 0; i < items.length; i++) {
       var deps = items[i].deps;
       for (var j = 0; j < deps.length; j++) {
          var k = deps[j];
-         ctx.beginPath();
-         // porqué +15??
-         ctx.moveTo(items[i].px + 17, items[i].py + 17);
-         ctx.lineTo(items[k].px + 17, items[k].py + 17);
-         ctx.closePath();
-         ctx.strokeStyle = "rgba(200, 200, 200, .3)";
-         ctx.lineWidth = 4;
-         ctx.stroke();
+         var coords = [items[i].px + 15, items[i].py + 15,
+                       items[k].px + 15, items[k].py + 15];
+         var line = new fabric.Line(coords, {
+            fill: "rgb(200, 200, 200)",
+            strokeWidth: 3,
+            selectable: false
+         });
+         c.add(line);
       }
+   }
+   for (var i = 0; i < items.length; i++) {
+      var rect = new fabric.Rect({
+         left: items[i].px + 15, 
+         top: items[i].py + 15, 
+         width: 20,
+         height: 20,
+         fill: "#fff",
+         stroke: "#555",
+         strokeWidth: 2,
+         selectable: false,
+      });
+      c.add(rect);
+   }
+   for (var i = 0; i < items.length; i++) {
+      var text = new fabric.Text("" + (i + 1), {
+         left: items[i].px + 15,
+         top: items[i].py + 15,
+         fontFamily: "Open Sans",
+         fontSize: 12,
+         stroke: "#555",
+         selectable: false,
+      });
+      c.add(text);
    }
 }
 

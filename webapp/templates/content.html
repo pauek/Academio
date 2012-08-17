@@ -62,17 +62,13 @@
       </div>
       {{end}}
     </div>
-    <div class="map-container">
-    <div class="map">
+    <div id="map">
       {{range .ChildrenInfo}}
       <div class="concept" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">
         <a ajx href="/{{.Item.Id}}"><div class="num">{{.Index}}</div></a>
       </div>
       {{end}}
-    </div>
-    <div class="map links">
-      <canvas id="deps" width="500" height="500"></canvas>
-    </div>
+      <canvas id="c" width="500" height="500"></canvas>
     </div>
   </div>
   <div class="clear"></div>
