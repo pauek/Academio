@@ -168,11 +168,15 @@ div[fragment=_root] {
 
 #doc {
 }
+.concept {
+  margin-bottom: .7em;
+}
 .concept div {
   display: inline-block;
 }
 .concept .num {
-  margin: 0 0.5em 0.5em 0;
+  margin: 0;
+  margin-right: .3em;
   border-radius: 0.2em;
   color: #666;
   width: 2em;

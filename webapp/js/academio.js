@@ -8,7 +8,6 @@ academio.updateMap = function () {
    
    var DIST = 60, WIDTH = 25, HEIGHT = 25, MARGIN = 20;
 
-   var xmin, ymin, xmax, ymax;
    var xcurr = 0, ycurr = 0;
    var items = [];
 
@@ -33,31 +32,60 @@ academio.updateMap = function () {
    }
 
    // Compute minimum of x and y
-   for (var i = 0; i < items.length; i++) {
+   var xmin = items[0].x, ymin = items[0].y;
+   var xmax = items[0].x, ymax = items[0].y;
+   for (var i = 1; i < items.length; i++) {
       var it = items[i];
-      if (typeof xmin === "undefined" || it.x < xmin) {
-         xmin = it.x;
-      } 
-      if (typeof xmax === "undefined" || it.x > xmax) {
-         xmax = it.x;
-      }
-      if (typeof ymin === "undefined" || it.y < ymin) {
-         ymin = it.y;
-      }
-      if (typeof ymax === "undefined" || it.y > ymax) {
-         ymax = it.y;
-      }
+      if (it.x < xmin) { xmin = it.x; } 
+      if (it.x > xmax) { xmax = it.x; } 
+      if (it.y < ymin) { ymin = it.y; } 
+      if (it.y > ymax) { ymax = it.y; } 
    }
 
    // Paint links
    var c = new fabric.Canvas('c', { 
       backgroundColor: "#f3f3f5",
-      selection: false 
+      hoverCursor: 'pointer',
+      selection: false,
    });
    var width = $('#map').width();
    var height = $('#map').height();
    c.setWidth(width);
    c.setHeight(height);
+
+   function high(target, light) {
+      var i = target._index;
+      var div = $('.topic .list .concept')[i];
+      var color = (light ? '#eee' : '#fff');
+      $(div).css({ background: color });
+      if (target != null) {
+         target.getObjects()[0].setFill(color);
+         c.renderAll();
+      }
+   }
+
+   var over;
+   c.on('mouse:move', function (opts) {
+      var target = c.findTarget(opts.e, true);
+      if (target) {
+         if (over != target) {
+            high(target, true);
+            if (over != null) {
+               high(over, false);
+            }
+            over = target;
+         }
+      } else if (over != null) {
+         high(over, false);
+         over = null;
+      }
+   });
+   c.on('mouse:down', function (e) {
+      if (over !== null) {
+         var i = over._index;
+         fragments.follow($('.topic .list .concept a')[i]);
+      }
+   });
 
    var scale, xoffset, yoffset;
    var xtotal = WIDTH + (xmax - xmin) * DIST + 2 * MARGIN;
@@ -73,12 +101,13 @@ academio.updateMap = function () {
       yoffset = (height - ytotal * scale) / 2.0;
    }
    function xmap(x) {
-      return (WIDTH / 2.0 + (x - xmin) * DIST) * scale + xoffset + MARGIN * scale;
+      return (MARGIN + WIDTH / 2.0 + (x - xmin) * DIST) * scale + xoffset;
    }
    function ymap(y) {
-      return (HEIGHT / 2.0 + (y - ymin) * DIST) * scale + yoffset + MARGIN * scale;
+      return (MARGIN + HEIGHT / 2.0 + (y - ymin) * DIST) * scale + yoffset;
    }
 
+   // links
    for (var i = 0; i < items.length; i++) {
       var deps = items[i].deps;
       for (var j = 0; j < deps.length; j++) {
@@ -99,26 +128,33 @@ academio.updateMap = function () {
       for (var i = 0; i < items.length; i++) {
          var item = svg.clone();
          item.set({
+            selectable: false,
             left: xmap(items[i].x),
             top: ymap(items[i].y),
-            selectable: false,
          });
          item.scaleToWidth(WIDTH * scale);
-         c.add(item);
-      }
-      // text on top
-      for (var i = 0; i < items.length; i++) {
          var text = new fabric.Text("" + (i + 1), {
+            selectable: false,
             left: xmap(items[i].x),
             top: ymap(items[i].y),
             fontFamily: "Open Sans",
             fontSize: HEIGHT / 1.8 * scale,
-            stroke: "#29393d",
-            selectable: false,
+            fontWeight: "normal",
+            fontStyle: "normal",
+            strokeWidth: 1,
+            fill: "#29303d",
          });
-         c.add(text);
+         var group = new fabric.Group([item, text], {
+            _index: i,
+            hasControls: false,
+            hasBorders: false,
+            lockMovementX: true,
+            lockMovementY: true,
+         });
+         c.add(group);
       }
    });
+
 }
 
 academio.showVideo = function (ev) {
