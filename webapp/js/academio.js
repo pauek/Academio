@@ -6,12 +6,14 @@ academio.updateMap = function () {
       return;
    }
    
-   var xmin, ymin;
+   var DIST = 60, WIDTH = 25, HEIGHT = 25, MARGIN = 20;
+
+   var xmin, ymin, xmax, ymax;
    var xcurr = 0, ycurr = 0;
    var items = [];
 
    // Get positions
-   $('#map .concept').each(function () {
+   $('.topic .list .concept').each(function () {
       var x = parseInt($(this).attr('x'));
       var y = parseInt($(this).attr('y'));
       var deps = JSON.parse($(this).attr('deps'));
@@ -36,63 +38,87 @@ academio.updateMap = function () {
       if (typeof xmin === "undefined" || it.x < xmin) {
          xmin = it.x;
       } 
+      if (typeof xmax === "undefined" || it.x > xmax) {
+         xmax = it.x;
+      }
       if (typeof ymin === "undefined" || it.y < ymin) {
          ymin = it.y;
       }
+      if (typeof ymax === "undefined" || it.y > ymax) {
+         ymax = it.y;
+      }
    }
-
-   // Compute px, py
-   $('#map .concept').each(function (i) {
-      var it = items[i];
-      it.px = (it.x - xmin) * 60;
-      it.py = (it.y - ymin) * 60;
-   });
 
    // Paint links
    var c = new fabric.Canvas('c', { 
-      backgroundColor: "#eee",
+      backgroundColor: "#f3f3f5",
       selection: false 
    });
-   c.setHeight($('#map').height());
-   c.setWidth($('#map').width());
+   var width = $('#map').width();
+   var height = $('#map').height();
+   c.setWidth(width);
+   c.setHeight(height);
+
+   var scale, xoffset, yoffset;
+   var xtotal = WIDTH + (xmax - xmin) * DIST + 2 * MARGIN;
+   var ytotal = HEIGHT + (ymax - ymin) * DIST + 2 * MARGIN;
+   var prop = height / width, pr = ytotal / xtotal;
+   if (pr < prop) { // even negative values
+      scale = width / xtotal;
+      xoffset = (width - xtotal * scale) / 2.0;
+      yoffset = 0;
+   } else {
+      scale = height / ytotal;
+      xoffset = (width - xtotal * scale) / 2.0;
+      yoffset = (height - ytotal * scale) / 2.0;
+   }
+   function xmap(x) {
+      return (WIDTH / 2.0 + (x - xmin) * DIST) * scale + xoffset + MARGIN * scale;
+   }
+   function ymap(y) {
+      return (HEIGHT / 2.0 + (y - ymin) * DIST) * scale + yoffset + MARGIN * scale;
+   }
+
    for (var i = 0; i < items.length; i++) {
       var deps = items[i].deps;
       for (var j = 0; j < deps.length; j++) {
          var k = deps[j];
-         var coords = [items[i].px + 15, items[i].py + 15,
-                       items[k].px + 15, items[k].py + 15];
+         var coords = [xmap(items[i].x), ymap(items[i].y),
+                       xmap(items[k].x), ymap(items[k].y)];
          var line = new fabric.Line(coords, {
             fill: "rgb(200, 200, 200)",
-            strokeWidth: 3,
+            strokeWidth: 3 * scale,
             selectable: false
          });
          c.add(line);
       }
    }
-   for (var i = 0; i < items.length; i++) {
-      var rect = new fabric.Rect({
-         left: items[i].px + 15, 
-         top: items[i].py + 15, 
-         width: 20,
-         height: 20,
-         fill: "#fff",
-         stroke: "#555",
-         strokeWidth: 2,
-         selectable: false,
-      });
-      c.add(rect);
-   }
-   for (var i = 0; i < items.length; i++) {
-      var text = new fabric.Text("" + (i + 1), {
-         left: items[i].px + 15,
-         top: items[i].py + 15,
-         fontFamily: "Open Sans",
-         fontSize: 12,
-         stroke: "#555",
-         selectable: false,
-      });
-      c.add(text);
-   }
+   fabric.loadSVGFromURL('/img/item.svg', function(objects, options) {
+      // rectangles
+      var svg = fabric.util.groupSVGElements(objects, options);
+      for (var i = 0; i < items.length; i++) {
+         var item = svg.clone();
+         item.set({
+            left: xmap(items[i].x),
+            top: ymap(items[i].y),
+            selectable: false,
+         });
+         item.scaleToWidth(WIDTH * scale);
+         c.add(item);
+      }
+      // text on top
+      for (var i = 0; i < items.length; i++) {
+         var text = new fabric.Text("" + (i + 1), {
+            left: xmap(items[i].x),
+            top: ymap(items[i].y),
+            fontFamily: "Open Sans",
+            fontSize: HEIGHT / 1.8 * scale,
+            stroke: "#29393d",
+            selectable: false,
+         });
+         c.add(text);
+      }
+   });
 }
 
 academio.showVideo = function (ev) {

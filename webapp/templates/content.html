@@ -56,18 +56,13 @@
   <div class="topic">
     <div class="list">
       {{range .ChildrenInfo}}
-      <div class="concept">
+      <div class="concept" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">
         <div class="num">{{.Index}}</div>
         <a ajx class="item" href="/{{.Item.Id}}">{{.Item.Title}}</a>
       </div>
       {{end}}
     </div>
     <div id="map">
-      {{range .ChildrenInfo}}
-      <div class="concept" x="{{.Coords.X}}" y="{{.Coords.Y}}" deps="{{.Deps}}">
-        <a ajx href="/{{.Item.Id}}"><div class="num">{{.Index}}</div></a>
-      </div>
-      {{end}}
       <canvas id="c" width="500" height="500"></canvas>
     </div>
   </div>
