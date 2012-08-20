@@ -162,6 +162,7 @@ func Page(w http.ResponseWriter, req *http.Request) {
 }
 
 var port = flag.Int("port", 8080, "Network port")
+var ssl = flag.Bool("ssl", false, "Use SSL?")
 
 func main() {
 	flag.Parse()
@@ -207,6 +208,14 @@ func main() {
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/", GzippedFunc(Page))
 
+	if *ssl {
+		listenSSL()
+	} else {
+		listen()
+	}
+}
+
+func listen_() {
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("Cannot listen on :%d", *port)
@@ -214,4 +223,23 @@ func main() {
 	}
 	log.Printf("Ready.")
 	http.Serve(ln, nil)
+}
+
+func listen() {
+	p := fmt.Sprintf(":%d", *port)
+	err := http.ListenAndServe(p, nil)
+	if err != nil {
+		log.Fatalf("Cannot Listen: %s", err)
+	}
+}
+
+func listenSSL() {
+	root := os.Getenv("ACADEMIO_ROOT")
+	certfile := filepath.Join(root, "webapp/certs/cert.pem")
+	keyfile  := filepath.Join(root, "webapp/certs/academio.key")
+		p := fmt.Sprintf(":%d", *port)
+	err := http.ListenAndServeTLS(p, certfile, keyfile, nil)
+	if err != nil {
+		log.Fatalf("Cannot ListenTLS: %s", err)
+	}
 }
