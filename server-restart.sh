@@ -11,6 +11,6 @@ pkill -9 webapp
 echo "Starting new process"
 ACADEMIO_PATH=$ACADEMIO_PATH \
 ACADEMIO_ROOT=$ACADEMIO_ROOT \
-  nohup $(which webapp) -port=80 &>> $ACADEMIO_ROOT/log &
+  nohup $(which webapp) -ssl -port=443 &>> $ACADEMIO_ROOT/log &
 EOF
 echo "Done"
