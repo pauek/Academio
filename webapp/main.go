@@ -248,9 +248,8 @@ func listenSSL() {
 func redirectToSSL() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func (w http.ResponseWriter, req *http.Request) {
-		url := req.URL
-		url.Scheme = "https"
-		http.Redirect(w, req, url.String(), http.StatusMovedPermanently)
+		url := "https:/" + "/academ.io" + req.URL.String()
+		http.Redirect(w, req, url, http.StatusMovedPermanently)
 	})
 	srv := http.Server{
 		Addr: ":http",
