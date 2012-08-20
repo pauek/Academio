@@ -117,7 +117,7 @@ func eachSubDir(dir string, fn func(dir string)) error {
 		return err
 	}
 	for _, info := range fileinfo {
-		if info.IsDir() && info.Name()[0] != '.' {
+		if info.IsDir() && info.Name()[0] != '.' && info.Name()[0] != '_' {
 			fn(info.Name())
 		}
 	}
