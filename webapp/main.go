@@ -209,7 +209,8 @@ func main() {
 	http.HandleFunc("/", GzippedFunc(Page))
 
 	if *ssl {
-		listenSSL()
+		go listenSSL()
+		redirectToSSL()
 	} else {
 		listen()
 	}
@@ -241,5 +242,22 @@ func listenSSL() {
 	err := http.ListenAndServeTLS(p, certfile, keyfile, nil)
 	if err != nil {
 		log.Fatalf("Cannot ListenTLS: %s", err)
+	}
+}
+
+func redirectToSSL() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func (w http.ResponseWriter, req *http.Request) {
+		url := req.URL
+		url.Scheme = "https"
+		http.Redirect(w, req, url.String(), http.StatusMovedPermanently)
+	})
+	srv := http.Server{
+		Addr: ":http",
+		Handler: mux,
+	}
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatalf("Cannot Listen (http -> https redirect): %s", err)
 	}
 }
