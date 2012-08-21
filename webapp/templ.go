@@ -61,4 +61,3 @@ func watchTemplates() {
 		}
 	}()
 }
-

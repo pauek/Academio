@@ -18,13 +18,13 @@ func (w gzipResponseWriter) Write(b []byte) (int, error) {
 }
 
 type gzipHandler struct {
-	handler http.Handler
+	handler  http.Handler
 	noExpire bool
 }
 
 func gzipped(w http.ResponseWriter, r *http.Request, noExpire bool, fn http.HandlerFunc) {
 	if noExpire {
-		w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", 60 * 60 * 24 * 365))
+		w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", 60*60*24*365))
 	}
 	if !strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
 		fn(w, r)
