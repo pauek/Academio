@@ -19,6 +19,7 @@ var cache = F.NewCache()
 func hFragList(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/_frag/"):]
 	list := cache.List("item " + id)
+	w.Header().Set("Content-Type", "text/html")
 	tmpl.Lookup("fraglist").Execute(w, list)
 }
 
