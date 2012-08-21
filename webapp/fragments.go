@@ -80,14 +80,6 @@ func sendJSON(w http.ResponseWriter, list []F.ListItem) {
 	}
 }
 
-func exec(tname string, data interface{}) string {
-	var b bytes.Buffer
-	if t := tmpl.Lookup(tname); t != nil {
-		t.Execute(&b, data)
-		return b.String()
-	}
-	panic("missing template")
-}
 
 // Fragments
 
@@ -99,12 +91,12 @@ func init() {
 		"item-link",
 		"topic-small",
 		"concept-small",
-		)
+	)
 	cache.Register(fStatic,
 		"home",
 		"navbar",
 		"footer",
-		)
+	)
 	cache.Register(fCourses, "courses")
 }
 
@@ -141,4 +133,13 @@ func fCourses(C *F.Cache, args []string) F.Fragment {
 		"/templates",
 	)
 	return F.MustParse(exec("courses", content.Courses()))
+}
+
+func exec(tname string, data interface{}) string {
+	var b bytes.Buffer
+	if t := tmpl.Lookup(tname); t != nil {
+		t.Execute(&b, data)
+		return b.String()
+	}
+	panic("missing template")
 }
