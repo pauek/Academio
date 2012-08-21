@@ -30,22 +30,14 @@ func init() {
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s", req.URL)
-	var title, fid string // fid = fragment id
-	path := req.URL.Path[1:]
-	switch path {
-	case "":
-		title, fid = "Inicio", "home"
-	case "cursos":
-		title, fid = "Cursos", "courses"
-	default:
-		item := content.Get(path)
-		if item == nil {
-			http.NotFound(w, req)
-			return
-		}
-		title = item.Data().Title
-		fid = fmt.Sprintf("item %s", path)
+
+	var title, fid string
+	title, fid, notfound := getFragmentID(req.URL.Path[1:])
+	if notfound {
+		http.NotFound(w, req)
+		return
 	}
+
 	switch req.Header.Get("Fragments") {
 	case "":
 		w.Header().Set("Content-Type", "text/html")
@@ -60,27 +52,44 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 			}
 		})
 	case "all":
-		list := cache.List(fid)
-		if data, err := json.Marshal(list); err == nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-		} else {
-			log.Printf("ERROR: Cannot marshal fragment: %s", err)
-		}
+		sendJSON(w, cache.List(fid))
 	case "since":
-		since := req.Header.Get("FragmentsStamp")
-		var stamp time.Time
-		err := json.Unmarshal([]byte(since), &stamp)
-		if err != nil {
-			log.Printf("ERROR: Cannot unmarshal timestamp '%s'", since)
+		sendJSON(w, cache.ListDiff(fid, getFragmentsStamp(req)))
+	}
+}
+
+func getFragmentID(path string) (title, fid string, notfound bool) {
+	switch path {
+	case "":
+		title, fid = "Inicio", "home"
+	case "cursos":
+		title, fid = "Cursos", "courses"
+	default:
+		item := content.Get(path)
+		if item == nil {
+			return "", "", true
 		}
-		list := cache.ListDiff(fid, stamp)
-		if data, err := json.Marshal(list); err == nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-		} else {
-			log.Printf("ERROR: Cannot marshal fragment: %s", err)
-		}
+		title = item.Data().Title
+		fid = fmt.Sprintf("item %s", path)
+	}
+	return
+}
+
+func getFragmentsStamp(req *http.Request) (stamp time.Time) {
+	since := req.Header.Get("FragmentsStamp")
+	err := json.Unmarshal([]byte(since), &stamp)
+	if err != nil {
+		log.Printf("ERROR: Cannot unmarshal timestamp '%s'", since)
+	}
+	return
+}
+
+func sendJSON(w http.ResponseWriter, list []F.ListItem) {
+	if data, err := json.Marshal(list); err == nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(data)
+	} else {
+		log.Printf("ERROR: Cannot marshal fragment: %s", err)
 	}
 }
 
