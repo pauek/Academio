@@ -11,23 +11,6 @@ import (
 	"time"
 )
 
-func init() {
-	// fragments
-	cache.Register(fItem, "item")
-	cache.Register(fItemFragment,
-		"item-nav",
-		"item-link",
-		"topic-small",
-		"concept-small",
-		)
-	cache.Register(fStatic,
-		"home",
-		"navbar",
-		"footer",
-		)
-	cache.Register(fCourses, "courses")
-}
-
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s", req.URL)
 
@@ -104,6 +87,25 @@ func exec(tname string, data interface{}) string {
 		return b.String()
 	}
 	panic("missing template")
+}
+
+// Fragments
+
+func init() {
+	// fragments
+	cache.Register(fItem, "item")
+	cache.Register(fItemFragment,
+		"item-nav",
+		"item-link",
+		"topic-small",
+		"concept-small",
+		)
+	cache.Register(fStatic,
+		"home",
+		"navbar",
+		"footer",
+		)
+	cache.Register(fCourses, "courses")
 }
 
 func fItem(C *F.Cache, args []string) F.Fragment {
