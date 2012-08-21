@@ -1,9 +1,9 @@
 
-[ ] Hacer el map en fabric.js:
+[x] Hacer el map en fabric.js:
     - Pintar el mapa entero y no esta cosa que hay ahora...
 
-[ ] Actualizar el .html a partir del .rst (si es más reciente)
-    desde el mismo servidor.
+[ ] Enviar todo el javascript desde academ.io
+    (evitar el problema de HTTPS...)
 
 [ ] Añadir usuarios (+ sesiones).
 
@@ -13,3 +13,5 @@
     - ficheros rst para cada entrada (no DB!).
     - comentarios usando el sistema propio de Academio.
      
+[ ] Actualizar el .html a partir del .rst (si es más reciente)
+    desde el mismo servidor.
