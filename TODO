@@ -5,6 +5,10 @@
 [ ] Enviar todo el javascript desde academ.io
     (evitar el problema de HTTPS...)
 
+[ ] Arreglar las imágenes de cada concepto.
+
+[ ] Limitar el scale en mapas pequeños.
+
 [ ] Añadir usuarios (+ sesiones).
 
 [ ] Sistema de comentarios.
