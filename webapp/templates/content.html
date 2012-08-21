@@ -21,8 +21,8 @@
 
 
 {{define "item-nav"}}
-<nav>
-  {{range .Path}}{% item-link {{.}} %}{{end}}
+<nav>{{range .Path}}
+  {% item-link {{.}} %}{{end}}
 </nav>
 {{end}}
 
@@ -36,9 +36,8 @@
 </div>
 <div id="content" class="course">
   {{.Data.Doc.Html}}
-  <ul class="course">
-{{range .Items}}   {% topic-small {{.Id}} %}
-{{end}}
+  <ul class="course">{{range .Items}}
+    {% topic-small {{.Id}} %}{{end}}
   </ul>
 </div>
 {{end}}
@@ -114,13 +113,6 @@
 
 <script>
 $(document).ready(function() {
-  $('.tabs a').click(function (ev) {
-    ev.preventDefault();
-    $('#content > div').hide();
-    $('.tabs li').removeClass('active');
-    $('#content div' + $(this).attr('href')).show();
-    $(this).parent().addClass('active');   
-  });
   $('#vid img').click(academio.showVideo);
 });
 </script>
