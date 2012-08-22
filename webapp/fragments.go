@@ -2,6 +2,7 @@ package main
 
 import (
 	"Academio/content"
+	"Academio/webapp/data"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -12,8 +13,10 @@ import (
 )
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
-	log.Printf("%s", req.URL)
+	session := data.GetSession(w, req)
+	log.Printf("%s [%s]", req.URL, session.Id)
 
+	// Determine fragment + title
 	var title, fid string
 	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
 	if notfound {
@@ -21,6 +24,7 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// Send HTML or JSON
 	switch req.Header.Get("Fragments") {
 	case "":
 		sendHTML(w, title, fid)
@@ -79,7 +83,6 @@ func sendJSON(w http.ResponseWriter, list []F.ListItem) {
 		log.Printf("ERROR: Cannot marshal fragment: %s", err)
 	}
 }
-
 
 // Fragments
 

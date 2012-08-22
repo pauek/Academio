@@ -15,19 +15,18 @@ var (
 )
 
 type Session struct {
-	id      string `json:"-"`
-	rev     string `json:"-"`
+	Id      string `json:"-"`
 	Message string
 	Referer string
 	Expires time.Time
-	User    interface{}
+	User    *User
 }
 
 func NewSession(expires time.Time) *Session {
 	id := NewUUID()
 	log.Printf("New session: %s", id)
 	s := &Session{
-		id:      id,
+		Id:      id,
 		User:    nil,
 		Expires: expires,
 	}
@@ -39,23 +38,23 @@ func NewSession(expires time.Time) *Session {
 
 func (S *Session) Delete() {
 	mux.Lock()
-	delete(sessions, S.id)
+	delete(sessions, S.Id)
 	mux.Unlock()
 }
 
 func (S *Session) SetCookie(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:  cookiename,
-		Value: S.id,
+		Value: S.Id,
 		Path:  "/",
 	})
 }
 
-func (S *Session) SetUser(user interface{}) {
+func (S *Session) SetUser(user *User) {
 	S.User = user
 }
 
-func GetSession(id string) *Session {
+func getSession(id string) *Session {
 	s, found := sessions[id]
 	if !found {
 		return nil
@@ -63,11 +62,21 @@ func GetSession(id string) *Session {
 	return s
 }
 
-func GetSessionFromRequest(req *http.Request) *Session {
+func getSessionFromRequest(req *http.Request) *Session {
 	cookie, err := req.Cookie(cookiename)
 	if err != nil {
 		return nil
 	}
-	return GetSession(cookie.Value)
+	return getSession(cookie.Value)
 }
 
+var SessionDuration = time.Hour * 24 * 30 // ~1 month
+
+func GetSession(w http.ResponseWriter, req *http.Request) *Session {
+	session := getSessionFromRequest(req)
+	if session == nil {
+		session = NewSession(time.Now().Add(SessionDuration))
+	}
+	session.SetCookie(w)
+	return session
+}
