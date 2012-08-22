@@ -1,0 +1,10 @@
+
+$ sudo -u postgres bash   # entrar como postgres
+$ createuser academio     # crear usuario
+$ createdb -O academio academio # db 'academio' owner (-O) 'academio'
+
+$ psql academio
+  > ALTER ROLE academio WITH PASSWORD 'xxxxxx';
+  > GRANT ALL ON users TO academio;
+
+
