@@ -21,7 +21,7 @@ var db *sql.DB
 
 var args = []string{
 	"host=/var/run/postgresql",
-	"user=pauek",
+	"user=academio",
 	"dbname=academio",
 	"sslmode=disable",
 }
