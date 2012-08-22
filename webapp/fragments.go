@@ -15,7 +15,7 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s", req.URL)
 
 	var title, fid string
-	title, fid, notfound := getFragmentID(req.URL.Path[1:])
+	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
 	if notfound {
 		http.NotFound(w, req)
 		return
@@ -31,7 +31,7 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getFragmentID(path string) (title, fid string, notfound bool) {
+func pathToFragmentID(path string) (title, fid string, notfound bool) {
 	switch path {
 	case "":
 		title, fid = "Inicio", "home"
