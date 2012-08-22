@@ -224,7 +224,7 @@ func (t *Topic) read(dir Dir) Item {
 		di := []int{}
 		if depends, err := ioutil.ReadFile(path); err == nil {
 			for _, dep := range strings.Split(string(depends), "\n") {
-				fmt.Printf("dep = '%s'\n", ToID(dep))
+				// fmt.Printf("dep = '%s'\n", ToID(dep))
 				if j := t.index(ToID(dep)); j != -1 {
 					di = append(di, j)
 				}
