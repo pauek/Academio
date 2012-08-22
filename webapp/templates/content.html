@@ -81,7 +81,11 @@
     <p>{{len .Items}} Conceptos</p>
   </div>
   <ul class="concepts">{{range $i, $item := .Items}}
-    <li><a ajx href="{{$item.Id}}" rel="tooltip" title="{{$item.Title}}">{{plus1 $i}}</a></li>{{end}}
+    <li>
+      <span class="tooltip" tooltip="{{$item.Title}}">
+        <a ajx href="{{$item.Id}}">{{plus1 $i}}</a>
+      </span>
+    </li>{{end}}
   </ul>
   <div class="clear"></div>
 </li>

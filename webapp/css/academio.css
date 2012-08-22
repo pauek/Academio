@@ -299,6 +299,25 @@ ul.course .topic .concepts li a {
 ul.course .topic .concepts li a:hover {
   background-color: #ebe8df;
 }
+
+.tooltip {
+  position: relative;
+}
+.tooltip:hover:after {
+  font-size: 92%;
+  content: attr(tooltip);
+  position: absolute;
+  color: white;
+  /* whitespace: no-wrap; */
+  padding: .3em .7em;
+  border-radius: .3em;
+  min-width: 7em;
+  background: rgba(0, 0, 0, 0.75);
+  bottom: 3em;
+  left: -2.7em;
+  z-index: 10;
+}
+
 .clear {
   clear: both;
 }
