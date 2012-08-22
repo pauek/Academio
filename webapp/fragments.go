@@ -14,7 +14,11 @@ import (
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	session := data.GetSession(w, req)
-	log.Printf("%s [%s]", req.URL, session.Id)
+	id := session.Id
+	if session.User != nil {
+		id = session.User.Login
+	}
+	log.Printf("%s [%s]", req.URL, id)
 
 	// Determine fragment + title
 	var title, fid string
@@ -99,6 +103,7 @@ func init() {
 		"home",
 		"navbar",
 		"footer",
+		"login",
 	)
 	cache.Register(fCourses, "courses")
 }

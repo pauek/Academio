@@ -14,7 +14,6 @@
 </div>
 {{end}}
 
-
 {{define "footer"}}
 <div class="inner">
   <ul>
@@ -26,4 +25,16 @@
 </div>
 {{end}}
 
-
+{{define "login"}}
+<div id="content">
+  <form action="/login" method="post">
+    <fieldset>
+      <label>Login</label>
+      <input name="login" type="text" id="inputlogin">
+      <label>Password</label>
+      <input name="password" type="password" id="inputpass1">
+      <button type="submit">Entra</button>
+    </fieldset>
+  </form>
+</div>
+{{end}}

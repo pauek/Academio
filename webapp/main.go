@@ -2,12 +2,14 @@ package main
 
 import (
 	"Academio/content"
+	"Academio/webapp/data"
 	"flag"
 	"fmt"
 	F "fragments"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"time"
@@ -58,6 +60,47 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 	}
 	io.Copy(w, image)
 }
+
+func hLogin(w http.ResponseWriter, req *http.Request) {
+	session := data.GetSession(w, req)
+	switch req.Method {
+	case "GET":
+		url, err := url.Parse(req.Header.Get("Referer"))
+		if err == nil && url.Path != "/login" {
+			session.Referer = url.Path
+			log.Printf("Referer = '%s'", url.Path)
+		}
+		sendHTML(w, "Login", "login")
+	case "POST":
+		hLoginProcessForm(w, req)
+	default:
+		http.Error(w, "Wrong method", http.StatusBadRequest)
+	}
+}
+
+func hLoginProcessForm(w http.ResponseWriter, req *http.Request) {
+	session := data.GetSession(w, req)
+	login := req.FormValue("login")
+	password := req.FormValue("password")
+	if user := data.AuthenticateUser(login, password); user != nil {
+		session.SetUser(user)
+		url := session.Referer
+		if url == "" {
+			url = "/"
+		}
+		http.Redirect(w, req, url, http.StatusSeeOther)
+		return
+	}
+	session.Message = "Incorrect Login"
+	http.Redirect(w, req, "/login", http.StatusSeeOther)
+}
+
+func hLogout(w http.ResponseWriter, req *http.Request) {
+	session := data.GetSession(w, req)
+	session.User = nil
+	http.Redirect(w, req, "/", http.StatusSeeOther)
+}
+
 
 var port = flag.Int("port", 8080, "Network port")
 var ssl = flag.Bool("ssl", false, "Use SSL?")
@@ -121,6 +164,8 @@ func main() {
 
 	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
 	http.HandleFunc("/png/", hPhotos)
+	http.HandleFunc("/login", hLogin)
+	http.HandleFunc("/logout", hLogout)
 	http.HandleFunc("/", GzippedFunc(fragmentPage))
 
 	if *ssl {
