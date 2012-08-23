@@ -29,6 +29,20 @@ func fmtTime(t time.Time) string {
 	return t.UTC().Format(http.TimeFormat)
 }
 
+func hFonts(w http.ResponseWriter, req *http.Request) {
+	path := filepath.Join(srvdir, req.URL.Path)
+	font, err := os.Open(path)
+	if err != nil {
+		log.Printf("open font: %s", err)
+		http.NotFound(w, req)
+		return
+	}
+	defer font.Close()
+	w.Header().Set("Content-Type", "font/ttf")
+	w.Header().Set("Expires", fmtTime(time.Now().Add(24 * time.Hour * 365 * 10)))
+	io.Copy(w, font)
+}
+
 func hPhotos(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/png/"):]
 
@@ -165,6 +179,7 @@ func main() {
 
 	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
 	http.HandleFunc("/png/", hPhotos)
+	http.HandleFunc("/fonts/", hFonts)
 	http.HandleFunc("/login", hLogin)
 	http.HandleFunc("/logout", hLogout)
 	http.HandleFunc("/", GzippedFunc(fragmentPage))
