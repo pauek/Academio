@@ -32,28 +32,32 @@ body {
   font-size: 0.875em;
 }
 header {
-  padding: 0.5em 0 0.625em;
+  padding: 0.6em 0.9em;
+  height: 1.9em;
   margin: 0;
   background: #29303d;
   position: relative;
 }
 header a {
-  color: white;
+  color: #eef;
   text-decoration: none;
 }
 header a:hover {
-  color: #eee;
+  color: white;
 }
 .logo {
   margin: 0;
-  margin-right: 0.7em;
-  margin-left: 0.6em;
+  margin-right: 0.2em;
+  padding-right: .7em;
   font-size: 1.375em;
   font-weight: bold;
+  float: left;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 header nav {
   display: inline;
 }
+
 header span.orange {
   color: orange;
 }
@@ -61,17 +65,21 @@ header ul {
   margin: 0;
   padding: 0 0 0.2em 0;
   display: inline;
+  list-style-type: none;
 }
 header ul li {
   margin-left: 0.62em;
-  list-style-type: none;
   display: inline;
+  line-height: 2em;
   padding: 0.2em 0.3em 0.2em 0.3em;
-  border-radius: 0.2em;
 }
-header ul li .active {
-  background: #333b4d;
+header .left {
+  float: left;
 }
+header .right {
+  float: right;
+}
+
 footer {
   border-top: 1px solid #fafcff;
   color: #666;
@@ -79,10 +87,13 @@ footer {
 }
 footer .logo {
   color: white;
-  margin-right: 5em;
+  margin-right: 3em;
 }
 footer .logo .orange {
   color: #afaba0;
+}
+footer .logo:hover {
+  color: white;
 }
 footer ul {
   margin: 0;
@@ -90,8 +101,10 @@ footer ul {
   list-style-type: none;
 }
 footer ul li {
-  display: inline-block;
-  margin-right: 3em;
+  margin-left: 1.52em;
+  display: inline;
+  line-height: 2em;
+  padding: 0.2em 0.3em 0.2em 0.3em;
 }
 footer a {
   color: #777;
@@ -351,6 +364,9 @@ ul.course .topic .concepts li a:hover {
 
 /* phones and tablets */
 @media screen and (max-width: 750px) {
+  .logo {
+    display: none;
+  }
   #top .inner h1 {
     padding-top: 0.8em;
   }
@@ -373,6 +389,9 @@ ul.course .topic .concepts li a:hover {
   }
   .topic {
     font-size: 1.3em;
+  }
+  #doc {
+    font-size: .8em;    
   }
   ul.course .topic .left {
     font-size: 1.3em;

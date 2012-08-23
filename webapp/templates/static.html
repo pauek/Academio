@@ -1,8 +1,15 @@
 {{define "navbar"}}
-<a href="/" class="logo"><span class="orange">academ</span>.io</a>
-<nav><ul>
-    <li class="active"><a href="/cursos">Cursos</a></li>
-</ul></nav>
+  <a href="/" class="logo"><span class="orange">academ</span>.io</a>
+  <div class="left">
+    <ul>
+      <li><a href="/cursos">Cursos</a></li>
+    </ul>
+  </div>
+  <div class="right">
+    <ul>
+      <li><a href="/login">Entra</a></li>
+    </ul>
+  </div>
 {{end}}
 
 
@@ -16,12 +23,15 @@
 
 {{define "footer"}}
 <div class="inner">
-  <ul>
-    <li class="logo"><span class="orange">academ</span>.io</li>
-    <li><a href="/">Acerca de</a></li>
-    <li><a href="/">Equipo</a></li>
-    <li><a href="/">Contacto</a></li>
-  </ul>
+  <a href="/" class="logo"><span class="orange">academ</span>.io</a>
+  <div class="left">
+    <ul>
+      <li><a href="/">Acerca de</a></li>
+      <li><a href="/">Blog</a></li>
+      <li><a href="/">Equipo</a></li>
+      <li><a href="/">Contacto</a></li>
+    </ul>
+  </div>
 </div>
 {{end}}
 
