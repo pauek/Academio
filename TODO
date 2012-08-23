@@ -2,8 +2,8 @@
 [x] Hacer el map en fabric.js:
     - Pintar el mapa entero y no esta cosa que hay ahora...
 
-[ ] Enviar todo el javascript desde academ.io
-    (evitar el problema de HTTPS...)
+[x] Evitar el problema con HTTPS
+    (conectarse a Google Fonts, MathJax con https)
 
 [ ] Arreglar las imágenes de cada concepto.
 
