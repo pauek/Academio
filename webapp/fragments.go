@@ -9,29 +9,37 @@ import (
 	F "fragments"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
-	session := data.GetSession(w, req)
+	// Determine fragment + title
+	var title, fid string
+	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
+	if notfound {
+		log.Printf("%s (NOT FOUND)", req.URL)
+		http.NotFound(w, req)
+		return
+	}
+
+	// Get session
+	session := data.GetOrCreateSession(req)
 	id := session.Id
 	if session.User != nil {
 		id = session.User.Login
 	}
 	log.Printf("%s [%s]", req.URL, id)
+	session.PutCookie(w)
 
-	// Determine fragment + title
-	var title, fid string
-	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
-	if notfound {
-		http.NotFound(w, req)
-		return
-	}
+	FragmentDispatch(w, req, session, fid, title)
+}
 
+func FragmentDispatch(w http.ResponseWriter, req *http.Request, session *data.Session, fid, title string) {
 	// Send HTML or JSON
 	switch req.Header.Get("Fragments") {
 	case "":
-		sendHTML(w, title, fid)
+		sendHTML(w, session, fid, title)
 	case "all":
 		sendJSON(w, cache.List(fid))
 	case "since":
@@ -65,7 +73,7 @@ func getFragmentsStamp(req *http.Request) (stamp time.Time) {
 	return
 }
 
-func sendHTML(w http.ResponseWriter, title, fid string) {
+func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	w.Header().Set("Content-Type", "text/html")
 	layout.Exec(w, func(action string) {
 		switch action {
@@ -73,6 +81,12 @@ func sendHTML(w http.ResponseWriter, title, fid string) {
 			cache.Render(w, fid)
 		case "title":
 			fmt.Fprintf(w, title)
+		case "navbar":
+			id := "navbar"
+			if session.User != nil {
+				id += " " + session.Id
+			}
+			cache.Render(w, id)
 		default:
 			cache.Render(w, action)
 		}
@@ -92,6 +106,7 @@ func sendJSON(w http.ResponseWriter, list []F.ListItem) {
 
 func init() {
 	// fragments
+	cache.Register(fNavbar, "navbar")
 	cache.Register(fItem, "item")
 	cache.Register(fItemFragment,
 		"item-nav",
@@ -101,7 +116,6 @@ func init() {
 	)
 	cache.Register(fStatic,
 		"home",
-		"navbar",
 		"footer",
 		"login",
 	)
@@ -120,6 +134,19 @@ func fItem(C *F.Cache, args []string) F.Fragment {
 		}
 	}
 	return F.MustParse(exec(item.Type(), item))
+}
+
+func fNavbar(c *F.Cache, args []string) F.Fragment {
+	fmt.Printf("fNavbar: args = %v\n", args)
+	fid := strings.Join(args, " ")
+	c.Depends(fid, "/templates")
+	var user *data.User
+	if len(args) > 1 {
+		session := data.FindSession(args[1])
+		user = session.User
+		c.Depends(fid, "/session/" + session.Id)
+	}
+	return F.MustParse(exec(args[0], user))
 }
 
 func fItemFragment(C *F.Cache, args []string) F.Fragment {
@@ -146,8 +173,12 @@ func fCourses(C *F.Cache, args []string) F.Fragment {
 func exec(tname string, data interface{}) string {
 	var b bytes.Buffer
 	if t := tmpl.Lookup(tname); t != nil {
-		t.Execute(&b, data)
-		return b.String()
+		err := t.Execute(&b, data)
+		if err != nil {
+			return err.Error()
+		} else {
+			return b.String()
+		}
 	}
 	panic("missing template")
 }

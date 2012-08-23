@@ -42,7 +42,7 @@ func (S *Session) Delete() {
 	mux.Unlock()
 }
 
-func (S *Session) SetCookie(w http.ResponseWriter) {
+func (S *Session) PutCookie(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:  cookiename,
 		Value: S.Id,
@@ -54,7 +54,7 @@ func (S *Session) SetUser(user *User) {
 	S.User = user
 }
 
-func getSession(id string) *Session {
+func FindSession(id string) *Session {
 	s, found := sessions[id]
 	if !found {
 		return nil
@@ -62,21 +62,20 @@ func getSession(id string) *Session {
 	return s
 }
 
-func getSessionFromRequest(req *http.Request) *Session {
+var SessionDuration = time.Hour * 24 * 30 // ~1 month
+
+func GetSession(req *http.Request) *Session {
 	cookie, err := req.Cookie(cookiename)
 	if err != nil {
 		return nil
 	}
-	return getSession(cookie.Value)
+	return FindSession(cookie.Value)
 }
 
-var SessionDuration = time.Hour * 24 * 30 // ~1 month
-
-func GetSession(w http.ResponseWriter, req *http.Request) *Session {
-	session := getSessionFromRequest(req)
+func GetOrCreateSession(req *http.Request) (session *Session) {
+	session = GetSession(req)
 	if session == nil {
 		session = NewSession(time.Now().Add(SessionDuration))
 	}
-	session.SetCookie(w)
-	return session
+	return
 }

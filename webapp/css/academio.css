@@ -40,7 +40,6 @@ header {
 }
 header a {
   color: #eef;
-  text-decoration: none;
 }
 header a:hover {
   color: white;
@@ -73,11 +72,38 @@ header ul li {
   line-height: 2em;
   padding: 0.2em 0.3em 0.2em 0.3em;
 }
+header .smaller {
+  font-size: 0.8em;
+}
 header .left {
   float: left;
 }
 header .right {
   float: right;
+}
+#user {
+  position: relative;
+}
+header .dropdown {
+  display: none;
+  background: black;
+  position: absolute;
+  right: -.5em;
+  top: 2em;
+  width: 10em;
+  background: #29303d;
+  padding: .3em 0;
+  line-height: 1.6em;
+  border: 1px solid #29303d;
+  border-radius: .5em;
+}
+header .dropdown a {
+  padding: .3em .7em;
+  display: block;
+}
+header .dropdown a:hover {
+  background: white;
+  color: black;
 }
 
 footer {

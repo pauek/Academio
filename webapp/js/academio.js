@@ -169,3 +169,10 @@ academio.showVideo = function (ev) {
                              'allowfullscreen>' +
                              '</iframe>');
 }
+
+$(document).ready(function () {
+   $('#user > a').click(function (e) {
+      e.preventDefault();
+      $('#user .dropdown').toggle();
+   });
+});

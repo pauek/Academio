@@ -7,7 +7,16 @@
   </div>
   <div class="right">
     <ul>
+      {{if .}}
+      <li id="user">
+        <a href="/u/{{.Login}}">{{.Login}}</a>
+        <div class="dropdown">
+          <a href="/logout">Salir</a>
+        </div>
+      </li>
+      {{else}}
       <li><a href="/login">Entra</a></li>
+      {{end}}
     </ul>
   </div>
 {{end}}

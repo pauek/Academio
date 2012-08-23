@@ -62,7 +62,7 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 }
 
 func hLogin(w http.ResponseWriter, req *http.Request) {
-	session := data.GetSession(w, req)
+	session := data.GetOrCreateSession(req)
 	switch req.Method {
 	case "GET":
 		url, err := url.Parse(req.Header.Get("Referer"))
@@ -70,16 +70,15 @@ func hLogin(w http.ResponseWriter, req *http.Request) {
 			session.Referer = url.Path
 			log.Printf("Referer = '%s'", url.Path)
 		}
-		sendHTML(w, "Login", "login")
+		FragmentDispatch(w, req, session, "login", "Login")
 	case "POST":
-		hLoginProcessForm(w, req)
+		hLoginProcessForm(w, req, session)
 	default:
 		http.Error(w, "Wrong method", http.StatusBadRequest)
 	}
 }
 
-func hLoginProcessForm(w http.ResponseWriter, req *http.Request) {
-	session := data.GetSession(w, req)
+func hLoginProcessForm(w http.ResponseWriter, req *http.Request, session *data.Session) {
 	login := req.FormValue("login")
 	password := req.FormValue("password")
 	if user := data.AuthenticateUser(login, password); user != nil {
@@ -96,8 +95,10 @@ func hLoginProcessForm(w http.ResponseWriter, req *http.Request) {
 }
 
 func hLogout(w http.ResponseWriter, req *http.Request) {
-	session := data.GetSession(w, req)
-	session.User = nil
+	session := data.GetSession(req)
+	if session != nil {
+		session.User = nil
+	}
 	http.Redirect(w, req, "/", http.StatusSeeOther)
 }
 
