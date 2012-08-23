@@ -331,6 +331,51 @@ ul.course .topic .concepts li a:hover {
   clear: both;
 }
 
+#login_form {
+  width: 35em;
+  margin: 5em auto;
+  border: 1px solid #ddd;
+  border-width: 1px 1px 2px;
+  border-radius: 7px;
+}
+#login_form h1 {
+  margin: 0;
+  padding: .2em .5em;
+  border-bottom: #29303d;
+  background: #f3f3f5;
+}
+#login_form h1 .small {
+  margin-left: .7em;
+  font-size: .7em;
+}
+#login_form form {
+  padding: 1.2em 1.4em;
+}
+#login_form label {
+  padding: 0;
+  display: inline-block;
+  width: 100%;
+  font-size: 1.2em;
+  color: #444;
+}
+#login_form input.text {
+  width: 23.5em;
+  padding: 0 .35em;
+  border: 1px solid #ddd;
+  margin: .2em 0 1em 0;
+  height: 2em;
+  line-height: 2em;
+  font-size: 1.1em;
+  font-family: "Open Sans";
+}
+#login_form button[type=submit] {
+  margin-top: 1.2em;
+  padding: .5em 1em;
+  color: #333;
+  font-family: "Open Sans";
+  font-size: 1.2em;
+}
+
 
 .fraglist {
   margin: 0;
@@ -363,6 +408,14 @@ ul.course .topic .concepts li a:hover {
 }
 
 /* phones and tablets */
+@media screen and (max-width: 480px) {
+  #login_form {
+    width: 100%;
+  }
+  #login_form input.text {
+    width: 92%;
+  }
+}
 @media screen and (max-width: 750px) {
   .logo {
     display: none;

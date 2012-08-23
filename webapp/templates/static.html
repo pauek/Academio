@@ -37,14 +37,21 @@
 
 {{define "login"}}
 <div id="content">
-  <form action="/login" method="post">
-    <fieldset>
-      <label>Login</label>
-      <input name="login" type="text" id="inputlogin">
-      <label>Password</label>
-      <input name="password" type="password" id="inputpass1">
-      <button type="submit">Entra</button>
-    </fieldset>
-  </form>
+  <div id="login_form">
+    <h1>Entra<span class="small">(o <a href="/register">Regístrate</a>)</span></h1>
+    <form action="/login" method="post">
+      <label>Usuario<br />
+        <input class="text"
+               autocapitalize="off" autofocus="autofocus" tabindex="1"
+               name="login" type="text" id="inputlogin">
+      </label>
+      <label>Contraseña<br />
+        <input class="text"
+               autocomplete="disabled" tabindex="2"
+               name="password" type="password" id="inputpass1">
+      </label>
+      <button tabindex="3" type="submit">Entra</button>
+    </form>
+  </div>
 </div>
 {{end}}
