@@ -310,6 +310,7 @@ pre {
   line-height: 1.125em;
   padding: 0.62em 0.95em;
   border: 1px solid #ccc;
+  overflow: auto;
 }
 .footnote {
   font-size: 80%;

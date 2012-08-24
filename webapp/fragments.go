@@ -32,10 +32,10 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s [%s]", req.URL, id)
 	session.PutCookie(w)
 
-	FragmentDispatch(w, req, session, fid, title)
+	ModeDispatch(w, req, session, fid, title)
 }
 
-func FragmentDispatch(w http.ResponseWriter, req *http.Request, session *data.Session, fid, title string) {
+func ModeDispatch(w http.ResponseWriter, req *http.Request, session *data.Session, fid, title string) {
 	// Send HTML or JSON
 	switch req.Header.Get("Fragments") {
 	case "":

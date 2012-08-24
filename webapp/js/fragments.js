@@ -67,6 +67,10 @@ fragments.getStamp = function(url) {
    return null;
 }
 
+fragments.goToTop = function () {
+   $('html, body').scrollTop(0); // Go to top
+}
+
 fragments.assembleFull = function(url, list) {
    fragments.log("assembleFull(");
    for (var i = 0; i < list.length; i++) {
@@ -75,6 +79,7 @@ fragments.assembleFull = function(url, list) {
       fragments.store(url, list[i]);
    }
    fragments.log(")");
+   fragments.goToTop();
 }
 
 fragments.assemblePartial = function(url, list) {
@@ -86,6 +91,7 @@ fragments.assemblePartial = function(url, list) {
    }
    msg += " })";
    fragments.log(msg);
+   fragments.goToTop();
 }
 
 fragments.loadFull = function(url) {
@@ -122,7 +128,6 @@ fragments.load = function(url) {
    } else {
       fragments.loadFull(url);
    }
-   $('html, body').scrollTop(0); // Go to top
 }
 
 fragments.follow = function(link) {

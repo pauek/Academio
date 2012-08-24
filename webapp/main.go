@@ -100,9 +100,8 @@ func hLogin(w http.ResponseWriter, req *http.Request) {
 		url, err := url.Parse(req.Header.Get("Referer"))
 		if err == nil && url.Path != "/login" {
 			session.Referer = url.Path
-			log.Printf("Referer = '%s'", url.Path)
 		}
-		FragmentDispatch(w, req, session, "login", "Login")
+		ModeDispatch(w, req, session, "login", "Login")
 	case "POST":
 		hLoginProcessForm(w, req, session)
 	default:
