@@ -160,7 +160,7 @@ academio.showVideo = function (ev) {
    var videoid = $('#vid').attr('videoid');
    var width = $('#content').width();
    if (width < 720) {
-      document.location.href = "http://youtu.be/" + videoid;
+      document.location.href = "http://www.youtube.com/watch?v=" + videoid;
    } else {
       var height = width * 9 / 16;
       $('#vid').width(width);
