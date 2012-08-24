@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="video.svg"
-   inkscape:export-filename="/home/pauek/src/pauek/go/src/Academio/art/video.png"
+   sodipodi:docname="play.svg"
+   inkscape:export-filename="/home/pauek/src/pauek/go/src/Academio/webapp/img/play.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -76,7 +76,7 @@
        sodipodi:cy="165.25"
        sodipodi:rx="43.25"
        sodipodi:ry="43.25"
-       d="m 243,165.25 a 43.25,43.25 0 1 1 -86.5,0 43.25,43.25 0 1 1 86.5,0 z"
+       d="m 243,165.25 c 0,23.88632 -19.36368,43.25 -43.25,43.25 -23.88632,0 -43.25,-19.36368 -43.25,-43.25 0,-23.88632 19.36368,-43.25 43.25,-43.25 23.88632,0 43.25,19.36368 43.25,43.25 z"
        transform="translate(43.073223,742.36218)" />
   </g>
 </svg>

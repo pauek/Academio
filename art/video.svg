@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
-   height="100"
+   width="16"
+   height="9"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="play.svg"
-   inkscape:export-filename="/home/pauek/src/pauek/go/src/Academio/art/video.png"
+   sodipodi:docname="video.svg"
+   inkscape:export-filename="/home/pauek/src/pauek/go/src/Academio/webapp/img/video.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -62,21 +62,5 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-192.82322,-857.36218)">
-    <path
-       style="fill:#f7f7f7;fill-opacity:1;fill-rule:evenodd;stroke:none"
-       d="m 221,878.61218 58,29 -58,29 0,-58 z"
-       id="rect2816"
-       sodipodi:nodetypes="cccc" />
-    <path
-       sodipodi:type="arc"
-       style="fill:none;stroke:#f7f7f7;stroke-width:7;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="path3591"
-       sodipodi:cx="199.75"
-       sodipodi:cy="165.25"
-       sodipodi:rx="43.25"
-       sodipodi:ry="43.25"
-       d="m 243,165.25 a 43.25,43.25 0 1 1 -86.5,0 43.25,43.25 0 1 1 86.5,0 z"
-       transform="translate(43.073223,742.36218)" />
-  </g>
+     transform="translate(-192.82322,-948.36218)" />
 </svg>
