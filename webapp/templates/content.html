@@ -12,9 +12,9 @@
   </div>
   <div class="right">
     <ul>
-      {{if .}}
+      {{if .User}}
       <li id="user">
-        <a href="/u/{{.Login}}">{{.Login}}</a>
+        <a href="/u/{{.User.Login}}">{{.User.Login}}</a>
         <div class="dropdown">
           <a href="/logout">Salir</a>
         </div>
@@ -24,6 +24,7 @@
       {{end}}
     </ul>
   </div>
+  {{if .Message}}<div id="message">{{.Message}}</div>{{end}}
 {{end}}
 
 

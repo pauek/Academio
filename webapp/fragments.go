@@ -136,17 +136,24 @@ func fItem(C *F.Cache, args []string) F.Fragment {
 	return F.MustParse(exec(item.Type(), item))
 }
 
+type navbarInfo struct {
+	User    *data.User
+	Message *string
+}
 func fNavbar(c *F.Cache, args []string) F.Fragment {
 	fmt.Printf("fNavbar: args = %v\n", args)
 	fid := strings.Join(args, " ")
 	c.Depends(fid, "/templates")
-	var user *data.User
+	var info navbarInfo
 	if len(args) > 1 {
 		session := data.FindSession(args[1])
-		user = session.User
+		info.User = session.User
 		c.Depends(fid, "/session/" + session.Id)
+		if len(session.Message) > 0 {
+			info.Message = &session.Message
+		}
 	}
-	return F.MustParse(exec(args[0], user))
+	return F.MustParse(exec(args[0], info))
 }
 
 func fItemFragment(C *F.Cache, args []string) F.Fragment {
