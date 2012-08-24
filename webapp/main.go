@@ -33,7 +33,6 @@ func hFonts(w http.ResponseWriter, req *http.Request) {
 	path := filepath.Join(srvdir, req.URL.Path)
 	font, err := os.Open(path)
 	if err != nil {
-		log.Printf("open font: %s", err)
 		http.NotFound(w, req)
 		return
 	}
@@ -41,6 +40,25 @@ func hFonts(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "font/ttf")
 	w.Header().Set("Expires", fmtTime(time.Now().Add(24 * time.Hour * 365 * 10)))
 	io.Copy(w, font)
+}
+
+func hFavicon(w http.ResponseWriter, req *http.Request) {
+	rest := req.URL.Path[len("/favicon.ico"):]
+	if len(rest) > 0 {
+		log.Printf("%s (NOT FOUND)", req.URL.Path)
+		http.NotFound(w, req)
+		return
+	}
+	path := filepath.Join(srvdir, "img/favicon.ico")
+	icon, err := os.Open(path)
+	if err != nil {
+		http.NotFound(w, req)
+		return
+	}
+	defer icon.Close()
+	w.Header().Set("Content-Type", "image/x-icon")
+	w.Header().Set("Expires", fmtTime(time.Now().Add(24 * time.Hour)))
+	io.Copy(w, icon)
 }
 
 func hPhotos(w http.ResponseWriter, req *http.Request) {
@@ -178,6 +196,7 @@ func main() {
 	serveFiles("/img/")
 
 	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
+	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/fonts/", hFonts)
 	http.HandleFunc("/login", hLogin)

@@ -71,7 +71,7 @@ body {
   font-size: 0.875em;
 }
 header {
-  padding: 0.6em 0.9em;
+  padding: 0.6em 0.8em 0.6em 0;
   height: 1.9em;
   margin: 0;
   background: #29303d;
@@ -86,7 +86,7 @@ header a:hover {
 .logo {
   margin: 0;
   margin-right: 0.2em;
-  padding-right: .7em;
+  padding-left: .5em;
   font-size: 1.375em;
   font-weight: bold;
   float: left;
@@ -95,7 +95,14 @@ header a:hover {
 header nav {
   display: inline;
 }
-
+header .logo img {
+  vertical-align: top;
+  margin-right: .4em;
+}
+header span.text {
+  padding-left: 0;
+  padding-right: .5em;
+}
 header span.orange {
   color: orange;
 }
@@ -482,7 +489,7 @@ ul.course .topic .concepts li a:hover {
   }
 }
 @media screen and (max-width: 750px) {
-  .logo {
+  .logo span.text {
     display: none;
   }
   #top .inner h1 {
