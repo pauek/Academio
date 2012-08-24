@@ -20,10 +20,35 @@
   <script src="/js/academio.js"             type="text/javascript"></script>
 </head>
 <body>
-  {% message %}
-  <header>{% navbar %}</header>
+  <header>
+    {% message %}
+    <a href="/" class="logo">
+      <img src="/img/logo.png">
+      <span class="text">
+        <span class="orange">academ</span>.io
+      </span>
+    </a>
+    <div class="left">
+      <ul>
+        <li><a href="/cursos">Cursos</a></li>
+      </ul>
+    </div>
+    {% navbar %}
+  </header>
   <div fragment="_root">{% body %}</div>
-  <footer>{% footer %}</footer>
+  <footer>
+    <div class="inner">
+      <a href="/" class="logo"><span class="orange">academ</span>.io</a>
+      <div class="left">
+        <ul>
+          <li><a href="/">Acerca de</a></li>
+          <li><a href="/">Blog</a></li>
+          <li><a href="/">Equipo</a></li>
+          <li><a href="/">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
 {{end}}

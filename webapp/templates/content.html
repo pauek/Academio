@@ -1,15 +1,4 @@
 {{define "navbar"}}
-  <a href="/" class="logo">
-    <img src="/img/logo.png">
-    <span class="text">
-      <span class="orange">academ</span>.io
-    </span>
-  </a>
-  <div class="left">
-    <ul>
-      <li><a href="/cursos">Cursos</a></li>
-    </ul>
-  </div>
   <div class="right">
     <ul>
       {{if .User}}
@@ -24,7 +13,6 @@
       {{end}}
     </ul>
   </div>
-  {{if .Message}}<div id="message">{{.Message}}</div>{{end}}
 {{end}}
 
 

@@ -87,6 +87,7 @@ func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 				id += " " + session.Id
 			}
 			cache.Render(w, id)
+		case "message":
 		default:
 			cache.Render(w, action)
 		}
