@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="logo.svg"
+   sodipodi:docname="favicon.svg"
    inkscape:export-filename="/home/pauek/src/pauek/go/src/Academio/webapp/img/favicon.png"
    inkscape:export-xdpi="14.4"
    inkscape:export-ydpi="14.4">
@@ -110,24 +110,6 @@
          style="fill:#000000;fill-opacity:0.19521915;stroke:none"
          rx="37.451881" />
     </clipPath>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3614"
-       id="linearGradient3620"
-       x1="100"
-       y1="852.36218"
-       x2="100"
-       y2="1011.3622"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3624"
-       id="linearGradient3630"
-       x1="100"
-       y1="65.1875"
-       x2="100"
-       y2="200"
-       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -137,7 +119,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284272"
-     inkscape:cx="118.93672"
+     inkscape:cx="51.408024"
      inkscape:cy="79.076761"
      inkscape:document-units="px"
      inkscape:current-layer="g3818"
@@ -178,7 +160,7 @@
          sodipodi:nodetypes="ccccccccccc"
          id="path3689"
          d="M 27.78125,852.36218 C 12.392361,852.36218 0,864.75454 0,880.14343 l 0,129.09747 22.09375,-11.7557 47.125,-108.99742 c 12.570621,-6.72428 44.75875,-7.40414 57.78125,-0.5 l 58.267,109.99007 14.733,8.90945 0,-126.74387 c 0,-15.38889 -12.39236,-27.78125 -27.78125,-27.78125 l -144.4375,0 z"
-         style="fill:url(#linearGradient3620);fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:9;stroke-miterlimit:4;stroke-dasharray:none" />
+         style="fill:#384253;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:9;stroke-miterlimit:4;stroke-dasharray:none" />
       <path
          sodipodi:nodetypes="cccccccccc"
          id="rect3590"
@@ -186,12 +168,12 @@
          d="M 81.59375,65.1875 43.65625,167.625 0,167.625 0,175 c 0,13.85 12.147281,25 27.53125,25 l 144.40625,0 C 187.32147,200 200,188.85 200,175 l 0,-7.5 -76.875,0 L 81.59375,65.1875 z"
          style="fill:#efa72c;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt" />
       <path
-         style="fill:none;fill-opacity:1;stroke:#2c3540;stroke-opacity:1;stroke-width:9;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:none;fill-opacity:1;stroke:#384253;stroke-opacity:1;stroke-width:9;stroke-miterlimit:4;stroke-dasharray:none"
          d="M -1.4142135,1008.1802 22.419575,997.48523 66.618901,886.87687 c 17.679178,-3.82523 37.301589,-5.74228 63.868369,0.24186 l 52.58519,110.19757 19.76853,10.2907"
          id="path3803"
          sodipodi:nodetypes="cccccc" />
       <path
-         style="fill:url(#linearGradient3630);fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt"
+         style="fill:#ac7821;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt"
          d="M 81.59375,65.1875 43.65625,167.625 0,167.625 0,175 c 0,13.85 12.147281,25 27.53125,25 l 144.40625,0 C 187.32147,200 200,188.85 200,175 l 0,-7.5 -76.875,0 L 81.59375,65.1875 z"
          transform="translate(0,852.36218)"
          id="path3805"
@@ -201,7 +183,7 @@
          id="path3807"
          transform="translate(0,852.36218)"
          d="m 200,167.5 c -20.58432,-2.01094 -47.66919,-3.50969 -76.875,0 L 81.59375,65.1875 43.65625,167.625 C 22.332405,164.9163 12.432549,166.77719 0,167.625"
-         style="fill:none;fill-opacity:1;stroke:#7a4b07;stroke-opacity:1;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt" />
+         style="fill:none;fill-opacity:1;stroke:#ac7821;stroke-opacity:1;stroke-width:10;stroke-miterlimit:10;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt" />
     </g>
   </g>
 </svg>
