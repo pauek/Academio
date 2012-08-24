@@ -228,6 +228,10 @@ footer a:hover {
 #vid {
   margin-top: 1.2em;
   margin-bottom: 2.4em;
+  background-color: #666;
+  background-image: url(/img/play.png);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 #vid img {
   width: 100%;
