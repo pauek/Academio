@@ -96,6 +96,8 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 
 func hLogin(w http.ResponseWriter, req *http.Request) {
 	session := data.GetOrCreateSession(req)
+	log.Printf("%s [%s]", req.URL, session.Id)
+	session.PutCookie(w)
 	switch req.Method {
 	case "GET":
 		url, err := url.Parse(req.Header.Get("Referer"))
@@ -123,12 +125,13 @@ func hLoginProcessForm(w http.ResponseWriter, req *http.Request, session *data.S
 		http.Redirect(w, req, url, http.StatusSeeOther)
 		return
 	}
-	session.Message = "Incorrect Login"
+	session.Message = "Login incorrecto"
 	http.Redirect(w, req, "/login", http.StatusSeeOther)
 }
 
 func hLogout(w http.ResponseWriter, req *http.Request) {
 	session := data.GetSession(req)
+	log.Printf("%s [%s]", req.URL, session.Id)
 	if session != nil {
 		session.User = nil
 	}

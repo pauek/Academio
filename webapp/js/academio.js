@@ -191,4 +191,5 @@ $(document).ready(function () {
    $('#message').click(function (e) {
       $(this).hide();
    });
+   // window.onresize = academio.updateMap; // slow...
 });
