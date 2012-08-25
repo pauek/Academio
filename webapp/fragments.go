@@ -5,9 +5,9 @@ import (
 	"Academio/webapp/data"
 	"bytes"
 	"encoding/json"
-	"html/template"
 	"fmt"
 	F "fragments"
+	"html/template"
 	"log"
 	"net/http"
 	"strings"
@@ -89,10 +89,10 @@ func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	}
 	if layout := tmpl.Lookup("layout"); layout != nil {
 		layout.Execute(w, layoutInfo{
-			Title: title,
+			Title:   title,
 			Message: session.Message,
-			Navbar: 	template.HTML(cache.RenderToString(navbarfid)),
-			Body: template.HTML(cache.RenderToString(fid)),
+			Navbar:  template.HTML(cache.RenderToString(navbarfid)),
+			Body:    template.HTML(cache.RenderToString(fid)),
 		})
 	} else {
 		code := http.StatusInternalServerError
@@ -155,7 +155,7 @@ func fNavbar(c *F.Cache, args []string) F.Fragment {
 	if len(args) > 1 {
 		session := data.FindSession(args[1])
 		info.User = session.User
-		c.Depends(fid, "/session/" + session.Id)
+		c.Depends(fid, "/session/"+session.Id)
 		if len(session.Message) > 0 {
 			info.Message = &session.Message
 		}
