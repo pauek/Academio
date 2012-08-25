@@ -65,7 +65,8 @@ academio.updateMap = function () {
    }
 
    var over;
-   c.on('mouse:move', function (opts) {
+
+   function mouseMove(opts) {
       var target = c.findTarget(opts.e, true);
       if (target) {
          if (over != target) {
@@ -79,12 +80,15 @@ academio.updateMap = function () {
          high(over, false);
          over = null;
       }
-   });
-   c.on('mouse:down', function (e) {
+   }
+
+   c.on('mouse:move', mouseMove);
+   c.on('mouse:down', function (opts) {
+      mouseMove(opts); // for mobile
       if (over !== null) {
          var i = over._index;
          fragments.follow($('.topic .list .concept a')[i]);
-      }
+      } 
    });
 
    var scale, xoffset, yoffset;
