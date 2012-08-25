@@ -47,7 +47,7 @@ fragments.assemble = function(list, $elem) {
    }
    msg += " })";
    fragments.log(msg);
-   $('html, body').scrollTop(0); // Go to top
+   window.scrollTo(0, 0); // Go to top
 }
 
 fragments.load = function(url) {
@@ -57,20 +57,21 @@ fragments.load = function(url) {
    $.ajax({
       url: url,
       headers: { "FragmentsSince": stamp },
-      dataType:"json"
-   }).done(function(page) {
-      fragments.db[url] = JSON.stringify(page.Stamp); 
-      document.title = page.Title;
-      fragments.log("Message is '" + page.Message + '"');
-      if (page.Message !== "") {
-         $('#message').html(page.Message);
-         $('#message').show('fast');
-      } else {
-         $('#message').hide();
-      }
-      fragments.assemble(page.Navbar, $('#navbar'));
-      fragments.assemble(page.Body, $('#body'));
-      fragments.replaceLinks();
+      dataType:"json",
+      success: function(page) {
+         fragments.db[url] = JSON.stringify(page.Stamp); 
+         document.title = page.Title;
+         fragments.log("Message is '" + page.Message + '"');
+         if (page.Message !== "") {
+            $('#message').html(page.Message);
+            $('#message').show('fast');
+         } else {
+            $('#message').hide();
+         }
+         fragments.assemble(page.Navbar, $('#navbar'));
+         fragments.assemble(page.Body, $('#body'));
+         fragments.replaceLinks();
+      },
    });
 }
 
