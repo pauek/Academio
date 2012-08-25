@@ -5,6 +5,7 @@ import (
 	"Academio/webapp/data"
 	"bytes"
 	"encoding/json"
+	"html/template"
 	"fmt"
 	F "fragments"
 	"log"
@@ -73,25 +74,30 @@ func getFragmentsStamp(req *http.Request) (stamp time.Time) {
 	return
 }
 
+type layoutInfo struct {
+	Title string
+	Message string
+	Navbar template.HTML
+	Body template.HTML
+}
+
 func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	w.Header().Set("Content-Type", "text/html")
-	layout.Exec(w, func(action string) {
-		switch action {
-		case "body":
-			cache.Render(w, fid)
-		case "title":
-			fmt.Fprintf(w, title)
-		case "navbar":
-			id := "navbar"
-			if session.User != nil {
-				id += " " + session.Id
-			}
-			cache.Render(w, id)
-		case "message":
-		default:
-			cache.Render(w, action)
-		}
-	})
+	navbarfid := "navbar"
+	if session.User != nil {
+		navbarfid += " " + session.Id
+	}
+	if layout := tmpl.Lookup("layout"); layout != nil {
+		layout.Execute(w, layoutInfo{
+			Title: title,
+			Message: session.Message,
+			Navbar: 	template.HTML(cache.RenderToString(navbarfid)),
+			Body: template.HTML(cache.RenderToString(fid)),
+		})
+	} else {
+		code := http.StatusInternalServerError
+		http.Error(w, "Template 'layout' not found", code)
+	}
 }
 
 func sendJSON(w http.ResponseWriter, list []F.ListItem) {

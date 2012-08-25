@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>{% title %} - Academio</title>
+  <title>{{ .Title }} - Academio</title>
 
   <meta name="viewport" 
         content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
@@ -21,7 +21,7 @@
 </head>
 <body>
   <header>
-    {% message %}
+    <div id="message">{{ .Message }}</div>
     <a href="/" class="logo">
       <img src="/img/logo.png">
       <span class="text">
@@ -33,9 +33,9 @@
         <li><a href="/cursos">Cursos</a></li>
       </ul>
     </div>
-    {% navbar %}
+    {{ .Navbar }}
   </header>
-  <div fragment="_root">{% body %}</div>
+  <div fragment="_root">{{ .Body }}</div>
   <footer>
     <div class="inner">
       <a href="/" class="logo"><span class="orange">academ</span>.io</a>

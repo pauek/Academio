@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	F "fragments"
 	T "html/template"
 	"inotify"
 	"log"
@@ -16,10 +15,7 @@ func plus1(i int) int {
 	return i + 1
 }
 
-var (
-	tmpl   *T.Template
-	layout F.Template
-)
+var tmpl *T.Template
 
 func init() {
 	readTemplates()
@@ -29,7 +25,6 @@ func init() {
 func readTemplates() {
 	tmpldir := srvdir + "/templates/[a-zA-Z0-9]*.html"
 	tmpl = T.Must(T.New("").Funcs(tFuncs).ParseGlob(tmpldir))
-	layout = F.MustParse(exec("layout", nil))
 }
 
 func isChange(ev *inotify.Event) bool {
