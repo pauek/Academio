@@ -235,6 +235,7 @@ footer a:hover {
   background-repeat: no-repeat;
 }
 #vid img {
+  cursor: pointer;
   width: 100%;
 }
 
