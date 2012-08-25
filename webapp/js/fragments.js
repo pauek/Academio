@@ -7,45 +7,26 @@ if (window.localStorage) {
 }
 
 fragments.log = function(message) {
-   if (message) {
-      console.log("fragments: " + message);
-   } else {
-      console.log("");
-   }
-}
-
-fragments.getHtml = function(id) {
-   if (id in fragments.db) {
-      var item = JSON.parse(fragments.db[id]);
-      return item.Html;
-   }
-   return null;
-}
-
-fragments.store = function(url, item) {
-   var id = item.Id;
-   if (id == '_root') {
-      id += url;
-   }
-   fragments.db[id] = JSON.stringify({
-      Html: item.Html,
-      Stamp: item.Stamp,
-   });
+   console.log(message ? "fragments: " + message : "");
 }
 
 fragments.replace = function(item) {
    if (item.Html === "") {
-      item.Html = fragments.getHtml(item.Id);
+      fragments.log('hit("' + item.Id + '")');
+      item.Html = fragments.db[item.Id];
    } else {
       fragments.log('replace("' + item.Id + '")');
    }
    var elem = $('div[fragment="' + item.Id + '"]');
-   var children = {}
+   // save children
+   var children = {};
    $(elem).find('div[fragment]').each(function () {
       var id = $(this).attr("fragment");
       children[id] = $(this).detach();
    });
-   $(elem).html(item.Html);
+   // change elem
+   $(elem).replaceWith(item.Html);
+   // put children back
    for (var id in children) {
       if (children.hasOwnProperty(id)) {
          $(elem)
@@ -55,79 +36,42 @@ fragments.replace = function(item) {
    }
 }
 
-fragments.getStamp = function(url) {
-   fragments.log('getStamp("' + url + '")');
-   var id = '_root' + url;
-   if (fragments.db[id]) {
-      var item = JSON.parse(fragments.db[id]);
-      fragments.log("  " + item.Stamp);
-      return item.Stamp
-   }
-   fragments.log("  null");
-   return null;
-}
-
-fragments.goToTop = function () {
-   $('html, body').scrollTop(0); // Go to top
-}
-
-fragments.assembleFull = function(url, list) {
-   fragments.log("assembleFull(");
+fragments.assemble = function(list, $elem) {
+   var msg = "assemble({";
+   $elem.html('<div fragment="' + list[0].Id + '"></div>');
    for (var i = 0; i < list.length; i++) {
-      fragments.log("  [" + list[i].Stamp + "] " + list[i].Id);
-      $('div[fragment="' + list[i].Id + '"]').html(list[i].Html);
-      fragments.store(url, list[i]);
-   }
-   fragments.log(")");
-   fragments.goToTop();
-}
-
-fragments.assemblePartial = function(url, list) {
-   var msg = "assemblePartial({";
-   for (var i = 0; i < list.length; i++) {
-      msg += " " + list[i].Id;
-      fragments.replace(list[i])
-      fragments.store(url, list[i]);
+      var item = list[i];
+      msg += " " + item.Id;
+      fragments.replace(item);
+      fragments.db[item.Id] = item.Html;      
    }
    msg += " })";
    fragments.log(msg);
-   fragments.goToTop();
-}
-
-fragments.loadFull = function(url) {
-   fragments.log('loadFull("' + url + '")');
-   $.ajax({
-      url: url,
-      headers: {"Fragments": "all"}, 
-      dataType:"json"
-   }).done(function(list) {
-      fragments.assembleFull(url, list);
-      fragments.replaceLinks();
-   });
-}
-
-fragments.loadPartial = function(url, stamp) {
-   fragments.log('loadPartial("' + url + '", ' + stamp + ')');
-   $.ajax({
-      url: url,
-      headers: {
-         "Fragments": "since",
-         "FragmentsStamp": '"' + stamp + '"',
-      }, 
-      dataType:"json"
-   }).done(function(list) {
-      fragments.assemblePartial(url, list);
-      fragments.replaceLinks();
-   });
+   $('html, body').scrollTop(0); // Go to top
 }
 
 fragments.load = function(url) {
-   var stamp = fragments.getStamp(url);
-   if (stamp) {
-      fragments.loadPartial(url, stamp);
-   } else {
-      fragments.loadFull(url);
-   }
+   var stamp = fragments.db[url];
+   stamp = (stamp ? '"' + JSON.parse(stamp) + '"' : "null");
+   fragments.log('load("' + url + '", ' + stamp + ')');
+   $.ajax({
+      url: url,
+      headers: { "FragmentsSince": stamp },
+      dataType:"json"
+   }).done(function(page) {
+      fragments.db[url] = JSON.stringify(page.Stamp); 
+      document.title = page.Title;
+      fragments.log("Message is '" + page.Message + '"');
+      if (page.Message !== "") {
+         $('#message').html(page.Message);
+         $('#message').show('fast');
+      } else {
+         $('#message').hide();
+      }
+      fragments.assemble(page.Navbar, $('#navbar'));
+      fragments.assemble(page.Body, $('#body'));
+      fragments.replaceLinks();
+   });
 }
 
 fragments.follow = function(link) {

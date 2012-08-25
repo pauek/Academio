@@ -33,19 +33,24 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s [%s]", req.URL, id)
 	session.PutCookie(w)
 
-	ModeDispatch(w, req, session, fid, title)
+	SendPage(w, req, session, fid, title)
+	session.Message = "" // message delivered
 }
 
-func ModeDispatch(w http.ResponseWriter, req *http.Request, session *data.Session, fid, title string) {
-	// Send HTML or JSON
-	switch req.Header.Get("Fragments") {
-	case "":
+func SendPage(w http.ResponseWriter, req *http.Request, session *data.Session, fid, title string) {
+	_stamp := req.Header.Get("FragmentsSince")
+	if _stamp == "" {
 		sendHTML(w, session, fid, title)
-	case "all":
-		sendJSON(w, cache.List(fid))
-	case "since":
-		sendJSON(w, cache.ListDiff(fid, getFragmentsStamp(req)))
+		return
 	}
+	stamp := parseStamp(_stamp)
+	sendJSON(w, &JSONPage{
+		Stamp:   time.Now(),
+		Title:   title,
+		Message: session.Message,
+		Navbar:  cache.Diff(navbarFID(session), stamp),
+		Body:    cache.Diff(fid, stamp),
+	})
 }
 
 func pathToFragmentID(path string) (title, fid string, notfound bool) {
@@ -65,33 +70,39 @@ func pathToFragmentID(path string) (title, fid string, notfound bool) {
 	return
 }
 
-func getFragmentsStamp(req *http.Request) (stamp time.Time) {
-	since := req.Header.Get("FragmentsStamp")
-	err := json.Unmarshal([]byte(since), &stamp)
+func navbarFID(session *data.Session) string {
+	navbarfid := "navbar"
+	if session.User != nil {
+		navbarfid += " " + session.Id
+	}
+	return navbarfid
+}
+
+func parseStamp(s string) (stamp time.Time) {
+	if s == "null" {
+		return
+	}
+	err := json.Unmarshal([]byte(s), &stamp)
 	if err != nil {
-		log.Printf("ERROR: Cannot unmarshal timestamp '%s'", since)
+		log.Printf("ERROR: Cannot unmarshal timestamp '%s'", s)
 	}
 	return
 }
 
 type layoutInfo struct {
-	Title string
+	Title   string
 	Message string
-	Navbar template.HTML
-	Body template.HTML
+	Navbar  template.HTML
+	Body    template.HTML
 }
 
 func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	w.Header().Set("Content-Type", "text/html")
-	navbarfid := "navbar"
-	if session.User != nil {
-		navbarfid += " " + session.Id
-	}
 	if layout := tmpl.Lookup("layout"); layout != nil {
 		layout.Execute(w, layoutInfo{
 			Title:   title,
 			Message: session.Message,
-			Navbar:  template.HTML(cache.RenderToString(navbarfid)),
+			Navbar:  template.HTML(cache.RenderToString(navbarFID(session))),
 			Body:    template.HTML(cache.RenderToString(fid)),
 		})
 	} else {
@@ -100,8 +111,16 @@ func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	}
 }
 
-func sendJSON(w http.ResponseWriter, list []F.ListItem) {
-	if data, err := json.Marshal(list); err == nil {
+type JSONPage struct {
+	Stamp   time.Time
+	Title   string
+	Message string
+	Navbar  []F.ListItem
+	Body    []F.ListItem
+}
+
+func sendJSON(w http.ResponseWriter, page *JSONPage) {
+	if data, err := json.Marshal(page); err == nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)
 	} else {
@@ -147,6 +166,7 @@ type navbarInfo struct {
 	User    *data.User
 	Message *string
 }
+
 func fNavbar(c *F.Cache, args []string) F.Fragment {
 	fmt.Printf("fNavbar: args = %v\n", args)
 	fid := strings.Join(args, " ")

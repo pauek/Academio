@@ -33,9 +33,11 @@
         <li><a href="/cursos">Cursos</a></li>
       </ul>
     </div>
-    {{ .Navbar }}
+    <div id="navbar" class="right">
+      {{ .Navbar }}
+    </div>
   </header>
-  <div fragment="_root">{{ .Body }}</div>
+  <div id="body" fragment="_root">{{ .Body }}</div>
   <footer>
     <div class="inner">
       <a href="/" class="logo"><span class="orange">academ</span>.io</a>

@@ -20,7 +20,8 @@ var cache = F.NewCache()
 
 func hFragList(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/_frag/"):]
-	list := cache.List("item " + id)
+	var zero time.Time
+	list := cache.Diff("item " + id, zero)
 	w.Header().Set("Content-Type", "text/html")
 	tmpl.Lookup("fraglist").Execute(w, list)
 }
@@ -101,7 +102,8 @@ func hLogin(w http.ResponseWriter, req *http.Request) {
 		if err == nil && url.Path != "/login" {
 			session.Referer = url.Path
 		}
-		ModeDispatch(w, req, session, "login", "Login")
+		SendPage(w, req, session, "login", "Login")
+		session.Message = "";
 	case "POST":
 		hLoginProcessForm(w, req, session)
 	default:

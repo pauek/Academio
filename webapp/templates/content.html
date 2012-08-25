@@ -1,18 +1,16 @@
 {{define "navbar"}}
-  <div class="right">
-    <ul>
-      {{if .User}}
-      <li id="user">
-        <a href="/u/{{.User.Login}}">{{.User.Login}}</a>
-        <div class="dropdown">
-          <a href="/logout">Salir</a>
-        </div>
-      </li>
-      {{else}}
-      <li><a href="/login">Entra</a></li>
-      {{end}}
-    </ul>
-  </div>
+<ul>
+  {{if .User}}
+  <li id="user">
+    <a href="/u/{{.User.Login}}">{{.User.Login}}</a>
+    <div class="dropdown">
+      <a href="/logout">Salir</a>
+    </div>
+  </li>
+  {{else}}
+  <li><a href="/login">Entra</a></li>
+  {{end}}
+</ul>
 {{end}}
 
 
@@ -93,7 +91,7 @@
 {{define "topic-small"}}
 <li class="topic">
   <div class="left">
-    <a ajx href="{{.Id}}">
+    <a ajx href="/{{.Id}}">
       <h3>{{.Title}}</h3>
     </a>
     <p>{{len .Items}} Conceptos</p>
@@ -101,7 +99,7 @@
   <ul class="concepts">{{range $i, $item := .Items}}
     <li>
       <span class="tooltip" tooltip="{{$item.Title}}">
-        <a ajx href="{{$item.Id}}">{{plus1 $i}}</a>
+        <a ajx href="/{{$item.Id}}">{{plus1 $i}}</a>
       </span>
     </li>{{end}}
   </ul>

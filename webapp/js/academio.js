@@ -181,4 +181,10 @@ $(document).ready(function () {
       e.preventDefault();
       $('#user .dropdown').toggle();
    });
+   if ($('#message').html() !== "") {
+      $('#message').show('fast');
+   }
+   $('#message').click(function (e) {
+      $(this).hide();
+   });
 });
