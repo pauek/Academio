@@ -20,7 +20,7 @@ func fragmentPage(w http.ResponseWriter, req *http.Request) {
 	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
 	if notfound {
 		log.Printf("%s (NOT FOUND)", req.URL)
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 
@@ -72,7 +72,7 @@ func pathToFragmentID(path string) (title, fid string, notfound bool) {
 
 func navbarFID(session *data.Session) string {
 	navbarfid := "navbar"
-	if session.User != nil {
+	if session != nil && session.User != nil {
 		navbarfid += " " + session.Id
 	}
 	return navbarfid
@@ -99,9 +99,13 @@ type layoutInfo struct {
 func sendHTML(w http.ResponseWriter, session *data.Session, fid, title string) {
 	w.Header().Set("Content-Type", "text/html")
 	if layout := tmpl.Lookup("layout"); layout != nil {
+		var msg string
+		if session != nil {
+			msg = session.Message
+		}
 		layout.Execute(w, layoutInfo{
 			Title:   title,
-			Message: session.Message,
+			Message: msg,
 			Navbar:  template.HTML(cache.RenderToString(navbarFID(session))),
 			Body:    template.HTML(cache.RenderToString(fid)),
 		})
@@ -144,6 +148,7 @@ func init() {
 		"home",
 		"footer",
 		"login",
+		"notfound",
 	)
 	cache.Register(fCourses, "courses")
 }

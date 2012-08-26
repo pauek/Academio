@@ -3,6 +3,7 @@ package main
 import (
 	"Academio/content"
 	"Academio/webapp/data"
+	"bytes"
 	"flag"
 	"fmt"
 	F "fragments"
@@ -12,6 +13,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"html/template"
 	"time"
 )
 
@@ -30,11 +32,31 @@ func fmtTime(t time.Time) string {
 	return t.UTC().Format(http.TimeFormat)
 }
 
+func NotFound(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+ 	w.Header().Set("Content-Type", "text/html")
+	var body bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&body, "notfound", req.URL.Path); err != nil {
+		goto InternalError
+	}
+	tmpl.ExecuteTemplate(w, "layout", layoutInfo{
+		Title:   "No encontrada - Academio",
+		Message: "",
+		Navbar:  template.HTML(cache.RenderToString("navbar")),
+		Body:    template.HTML(body.String()),
+	})
+	return
+	
+InternalError:
+	code := http.StatusInternalServerError
+	http.Error(w, "Template 'layout' not found", code)
+}
+
 func hFonts(w http.ResponseWriter, req *http.Request) {
 	path := filepath.Join(srvdir, req.URL.Path)
 	font, err := os.Open(path)
 	if err != nil {
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 	defer font.Close()
@@ -47,13 +69,13 @@ func hFavicon(w http.ResponseWriter, req *http.Request) {
 	rest := req.URL.Path[len("/favicon.ico"):]
 	if len(rest) > 0 {
 		log.Printf("%s (NOT FOUND)", req.URL.Path)
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 	path := filepath.Join(srvdir, "img/favicon.ico")
 	icon, err := os.Open(path)
 	if err != nil {
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 	defer icon.Close()
@@ -67,18 +89,18 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 
 	item := content.Get(id)
 	if item == nil {
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 	course, ok := item.(*content.Course)
 	if !ok {
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 
 	image, err := os.Open(course.Photo)
 	if err != nil {
-		http.NotFound(w, req)
+		NotFound(w, req)
 		return
 	}
 	defer image.Close()
@@ -199,13 +221,13 @@ func main() {
 	serveFiles("/css/")
 	serveFiles("/img/")
 
-	http.HandleFunc("/_frag/", GzippedFunc(hFragList))
+	http.HandleFunc("/_frag/", hFragList)
 	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/fonts/", hFonts)
 	http.HandleFunc("/login", hLogin)
 	http.HandleFunc("/logout", hLogout)
-	http.HandleFunc("/", GzippedFunc(fragmentPage))
+	http.HandleFunc("/", fragmentPage)
 
 	if *ssl {
 		go listenSSL()

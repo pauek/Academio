@@ -1,3 +1,20 @@
+{{define "notfound"}}
+<div id="content">
+  <h1>Página no encontrada...</h1>
+  <p>Lo sentimos, la dirección <tt>{{.}}</tt> no se corresponde con 
+    ninguna página de <a href="https://academ.io">academ.io</a>.
+    <p>De todas maneras, hemos encontrado este programa:</p>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+   cout << "Página no encontrada" << endl;
+}
+</pre>
+</div>
+{{end}}
+
 {{define "home"}}
 <div id="content">
   <h1>Inicio</h1>
