@@ -60,11 +60,11 @@ class HTMLTranslator(html4css1.HTMLTranslator):
       raise nodes.SkipNode # avoid depart_...
    
    def visit_math(self, node):
-      print "'" + node.rawsource + "'"
+      # print "'" + node.rawsource + "'"
       g = re.match(':math:`(.*)`', node.rawsource, flags=re.DOTALL)
       if g: 
          math = g.group(1)
-         print math
+         # print math
          self.body.append('\\(%s\\)' % math)
       raise nodes.SkipNode
 
@@ -96,10 +96,10 @@ for path in PATH.split(':'):
    print itemid
    rst = path + '/' + itempath + '/doc.rst'
    dirr, base = os.path.split(rst)
-   print dirr
+   # print dirr
    name, ext = os.path.splitext(base)
    html = os.path.join(dirr, name + '.html')
-   print html
+   # print html
    text = read_file(rst)
    dic = docutils.core.publish_parts(text, writer = HTMLWriter())
    f = codecs.open(html, 'w', 'utf8')
