@@ -24,16 +24,16 @@ func init() {
 // Dir
 
 type Dir struct {
-	root, rel string
+	Root, Rel string
 }
 
-func (d Dir) abs() string { return filepath.Join(d.root, d.rel) }
+func (d Dir) abs() string { return filepath.Join(d.Root, d.Rel) }
 
 func (d Dir) join(subdir string) Dir {
-	return Dir{d.root, filepath.Join(d.rel, subdir)}
+	return Dir{d.Root, filepath.Join(d.Rel, subdir)}
 }
 
-func (d Dir) file(filename string) string {
+func (d Dir) File(filename string) string {
 	return filepath.Join(d.abs(), filename)
 }
 
@@ -48,7 +48,7 @@ type CommonData struct {
 	}
 }
 
-func (data *CommonData) Id() string { return ToID(data.dir.rel) }
+func (data *CommonData) Id() string { return ToID(data.dir.Rel) }
 
 func (data *CommonData) Path() (ids []string) {
 	acum := ""
@@ -68,7 +68,7 @@ func (data *CommonData) Data() *CommonData { return data }
 
 func (data *CommonData) read(dir Dir) {
 	data.dir = dir
-	_, last := filepath.Split(data.dir.rel)
+	_, last := filepath.Split(data.dir.Rel)
 	data.Title = removeOrder(last)
 	dochtml := filepath.Join(dir.abs(), "doc.html")
 	if raw, err := ioutil.ReadFile(dochtml); err == nil {
@@ -113,10 +113,10 @@ func (c *Concept) Type() string { return "concept" }
 
 func (c *Concept) read(dir Dir) Item {
 	c.CommonData.read(dir)
-	if vid, err := ioutil.ReadFile(dir.file("video")); err == nil {
+	if vid, err := ioutil.ReadFile(dir.File("video")); err == nil {
 		c.VideoID = strings.Replace(string(vid), "\n", "", -1)
 	}
-	if deps, err := ioutil.ReadFile(dir.file("depends")); err == nil {
+	if deps, err := ioutil.ReadFile(dir.File("depends")); err == nil {
 		for _, dep := range strings.Split(string(deps), "\n") {
 			if dep != "" {
 				c.Depends = append(c.Depends, ToID(dep))
@@ -149,7 +149,7 @@ func (g *Group) read(dir Dir) {
 	eachSubDir(dir.abs(), func(subdir string) {
 		d := dir.join(subdir)
 		subitem := SubItem{
-			Id:    ToID(d.rel),
+			Id:    ToID(d.Rel),
 			Title: removeOrder(subdir),
 			dir:   d.abs(),
 		}
@@ -249,8 +249,8 @@ func (c *Course) Type() string { return "course" }
 func (c *Course) read(dir Dir) Item {
 	c.CommonData.read(dir)
 	c.Group.read(dir)
-	if _, err := os.Stat(dir.file("photo.png")); err == nil {
-		c.Photo = dir.file("photo.png")
+	if _, err := os.Stat(dir.File("photo.png")); err == nil {
+		c.Photo = dir.File("photo.png")
 	}
 	return c
 }
@@ -258,11 +258,11 @@ func (c *Course) read(dir Dir) Item {
 // Interface
 
 func Get(id string) (item Item) {
-	dir := toDir(id)
-	if dir.root == "" {
+	dir := ToDir(id)
+	if dir.Root == "" {
 		return nil
 	}
-	switch numLevels(dir.rel) {
+	switch numLevels(dir.Rel) {
 	case 1:
 		item = new(Course)
 	case 2:

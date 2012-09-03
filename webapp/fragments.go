@@ -15,14 +15,35 @@ import (
 )
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
-	// Determine fragment + title
-	var title, fid string
-	title, fid, notfound := pathToFragmentID(req.URL.Path[1:])
+	// Extract Item ID from URL
+	var itemId string
+	path := req.URL.Path[1:]
+	k := strings.Index(path, "/")
+	if k != -1 {
+		// serve file from item directory
+		itemId = path[:k]
+		dir := content.ToDir(itemId)
+		if dir.Root == "" {
+			NotFound(w, req)
+			return
+		} 
+		filename := dir.File(path[k+1:])
+		log.Printf("%s", req.URL.Path)
+		http.ServeFile(w, req, filename)
+		return
+	} else {
+		itemId = path
+	}
+
+	// Determine fragment ID & Title
+	var fid string
+	fid, notfound := getFragmentID(itemId)
 	if notfound {
 		log.Printf("%s (NOT FOUND)", req.URL)
 		NotFound(w, req)
 		return
 	}
+	title := getTitle(itemId)
 
 	// Get session
 	session := data.GetOrCreateSession(req)
@@ -53,19 +74,30 @@ func SendPage(w http.ResponseWriter, req *http.Request, session *data.Session, f
 	})
 }
 
-func pathToFragmentID(path string) (title, fid string, notfound bool) {
-	switch path {
+func getFragmentID(id string) (fid string, notfound bool) {
+	switch id {
 	case "":
-		title, fid = "Inicio", "home"
+		fid = "home"
 	case "cursos":
-		title, fid = "Cursos", "courses"
+		fid = "courses"
 	default:
-		item := content.Get(path)
+		item := content.Get(id)
 		if item == nil {
-			return "", "", true
+			return "", true
 		}
-		title = item.Data().Title
-		fid = fmt.Sprintf("item %s", path)
+		fid = fmt.Sprintf("item %s", id)
+	}
+	return
+}
+
+func getTitle(id string) (title string) {
+	switch id {
+	case "":
+		title = "Inicio"
+	case "cursos":
+		title = "Cursos"
+	default:
+		title = content.Get(id).Data().Title
 	}
 	return
 }

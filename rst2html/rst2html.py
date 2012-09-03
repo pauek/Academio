@@ -24,11 +24,19 @@ def normalize(cid):
    output = ""
    for line in p.stdout:
       output += line
-   return output
+   return output[:-1]
 
 class HTMLTranslator(html4css1.HTMLTranslator):
    def __init__(self, document):
       html4css1.HTMLTranslator.__init__(self, document)
+
+   def visit_image(self, node):
+      global itemid
+      uri = node.attributes['uri']
+      path = 'blabla'
+      node.attributes['uri'] = itemid + '/' + uri
+      print "image: ", node.attributes
+      html4css1.HTMLTranslator.visit_image(self, node)
 
    def visit_concept(self, node):
       path = node.astext()
@@ -67,12 +75,18 @@ def read_file(filename, utf=False):
    except IOError:
       return None
 
-rst = sys.argv[1]
-dirr, base = os.path.split(rst)
-name, ext = os.path.splitext(base)
-html = os.path.join(dirr, name + '.html')
-print html
-text = read_file(rst)
-dic = docutils.core.publish_parts(text, writer = HTMLWriter())
-f = codecs.open(html, 'w', 'utf8')
-f.write(dic['body'])
+PATH = os.getenv('ACADEMIO_PATH')
+for path in PATH.split(':'):
+   itempath = sys.argv[1]
+   itemid = normalize(itempath)
+   print itemid
+   rst = path + '/' + itempath + '/doc.rst'
+   dirr, base = os.path.split(rst)
+   print dirr
+   name, ext = os.path.splitext(base)
+   html = os.path.join(dirr, name + '.html')
+   print html
+   text = read_file(rst)
+   dic = docutils.core.publish_parts(text, writer = HTMLWriter())
+   f = codecs.open(html, 'w', 'utf8')
+   f.write(dic['body'])

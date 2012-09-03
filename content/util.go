@@ -58,7 +58,7 @@ func parentID(id string) (pid string) {
 
 // Find a dir from the roots that translates to ID
 // 
-func toDir(ID string) (dir Dir) {
+func ToDir(ID string) (dir Dir) {
 	for _, root := range roots {
 		found := ""
 		walkDirs(root, func(reldir string, level int) {

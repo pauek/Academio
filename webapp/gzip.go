@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"log"
 	"strings"
 )
 
@@ -22,18 +23,19 @@ type gzipHandler struct {
 	noExpire bool
 }
 
-func gzipped(w http.ResponseWriter, r *http.Request, noExpire bool, fn http.HandlerFunc) {
+func gzipped(w http.ResponseWriter, req *http.Request, noExpire bool, fn http.HandlerFunc) {
 	if noExpire {
 		w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", 60*60*24*365))
 	}
-	if !strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
-		fn(w, r)
+	if !strings.Contains(req.Header.Get("Accept-Encoding"), "gzip") {
+		fn(w, req)
 		return
 	}
+	log.Printf("%s", req.URL.Path)
 	w.Header().Set("Content-Encoding", "gzip")
 	gz := gzip.NewWriter(w)
 	defer gz.Close()
-	fn(gzipResponseWriter{Writer: gz, ResponseWriter: w}, r)
+	fn(gzipResponseWriter{Writer: gz, ResponseWriter: w}, req)
 }
 
 func (H *gzipHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
