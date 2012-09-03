@@ -60,6 +60,13 @@ h1, h2, h3, h4 {
   border-spacing: 0;
   border-top: 1px solid #c7c7ca;
 }
+.table table.docutils th {
+  border: 0;
+  border-bottom: 1px solid #c7c7ca;
+  text-align: left;
+  padding: .4em .6em .4em .6em;
+  background: #eee;
+}
 .table table.docutils td {
   padding: .2em .5em ;
   border-top: 0;
