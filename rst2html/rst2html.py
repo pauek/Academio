@@ -30,13 +30,27 @@ class HTMLTranslator(html4css1.HTMLTranslator):
    def __init__(self, document):
       html4css1.HTMLTranslator.__init__(self, document)
 
+   # hack to be able to select tables in CSS (1)
+   def visit_table(self, node):
+      self.body.append('<div class="table">')
+      html4css1.HTMLTranslator.visit_table(self, node)
+
+   # hack to be able to select tables in CSS (2)
+   def depart_table(self, node):
+      html4css1.HTMLTranslator.depart_table(self, node)
+      self.body.append('</div>')
+
    def visit_image(self, node):
       global itemid
       uri = node.attributes['uri']
       path = 'blabla'
       node.attributes['uri'] = itemid + '/' + uri
-      print "image: ", node.attributes
+      self.body.append('<div class="image">')
       html4css1.HTMLTranslator.visit_image(self, node)
+      
+   def depart_image(self, node):
+      html4css1.HTMLTranslator.depart_image(self, node)
+      self.body.append('</div>')
 
    def visit_concept(self, node):
       path = node.astext()

@@ -51,6 +51,23 @@ a:hover {
 h1, h2, h3, h4 {
   margin: 0;
 }
+
+/* Tables */
+
+.table table.docutils {
+  margin: 2em;
+  border: 0;
+  border-spacing: 0;
+  border-top: 1px solid #c7c7ca;
+}
+.table table.docutils td {
+  padding: .2em .5em ;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #c7c7ca;
+}
+
 #doc h1 {
   font-size: 1.38em;
   font-weight: 700;
@@ -269,8 +286,13 @@ footer a:hover {
   margin: 0;
   margin-bottom: 1.5em;
 }
-
 #doc {
+  width: 100%;
+}
+
+#doc .image {
+  width: 100%;
+  text-align: center;
 }
 .concept {
   margin-bottom: .7em;
@@ -323,12 +345,22 @@ pre {
   border: 1px solid #ccc;
   overflow: auto;
 }
+/* footnotes */
 .footnote {
-  font-size: 80%;
+  font-size: 0.8rem;
 }
 hr {
-  margin: 25em auto 1.25em auto;
+  margin: 3em auto 1em auto;
+  border: 0;
+  height: 1px;
+  background: #ccc;
 }
+a.fn-backref {
+  font-size: 0.8rem;
+  margin-right: .2em;
+}
+
+
 ul#cursos {
   padding: 0;
 }
