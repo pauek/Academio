@@ -162,45 +162,17 @@ func hLogout(w http.ResponseWriter, req *http.Request) {
 
 
 var port = flag.Int("port", 8080, "Network port")
-var ssl = flag.Bool("ssl", false, "Use SSL?")
 
-func serveFiles(prefix string) {
+func ServeFiles(prefix string) {
 	fs := http.FileServer(http.Dir(srvdir + prefix))
 	http.Handle(prefix, http.StripPrefix(prefix, GzippedNoExpire(fs)))
 }
 
-func listen() {
+func Listen() {
 	p := fmt.Sprintf(":%d", *port)
 	err := http.ListenAndServe(p, nil)
 	if err != nil {
 		log.Fatalf("Cannot Listen: %s", err)
-	}
-}
-
-func listenSSL() {
-	root := os.Getenv("ACADEMIO_ROOT")
-	certfile := filepath.Join(root, "webapp/certs/cert.pem")
-	keyfile  := filepath.Join(root, "webapp/certs/academio.key")
-		p := fmt.Sprintf(":%d", *port)
-	err := http.ListenAndServeTLS(p, certfile, keyfile, nil)
-	if err != nil {
-		log.Fatalf("Cannot ListenTLS: %s", err)
-	}
-}
-
-func redirectToSSL() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		url := "https:/" + "/academ.io" + req.URL.String()
-		http.Redirect(w, req, url, http.StatusMovedPermanently)
-	})
-	srv := http.Server{
-		Addr:    ":http",
-		Handler: mux,
-	}
-	err := srv.ListenAndServe()
-	if err != nil {
-		log.Fatalf("Cannot Listen (http -> https redirect): %s", err)
 	}
 }
 
@@ -216,10 +188,10 @@ func main() {
 	})
 
 	// handlers
-	serveFiles("/js/lib/")
-	serveFiles("/js/")
-	serveFiles("/css/")
-	serveFiles("/img/")
+	ServeFiles("/js/lib/")
+	ServeFiles("/js/")
+	ServeFiles("/css/")
+	ServeFiles("/img/")
 
 	http.HandleFunc("/_frag/", hFragList)
 	http.HandleFunc("/favicon.ico", hFavicon)
@@ -229,10 +201,5 @@ func main() {
 	http.HandleFunc("/logout", hLogout)
 	http.HandleFunc("/", fragmentPage)
 
-	if *ssl {
-		go listenSSL()
-		redirectToSSL()
-	} else {
-		listen()
-	}
+	Listen()
 }

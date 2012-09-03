@@ -1,24 +1,26 @@
 package main
 
 import (
-	"text/template"
 	"io"
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
+	"text/template"
 )
 
 const webapp = "localhost:8080"
 
 type Server string
 
-func (s Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func ReverseProxy(w http.ResponseWriter, req *http.Request) {
 	var err error
 	var inConn, outConn net.Conn
 
 	log.Printf("%s %v", req.Method, req.URL)
 
-	if inConn, err = net.Dial("tcp", string(s)); err != nil {
+	if inConn, err = net.Dial("tcp", webapp); err != nil {
 		SiteIsDown(w)
 		return
 	}
@@ -45,7 +47,7 @@ const down = `<!doctype html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Academio duerme</title>
+    <title>Academio</title>
     <style>
       html, body { 
         margin: 0; padding: 0;
@@ -81,8 +83,8 @@ const down = `<!doctype html>
 
 const downBody = `
 <h1>
-  <span class="bold"><span class="orange">academ.</span>io</span> duerme <br />
-  <span class="small">Por favor, vuelve más tarde</span>
+  <span class="bold"><span class="orange">academ.</span>io</span> descansa...<br />
+  <span class="small">Por favor, vuelve más tarde.</span>
 </h1>
 `
 
@@ -100,10 +102,35 @@ func SiteIsDown(w http.ResponseWriter) {
 	tDown.Execute(w, downBody)
 }
 
-func main() {
-	listener, err := net.Listen("tcp", ":80")
-	if err != nil {
-		log.Fatalf("Cannot listen on ':80': %s", err)
+func RedirectToSSL() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		url := "https:/" + "/academ.io" + req.URL.String()
+		http.Redirect(w, req, url, http.StatusMovedPermanently)
+	})
+	srv := http.Server{
+		Addr:    ":http",
+		Handler: mux,
 	}
-	http.Serve(listener, Server(webapp))
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatalf("Cannot Listen (http -> https redirect): %s", err)
+	}
+}
+
+func ListenSSL() {
+	http.HandleFunc("/", ReverseProxy)
+
+	root := os.Getenv("ACADEMIO_ROOT")
+	certfile := filepath.Join(root, "webapp/certs/cert.pem")
+	keyfile := filepath.Join(root, "webapp/certs/academio.key")
+	err := http.ListenAndServeTLS(":https", certfile, keyfile, nil)
+	if err != nil {
+		log.Fatalf("Cannot Listen (SSL): %s", err)
+	}
+}
+
+func main() {
+	go RedirectToSSL()
+	ListenSSL()
 }
