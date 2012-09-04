@@ -123,6 +123,12 @@ header a:hover {
   float: left;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
+#beta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
 header nav {
   display: inline;
 }
