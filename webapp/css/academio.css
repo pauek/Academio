@@ -184,6 +184,72 @@ header .dropdown a:hover {
   color: black;
 }
 
+#home {
+  color: white;
+  padding-top: 5em;
+  text-align: center;
+  padding-bottom: 2em;
+  background: #41444f;
+  background-image: url('/img/bkg.png');
+}
+#home h1 {
+  line-height: 3rem;
+  margin: 0 .5em .2em .5em;
+  font-weight: 400;
+  font-size: 3rem;
+}
+#home p {
+  margin: 0 1em;
+  font-size: 1.25em;
+}
+#content.home h2 {
+  font-size: 1.3em;
+  margin: 0 auto;
+  width: 60%;
+}
+#content.home a {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 2em;
+  background: #d37429;
+  color: white;
+  border-radius: .3em;
+  box-shadow: 0 5px 10px #aaa;
+}
+
+.point-wrapper {
+  margin: 0;
+}
+.point {
+  float: left;
+  height: auto;
+  margin: 0 .5em .5em 0;
+  padding: .7em 1.1em 1em 1.1em;
+}
+.point h2 { 
+  font-weight: 600;
+  font-family: "Open Sans Condensed";
+  margin: 0;
+  padding: 0;
+}
+.point h2 img {
+  float: left;
+  margin-top: .1em;
+}
+.point p {
+  margin: .2em 0 0;
+}
+.point em {
+  float: right;
+  margin-top: .5em;
+  font-size: .9em;
+  color: #778;
+}
+
+
 footer {
   border-top: 1px solid #c9cfd8;
   color: #666;
@@ -292,9 +358,12 @@ footer a:hover {
 }
 
 #content {
-  padding: .7em;
+  padding: 1.5em;
   padding-bottom: 5em;
-  min-height: 45em;
+  min-height: 15em;
+}
+#content.home {
+  min-height: 15em;
 }
 #content > p {
   margin: 0;
@@ -369,6 +438,9 @@ hr {
   height: 1px;
   background: #ccc;
 }
+hr.separator {
+  margin-top: 0;
+}
 a.fn-backref {
   font-size: 0.8rem;
   margin-right: .2em;
@@ -403,7 +475,7 @@ ul.course .topic {
   font-size: .9em;
   border-top: 1px solid #e7e7e7;
   list-style-type: none;
-  padding: .4em 0 .4em 0;
+  padding: .8em 0 .8em 0;
 }
 ul.course .topic .left {
   display: inline-block;
@@ -594,11 +666,21 @@ ul.course .topic .concepts li a:hover {
     width: 100%;
     height: 600px;
   }
+  #content {
+    min-height: 45em;
+  }
 }
 
 /* tablet */
 @media screen and (min-width: 800px) {
-  #content, #top .inner { 
+  .point {
+    width: 28%;
+    height: 18em;
+  }
+  #content.home a {
+    width: 50%;
+  }
+  #content, #top .inner, .point-wrapper { 
     width: 720px; 
     margin-left: auto;
     margin-right: auto;
@@ -608,6 +690,9 @@ ul.course .topic .concepts li a:hover {
   }
   ul.course { 
     width: 720px; 
+  }
+  ul.course .topic {
+    padding: .4em 0 .4em 0;
   }
   ul.course .topic .concepts {
     width: 370px;
@@ -623,13 +708,23 @@ ul.course .topic .concepts li a:hover {
 
 /* desktop */
 @media screen and (min-width: 1200px) {
-  #content, #top .inner { 
+  .point {
+    width: 29.5%;
+    height: 12em;
+  }
+  #content.home a {
+    width: 35%;
+  }
+  #content, #top .inner, .point-wrapper { 
     width: 1100px;
     margin-left: auto;
     margin-right: auto;
   }
   #content > p {
     width: 40em;
+  }
+  #content.home {
+    min-height: 21em;
   }
   #doc, #vid {
     width: 45em;

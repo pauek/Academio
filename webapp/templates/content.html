@@ -155,10 +155,41 @@ int main() {
 {{end}}
 
 {{define "home"}}
-<div id="content">
-  <h1>Inicio</h1>
-  <p>Esta es la página principal</p>
-  <p>Aquí hay algunos <a href="/cursos">cursos</a></p>
+<div id="home">
+  <h1>Estudias o aprendes?</h1>
+  <p>academ.io es una web de cursos donde aprenderás de otra manera</p>
+</div>
+<div class="point-wrapper">
+  <div class="point">
+    <h2><img src="/img/point1.png" />Con vídeos</h2>
+    <p>Los puedes ver, revisar, parar, rebobinar... Son de tú a tú,
+      sobre ejemplos concretos, y con las manos en la masa. Son cortos
+      porque tratan un concepto concreto. Y tienen asociada una página
+      o dos de documentación. Dile adiós a tomar apuntes y a las
+      clases magistrales.</p>
+  </div>
+  <div class="point">
+    <h2><img src="/img/point2.png" />A tu ritmo</h2>
+    <p>Si cada uno aprende a un ritmo diferente, porqué hay que
+      sincronizar a toda la clase? Quizás esta semana estás más
+      inspirado y la que viene no tanto. Quizás el primer tema de
+      cueste más y el último muy poco. Los cursos tiene un mapa para
+      que te sitúes y sepas por donde vas.</p>
+  </div>
+  <div class="point">
+    <h2><img src="/img/point3.png" />Con alicientes</h2>
+    <p>Todos necesitamos que nos digan lo bien que vamos, y muy a
+      menudo. <a href="academ.io">academ.io</a> sigue tu progreso y
+      sabe si eres competente porque cada concepto tiene ejercicios y
+      problemas que se corrigen al momento, para que veas cómo
+      vas. <br />
+      <em>en preparación</em> </p>
+  </div>
+  <div class="clear"></div>
+</div>
+<div id="content" class="home">
+  <hr class="separator" />
+  <a href="/cursos">Lista de cursos</a>
 </div>
 {{end}}
 
