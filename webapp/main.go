@@ -160,6 +160,22 @@ func hLogout(w http.ResponseWriter, req *http.Request) {
 	http.Redirect(w, req, "/", http.StatusSeeOther)
 }
 
+func hRegister(w http.ResponseWriter, req *http.Request) {
+	session := data.GetSession(req)
+	log.Printf("%s [%s]", req.URL, session.Id)
+	if req.URL.Path != "/register" {
+		NotFound(w, req)
+		return
+	}
+	NotFound(w, req)
+}
+
+func hAbout(w http.ResponseWriter, req *http.Request) {
+	session := data.GetOrCreateSession(req)
+	log.Printf("%s [%s]", req.URL, session.Id)
+	SendPage(w, req, session, "about", "Acerca de")
+}
+
 
 var port = flag.Int("port", 8080, "Network port")
 
@@ -188,18 +204,25 @@ func main() {
 	})
 
 	// handlers
-	ServeFiles("/js/lib/")
 	ServeFiles("/js/")
 	ServeFiles("/css/")
 	ServeFiles("/img/")
 
-	http.HandleFunc("/_frag/", hFragList)
 	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/fonts/", hFonts)
+
+	// Users
 	http.HandleFunc("/login", hLogin)
 	http.HandleFunc("/logout", hLogout)
+	http.HandleFunc("/register", hRegister)
+
+	// About
+	http.HandleFunc("/acerca", hAbout)
+	
 	http.HandleFunc("/", fragmentPage)
+
+	http.HandleFunc("/_frag/", hFragList)
 
 	Listen()
 }

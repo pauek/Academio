@@ -180,6 +180,7 @@ func init() {
 		"home",
 		"footer",
 		"login",
+		"about",
 		"notfound",
 	)
 	cache.Register(fCourses, "courses")

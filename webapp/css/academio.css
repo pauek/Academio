@@ -80,13 +80,20 @@ h1, h2, h3, h4 {
   font-weight: 700;
   font-family: "Open Sans Condensed";
 }
-h1 {
+h1, h2, h3 {
   font-family: "Open Sans";
-  font-weight: 300;
-  margin: 0.2em 0 0.15em 0;
   font-variant: normal;
   font-style: normal;
-  font-size: 2.25em;
+}
+h1 {
+  font-weight: 300;
+  font-size: 2.25rem;
+  margin: 0.2em 0 0.15em 0;
+}
+h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0.2em 0 0.15em 0;
 }
 body {
   margin: 0;
@@ -178,13 +185,13 @@ header .dropdown a:hover {
 }
 
 footer {
-  border-top: 1px solid #fafcff;
+  border-top: 1px solid #c9cfd8;
   color: #666;
-  padding: 1.5em 1.5em 5em;
+  padding: 1em 1em 5em 0;
 }
 footer .logo {
   color: white;
-  margin-right: 3em;
+  margin: 0 2em 0 .5em;
 }
 footer .logo .orange {
   color: #afaba0;
@@ -652,4 +659,18 @@ ul.course .topic .concepts li a:hover {
     padding: 0.2em 0.5em 0.2em 0.5em;
     border-radius: 0.3em;
   }
+}
+
+.member {
+  width: 25em;
+  height: 3em;
+  padding: 1em 0 .5em 0;
+}
+.member img {
+  float: left;
+  margin-right: 1em;
+}
+.member h4 {
+  font-weight: 400;
+  font-size: 1rem;
 }

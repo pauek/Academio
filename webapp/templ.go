@@ -41,7 +41,7 @@ func watchTemplates() {
 		log.Printf("Warning: Cannot watch templates.")
 	}
 
-	watcher.Watch("templates")
+	watcher.Watch(srvdir + "/templates")
 
 	go func() {
 		for {
