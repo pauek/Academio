@@ -42,7 +42,7 @@ func ToID(dir string) (id string) {
 	id = replacer.Replace(id)              // remove accents + map chars
 	id = strings.Title(id)                 // Make A Title
 	id = strings.Replace(id, " ", "", -1)  // remove spaces
-	id = strings.Replace(id, "/", ".", -1) // remove '/'
+	id = strings.Replace(id, "/", ".", -1) // '/' -> '.'
 	return id
 }
 
