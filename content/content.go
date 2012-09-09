@@ -1,6 +1,7 @@
 package content
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -72,14 +73,38 @@ func (data *CommonData) absdir() string { return data.dir.abs() }
 
 func (data *CommonData) Data() *CommonData { return data }
 
+func readHTMLDocs(file string, id string) template.HTML {
+	raw, err := ioutil.ReadFile(file)
+	if err != nil {
+		return template.HTML("") // no docs
+	}
+	var tFuncs = map[string]interface{}{
+		"link": func (dir string) template.HTML {
+			_, last := filepath.Split(dir)
+			title := removeOrder(last)
+			a := `<a ajx class="concept" href="/%s">%s</a>`
+			return template.HTML(fmt.Sprintf(a, ToID(dir), title))
+		},
+	}
+	T, err := template.New("").Funcs(tFuncs).Parse(string(raw))
+	if err != nil {
+		return template.HTML(fmt.Sprintf(`<div class="error">Error: %s</div>`, err))
+	}
+	var b bytes.Buffer
+	T.Execute(&b, map[string]string {
+		"Id": id,
+	})
+	return template.HTML(b.String())
+}
+
 func (data *CommonData) read(dir Dir) {
 	data.dir = dir
 	_, last := filepath.Split(data.dir.Rel)
 	data.Title = removeOrder(last)
-	dochtml := filepath.Join(dir.abs(), "doc.html")
-	if raw, err := ioutil.ReadFile(dochtml); err == nil {
-		data.Doc.Html = template.HTML(string(raw))
-	}
+
+	docfile := filepath.Join(dir.abs(), "doc.html")
+	data.Doc.Html = readHTMLDocs(docfile, ToID(dir.Rel))
+
 	docrst := filepath.Join(dir.abs(), "doc.rst")
 	if raw, err := ioutil.ReadFile(docrst); err == nil {
 		data.Doc.Rst = string(raw)

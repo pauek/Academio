@@ -19,13 +19,6 @@ register_generic_role('math', math)
 
 ## Highlighting in docutils (using pygments)
 
-def normalize(cid):
-   p = subprocess.Popen(["dir2id", cid], stdout=subprocess.PIPE)
-   output = ""
-   for line in p.stdout:
-      output += line
-   return output[:-1]
-
 class HTMLTranslator(html4css1.HTMLTranslator):
    def __init__(self, document):
       html4css1.HTMLTranslator.__init__(self, document)
@@ -41,10 +34,8 @@ class HTMLTranslator(html4css1.HTMLTranslator):
       self.body.append('</div>')
 
    def visit_image(self, node):
-      global itemid
       uri = node.attributes['uri']
-      path = 'blabla'
-      node.attributes['uri'] = itemid + '/' + uri
+      node.attributes['uri'] = '/{{.Id}}/' + uri
       self.body.append('<div class="image">')
       html4css1.HTMLTranslator.visit_image(self, node)
       
@@ -53,10 +44,7 @@ class HTMLTranslator(html4css1.HTMLTranslator):
       self.body.append('</div>')
 
    def visit_concept(self, node):
-      path = node.astext()
-      url = normalize(path)
-      name = path.split('/')[-1]
-      self.body.append('<a ajx href="/%s">%s</a>' % (url, name))
+      self.body.append('{{link "%s"}}' % node.astext())
       raise nodes.SkipNode # avoid depart_...
    
    def visit_math(self, node):
@@ -92,8 +80,6 @@ def read_file(filename, utf=False):
 PATH = os.getenv('ACADEMIO_PATH')
 for path in PATH.split(':'):
    itempath = sys.argv[1]
-   itemid = normalize(itempath)
-   print itemid
    rst = path + '/' + itempath + '/doc.rst'
    dirr, base = os.path.split(rst)
    # print dirr
