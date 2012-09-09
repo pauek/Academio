@@ -99,7 +99,10 @@
   <ul class="concepts">{{range $i, $item := .Items}}
     <li>
       <span class="tooltip" tooltip="{{$item.Title}}">
-        <a ajx href="/{{$item.Id}}">{{plus1 $i}}</a>
+        <a ajx 
+           {{if $item.NoDocs}}class="no-docs"{{end}}
+           {{if $item.NoVideo}}class="no-video"{{end}}
+           href="/{{$item.Id}}">{{plus1 $i}}</a>
       </span>
     </li>{{end}}
   </ul>
@@ -116,7 +119,9 @@
   </div>
 </div>
 <div id="content" class="topic">
+  {{if .VideoID}}
   <div id="vid" videoid="{{.VideoID}}"><img src="/img/video.png"></div>
+  {{end}}
   <div id="doc">{{.Data.Doc.Html}}</div>
   <div class="clear"></div>
 </div>

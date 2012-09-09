@@ -37,6 +37,12 @@ func (d Dir) File(filename string) string {
 	return filepath.Join(d.abs(), filename)
 }
 
+func (d Dir) FileExists(filename string) bool {
+	abspath := d.File(filename)
+	_, err := os.Stat(abspath)
+	return err == nil
+}
+
 // Common contains all fields that are common to content items
 //
 type CommonData struct {
@@ -83,7 +89,8 @@ func (data *CommonData) read(dir Dir) {
 // Item
 
 type SubItem struct {
-	Id, Title, dir string
+	Id, Title, dir  string
+	NoVideo, NoDocs bool
 }
 
 type ItemGroup interface {
@@ -149,9 +156,11 @@ func (g *Group) read(dir Dir) {
 	eachSubDir(dir.abs(), func(subdir string) {
 		d := dir.join(subdir)
 		subitem := SubItem{
-			Id:    ToID(d.Rel),
-			Title: removeOrder(subdir),
-			dir:   d.abs(),
+			Id:     ToID(d.Rel),
+			Title:  removeOrder(subdir),
+			dir:    d.abs(),
+			NoVideo: !d.FileExists("video"),
+			NoDocs:  !d.FileExists("doc.html"),
 		}
 		g.Add(subitem)
 	})
@@ -165,15 +174,15 @@ type Topic struct {
 	CommonData
 	Group
 	Coords []XY
-	Deps [][]int
+	Deps   [][]int
 	// Map of concepts?
 }
 
 type Info struct {
-	Index int
-	Item SubItem
+	Index  int
+	Item   SubItem
 	Coords XY
-	Deps string
+	Deps   string
 }
 
 func (t *Topic) ChildrenInfo() (info []Info) {
@@ -185,13 +194,13 @@ func (t *Topic) ChildrenInfo() (info []Info) {
 			}
 			deps += fmt.Sprintf("%d", d)
 		}
-		deps += "]";
+		deps += "]"
 
 		info = append(info, Info{
-			Index: i + 1,
-			Item: t.Items[i],
+			Index:  i + 1,
+			Item:   t.Items[i],
 			Coords: t.Coords[i],
-			Deps: deps,
+			Deps:   deps,
 		})
 	}
 	return
