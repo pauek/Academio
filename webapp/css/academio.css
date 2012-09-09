@@ -383,6 +383,10 @@ footer a:hover {
   width: 100%;
   text-align: center;
 }
+#doc img {
+  width: 100%;
+  margin: 1em 0 3em;
+}
 .concept {
   margin-bottom: .7em;
 }
@@ -520,6 +524,12 @@ ul.course .topic .concepts li a {
 }
 ul.course .topic .concepts li a:hover {
   background-color: #ebe8df;
+}
+ul.course .topic .concepts li a.no-docs {
+  border: 1px solid #777;
+}
+ul.course .topic .concepts li a.no-video {
+  background: #fab4b4;
 }
 
 .tooltip {
