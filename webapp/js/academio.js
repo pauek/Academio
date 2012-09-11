@@ -41,6 +41,13 @@ academio.updateMap = function () {
       if (it.y < ymin) { ymin = it.y; } 
       if (it.y > ymax) { ymax = it.y; } 
    }
+   // avoid too big maps...
+   while (xmax - xmin < 4) {
+      xmin--; xmax++;
+   }
+   while (ymax - ymin < 4) {
+      ymax++;
+   }
 
    // Paint links
    var c = new fabric.Canvas('c', { 
