@@ -2,6 +2,7 @@ package content
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -99,7 +100,6 @@ func numLevels(reldir string) (lv int) {
 	return
 }
 
-
 // Determine the number of levels in a relative dir
 //
 func numLevelsID(id string) (lv int) {
@@ -116,7 +116,10 @@ func eachSubDir(dir string, fn func(dir string)) error {
 	if err != nil {
 		return err
 	}
-	for _, info := range fileinfo {
+	for _, linfo := range fileinfo {
+		// since ReadDir uses Lstat, we have to 
+		// repeat with os.Stat to follow the symlinks
+		info, _ := os.Stat(filepath.Join(dir, linfo.Name())) // sure ignore err?		
 		if info.IsDir() && info.Name()[0] != '.' && info.Name()[0] != '_' {
 			fn(info.Name())
 		}
@@ -128,7 +131,7 @@ func eachSubDir(dir string, fn func(dir string)) error {
 //
 func walkDirs(path string, fn func(dir string, level int)) {
 	// need to declare since it's recursive
-	var walk func(dir string, level int) 
+	var walk func(dir string, level int)
 
 	walk = func(dir string, level int) {
 		if level > 0 {
