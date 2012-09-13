@@ -120,7 +120,7 @@ func eachSubDir(dir string, fn func(dir string)) error {
 		// since ReadDir uses Lstat, we have to 
 		// repeat with os.Stat to follow the symlinks
 		info, _ := os.Stat(filepath.Join(dir, linfo.Name())) // sure ignore err?		
-		if info.IsDir() && info.Name()[0] != '.' && info.Name()[0] != '_' {
+		if info != nil && info.IsDir() && info.Name()[0] != '.' && info.Name()[0] != '_' {
 			fn(info.Name())
 		}
 	}
