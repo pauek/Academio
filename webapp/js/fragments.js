@@ -71,6 +71,7 @@ fragments.load = function(url) {
          fragments.assemble(page.Navbar, $('#navbar'));
          fragments.assemble(page.Body, $('#body'));
          fragments.replaceLinks();
+         _gaq.push(['_trackPageview', url]); // Google Analytics
       },
    });
 }
