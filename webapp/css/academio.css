@@ -430,6 +430,8 @@ pre, tt {
 }
 tt {
   font-size: 90%;
+  padding: 0 .15em 0 .15em;
+  border: 1px solid #ccc;
 }
 pre {
   font-size: 0.875em;
