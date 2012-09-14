@@ -41,11 +41,11 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1313"
-     inkscape:window-height="921"
-     inkscape:window-x="331"
-     inkscape:window-y="67"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1019"
+     inkscape:window-x="0"
+     inkscape:window-y="28"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -54,7 +54,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -70,15 +70,15 @@
        sodipodi:nodetypes="ccccc" />
     <text
        xml:space="preserve"
-       style="font-size:13.08353806px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Open Sans;-inkscape-font-specification:Open Sans Bold"
-       x="-725.22186"
-       y="741.70886"
+       style="font-size:10.21688461px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Open Sans;-inkscape-font-specification:Open Sans Bold"
+       x="-725.80353"
+       y="740.68304"
        id="text3591"
        transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3593"
-         x="-725.22186"
-         y="741.70886">BETA</tspan></text>
+         x="-725.80353"
+         y="740.68304">ALPHA</tspan></text>
   </g>
 </svg>

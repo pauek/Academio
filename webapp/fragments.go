@@ -15,6 +15,13 @@ import (
 )
 
 func fragmentPage(w http.ResponseWriter, req *http.Request) {
+
+	// Do not show main page for now
+	if req.URL.Path == "/" {
+		http.Redirect(w, req, "/cursos", http.StatusSeeOther)
+		return
+	}
+
 	// Extract Item ID from URL
 	var itemId string
 	path := req.URL.Path[1:]

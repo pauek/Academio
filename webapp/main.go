@@ -212,6 +212,8 @@ func main() {
 	http.HandleFunc("/png/", hPhotos)
 	http.HandleFunc("/fonts/", hFonts)
 
+	/*
+
 	// Users
 	http.HandleFunc("/login", hLogin)
 	http.HandleFunc("/logout", hLogout)
@@ -219,6 +221,8 @@ func main() {
 
 	// About
 	http.HandleFunc("/acerca", hAbout)
+
+	*/
 	
 	http.HandleFunc("/", fragmentPage)
 
