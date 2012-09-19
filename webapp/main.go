@@ -7,14 +7,14 @@ import (
 	"flag"
 	"fmt"
 	F "fragments"
+	"html/template"
 	"io"
 	"log"
+	"mime"
 	"net/http"
 	"net/url"
-	"crypto/sha1"
 	"os"
 	"path/filepath"
-	"html/template"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func fmtTime(t time.Time) string {
 
 func NotFound(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
- 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html")
 	var body bytes.Buffer
 	if err := tmpl.ExecuteTemplate(&body, "notfound", req.URL.Path); err != nil {
 		goto InternalError
@@ -53,20 +53,12 @@ InternalError:
 	http.Error(w, "Template 'layout' not found", code)
 }
 
-func hFonts(w http.ResponseWriter, req *http.Request) {
-	path := filepath.Join(srvdir, req.URL.Path)
-	font, err := os.Open(path)
-	if err != nil {
-		NotFound(w, req)
-		return
-	}
-	defer font.Close()
-	w.Header().Set("Content-Type", "font/ttf")
-	w.Header().Set("Expires", fmtTime(time.Now().Add(24 * time.Hour * 365 * 10)))
-	io.Copy(w, font)
-}
 
 func hFavicon(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, filepath.Join(srvdir, "static/img/favicon.ico"))
+}
+
+func REMOVE_hFavicon(w http.ResponseWriter, req *http.Request) {
 	rest := req.URL.Path[len("/favicon.ico"):]
 	if len(rest) > 0 {
 		log.Printf("%s (NOT FOUND)", req.URL.Path)
@@ -87,7 +79,6 @@ func hFavicon(w http.ResponseWriter, req *http.Request) {
 
 func hPhotos(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Path[len("/png/"):]
-
 	item := content.Get(id)
 	if item == nil {
 		NotFound(w, req)
@@ -98,28 +89,7 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 		NotFound(w, req)
 		return
 	}
-
-	image, err := os.Open(course.Photo)
-	if err != nil {
-		NotFound(w, req)
-		return
-	}
-	defer image.Close()
-
-	// ETag
-	hash := sha1.New()
-	io.Copy(hash, image)
-	image.Seek(0, 0)
-	etag := fmt.Sprintf("%x", hash.Sum(nil))
-
-	if req.Header.Get("If-None-Match") == etag {
-		w.WriteHeader(http.StatusNotModified)
-		return
-	}
-
-	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("ETag", etag)
-	io.Copy(w, image)
+	http.ServeFile(w, req, course.Photo)
 }
 
 func hLogin(w http.ResponseWriter, req *http.Request) {
@@ -133,7 +103,7 @@ func hLogin(w http.ResponseWriter, req *http.Request) {
 			session.Referer = url.Path
 		}
 		SendPage(w, req, session, "login", "Login")
-		session.Message = "";
+		session.Message = ""
 	case "POST":
 		hLoginProcessForm(w, req, session)
 	default:
@@ -201,6 +171,8 @@ func Listen() {
 func main() {
 	flag.Parse()
 
+	mime.AddExtensionType(".ttf", "font/ttf")
+
 	content.WatchForChanges(func(id string) {
 		if id == "" {
 			cache.Touch("/courses")
@@ -213,23 +185,23 @@ func main() {
 	ServeFiles("/js/")
 	ServeFiles("/css/")
 	ServeFiles("/img/")
+	ServeFiles("/fonts/")
 
 	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
-	http.HandleFunc("/fonts/", hFonts)
 
 	/*
 
-	// Users
-	http.HandleFunc("/login", hLogin)
-	http.HandleFunc("/logout", hLogout)
-	http.HandleFunc("/register", hRegister)
+		// Users
+		http.HandleFunc("/login", hLogin)
+		http.HandleFunc("/logout", hLogout)
+		http.HandleFunc("/register", hRegister)
 
-	// About
-	http.HandleFunc("/acerca", hAbout)
+		// About
+		http.HandleFunc("/acerca", hAbout)
 
 	*/
-	
+
 	http.HandleFunc("/", fragmentPage)
 
 	http.HandleFunc("/_frag/", hFragList)
