@@ -155,10 +155,6 @@ func hAbout(w http.ResponseWriter, req *http.Request) {
 
 var port = flag.Int("port", 8080, "Network port")
 
-func ServeFiles(prefix string) {
-	fs := http.FileServer(http.Dir(srvdir + "/static" + prefix))
-	http.Handle(prefix, http.StripPrefix(prefix, GzippedNoExpire(fs)))
-}
 
 func Listen() {
 	p := fmt.Sprintf(":%d", *port)
@@ -182,10 +178,10 @@ func main() {
 	})
 
 	// handlers
-	ServeFiles("/js/")
-	ServeFiles("/css/")
-	ServeFiles("/img/")
-	ServeFiles("/fonts/")
+	http.HandleFunc("/css/", StaticFiles)
+	http.HandleFunc("/js/", StaticFiles)
+	http.HandleFunc("/img/", StaticFiles)
+	http.HandleFunc("/fonts/", StaticFiles)
 
 	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
