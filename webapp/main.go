@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"crypto/sha1"
 	"os"
 	"path/filepath"
 	"html/template"
@@ -72,7 +73,7 @@ func hFavicon(w http.ResponseWriter, req *http.Request) {
 		NotFound(w, req)
 		return
 	}
-	path := filepath.Join(srvdir, "img/favicon.ico")
+	path := filepath.Join(srvdir, "static/img/favicon.ico")
 	icon, err := os.Open(path)
 	if err != nil {
 		NotFound(w, req)
@@ -105,14 +106,19 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 	}
 	defer image.Close()
 
-	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Expires", fmtTime(time.Now().Add(1 * time.Hour)))
-	if stat, err := image.Stat(); err == nil {
-		w.Header().Set("Last-Modified", fmtTime(stat.ModTime()))
-	}
-	if req.Method == "HEAD" {
+	// ETag
+	hash := sha1.New()
+	io.Copy(hash, image)
+	image.Seek(0, 0)
+	etag := fmt.Sprintf("%x", hash.Sum(nil))
+
+	if req.Header.Get("If-None-Match") == etag {
+		w.WriteHeader(http.StatusNotModified)
 		return
 	}
+
+	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("ETag", etag)
 	io.Copy(w, image)
 }
 
@@ -180,7 +186,7 @@ func hAbout(w http.ResponseWriter, req *http.Request) {
 var port = flag.Int("port", 8080, "Network port")
 
 func ServeFiles(prefix string) {
-	fs := http.FileServer(http.Dir(srvdir + prefix))
+	fs := http.FileServer(http.Dir(srvdir + "/static" + prefix))
 	http.Handle(prefix, http.StripPrefix(prefix, GzippedNoExpire(fs)))
 }
 
