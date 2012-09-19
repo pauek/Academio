@@ -89,7 +89,7 @@ func hPhotos(w http.ResponseWriter, req *http.Request) {
 		NotFound(w, req)
 		return
 	}
-	http.ServeFile(w, req, course.Photo)
+	ServeFile(w, req, course.Photo)
 }
 
 func hLogin(w http.ResponseWriter, req *http.Request) {
@@ -178,10 +178,10 @@ func main() {
 	})
 
 	// handlers
-	http.HandleFunc("/css/", StaticFiles)
-	http.HandleFunc("/js/", StaticFiles)
-	http.HandleFunc("/img/", StaticFiles)
-	http.HandleFunc("/fonts/", StaticFiles)
+	http.HandleFunc("/css/", hStaticFiles)
+	http.HandleFunc("/js/", hStaticFiles)
+	http.HandleFunc("/img/", hStaticFiles)
+	http.HandleFunc("/fonts/", hStaticFiles)
 
 	http.HandleFunc("/favicon.ico", hFavicon)
 	http.HandleFunc("/png/", hPhotos)
